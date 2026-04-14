@@ -15,7 +15,10 @@ class Settings(BaseSettings):
     supabase_key: str = ""
     ollama_host: str = "http://localhost:11434"
 
-    vlm_mode: Literal["real", "mock"] = "real"
+    zai_api_key: str = ""
+    zai_base_url: str = "https://api.z.ai/api/paas/v4"
+
+    vlm_mode: Literal["real", "mock", "zai"] = "real"
     vlm_model: str = "gemma3:4b"
     upload_dir: Path = Path("./uploads")
     frames_dir: Path = Path("./frames")

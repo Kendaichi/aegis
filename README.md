@@ -317,6 +317,35 @@ Mock mode is useful for frontend/backend iteration, CI, and demos that don't nee
 
 ---
 
+## z.ai VLM mode (cloud)
+
+If you don't want to run a local VLM, you can route `/analyze` and `/chat` to [z.ai](https://docs.z.ai/)'s OpenAI-compatible vision endpoint instead.
+
+### Enable it
+
+In `apps/api/.env` (or the Compose `.env`):
+
+```env
+VLM_MODE=zai
+VLM_MODEL=glm-4.5v          # confirm the exact tag in z.ai's model list
+ZAI_API_KEY=your-z-ai-key
+ZAI_BASE_URL=https://api.z.ai/api/paas/v4
+```
+
+Then restart the API. No Ollama required.
+
+### How it works
+
+Each frame is read from disk, base64-encoded, and sent as an `image_url` content block to the z.ai chat-completions endpoint; the response is parsed with the same JSON schema as the Ollama path. Chat requests are forwarded as plain text messages. The integration lives in `apps/api/app/services/vlm.py` behind the `vlm_mode == "zai"` branches.
+
+### Notes
+
+- The `openai` Python SDK is used purely as an OpenAI-compatible HTTP client — no OpenAI account is involved.
+- Verify the vision-model tag you want (`glm-4.5v`, `glm-4v-plus`, `glm-4v`, etc.) in z.ai's docs before setting `VLM_MODEL`.
+- Keep `ZAI_API_KEY` out of `apps/desktop/.env`; all VLM calls go through the backend.
+
+---
+
 ## API reference
 
 All routes return JSON. Schemas are Pydantic v2 models defined in `apps/api/app/schemas.py`.
