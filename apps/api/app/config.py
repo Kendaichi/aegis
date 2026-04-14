@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -14,6 +15,7 @@ class Settings(BaseSettings):
     supabase_key: str = ""
     ollama_host: str = "http://localhost:11434"
 
+    vlm_mode: Literal["real", "mock"] = "real"
     vlm_model: str = "gemma3:4b"
     upload_dir: Path = Path("./uploads")
     frames_dir: Path = Path("./frames")

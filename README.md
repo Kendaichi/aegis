@@ -19,14 +19,15 @@ AEGIS ingests aerial or ground video of a disaster site, extracts frames, analyz
    - [3. Run Ollama + pull Gemma 3](#3-run-ollama--pull-gemma-3)
    - [4. Run the backend](#4-run-the-backend)
    - [5. Run the desktop app](#5-run-the-desktop-app)
-7. [API reference](#api-reference)
-8. [Supabase schema](#supabase-schema)
-9. [Environment variables](#environment-variables)
-10. [Scripts](#scripts)
-11. [Project structure (full)](#project-structure-full)
-12. [Troubleshooting](#troubleshooting)
-13. [Roadmap](#roadmap)
-14. [License](#license)
+7. [Mock VLM mode (development)](#mock-vlm-mode-development)
+8. [API reference](#api-reference)
+9. [Supabase schema](#supabase-schema)
+10. [Environment variables](#environment-variables)
+11. [Scripts](#scripts)
+12. [Project structure (full)](#project-structure-full)
+13. [Troubleshooting](#troubleshooting)
+14. [Roadmap](#roadmap)
+15. [License](#license)
 
 ---
 
@@ -120,6 +121,7 @@ aegis/
   - macOS: `brew install ffmpeg`
   - Linux: `sudo apt install ffmpeg`
 - **Ollama** running locally — https://ollama.com
+  _Optional for development._ If your machine can't run Gemma 3 locally, skip Ollama and use [Mock VLM mode](#mock-vlm-mode-development).
 - A **Supabase** project (URL + anon key for the frontend, service-role or anon key for the backend)
 
 ---
@@ -198,6 +200,39 @@ npm run tauri build
 Output appears under `apps/desktop/src-tauri/target/release/bundle/`.
 
 > **First-time Tauri note:** generate real icons before `tauri build` — see `apps/desktop/src-tauri/icons/README.md`.
+
+---
+
+## Mock VLM mode (development)
+
+Running Gemma 3 4B locally needs a capable GPU/CPU and several gigabytes of RAM. If your dev machine can't spare it, run the backend in **mock mode** — the VLM is replaced with a deterministic stub that returns canned `FrameAnalysis` objects and chat replies. No Ollama, no model download, no GPU.
+
+Mock mode lets you build and test everything that *isn't* the model: the upload pipeline, frame extraction, report aggregation, map markers, chat UI, Supabase wiring, CORS, etc.
+
+### Enable it
+
+Set `VLM_MODE=mock` in `apps/api/.env`:
+
+```env
+VLM_MODE=mock
+```
+
+Then run the backend as usual (`uvicorn main:app --reload --port 8000`). You can leave `OLLAMA_HOST` and `VLM_MODEL` unset — they're ignored in mock mode.
+
+### What the stub returns
+
+- **`/analyze`** — each frame is assigned a severity/description/hazards bucket deterministically hashed from the frame filename + index, so the same video produces the same output on every run. Confidence values range `0.5`–`0.9`.
+- **`/chat`** — returns a short canned reply that echoes the last user message and reminds you mock mode is on.
+
+The stub lives in `apps/api/app/services/vlm.py` (see `_mock_frame_analysis` and the `vlm_mode == "mock"` branches). Edit the `_MOCK_*` tables there to tweak the fake outputs.
+
+### Switching back to the real model
+
+Set `VLM_MODE=real` (or remove the line — `real` is the default), make sure Ollama is running and `gemma3:4b` is pulled, then restart the backend. No frontend changes are needed.
+
+### When you still need the real model
+
+Mock mode is useful for frontend/backend iteration, CI, and demos that don't need accurate analysis. Use the real model (locally or pointed at a remote Ollama via `OLLAMA_HOST`) whenever you're evaluating model quality, tuning prompts, or validating end-to-end behaviour before a release.
 
 ---
 
@@ -346,6 +381,7 @@ Persisting into Supabase is scaffolded via `apps/api/app/db.py` (`get_supabase()
 | `SUPABASE_URL`            | —                          | Supabase project URL                      |
 | `SUPABASE_KEY`            | —                          | Service-role or anon key                  |
 | `OLLAMA_HOST`             | `http://localhost:11434`   | Ollama HTTP endpoint                      |
+| `VLM_MODE`                | `real`                     | `real` calls Ollama; `mock` returns canned frame/chat responses — see [Mock VLM mode](#mock-vlm-mode-development) |
 | `VLM_MODEL`               | `gemma3:4b`                | Ollama model tag                          |
 | `UPLOAD_DIR`              | `./uploads`                | Where uploaded videos are stored          |
 | `FRAMES_DIR`              | `./frames`                 | Where extracted frames are stored         |

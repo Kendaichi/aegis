@@ -1,3 +1,4 @@
+import hashlib
 import json
 from pathlib import Path
 
@@ -18,6 +19,30 @@ Respond with STRICT JSON matching this schema:
 }
 Only output the JSON object. No prose, no markdown fences."""
 
+_MOCK_SEVERITIES: list[DamageSeverity] = [
+    DamageSeverity.none,
+    DamageSeverity.minor,
+    DamageSeverity.moderate,
+    DamageSeverity.severe,
+    DamageSeverity.destroyed,
+]
+
+_MOCK_DESCRIPTIONS = [
+    "No visible structural damage; minor surface debris on roadway.",
+    "Cracked exterior wall and scattered roof tiles near the entrance.",
+    "Partially collapsed second floor with leaning support beams.",
+    "Severe structural failure; load-bearing wall sheared off.",
+    "Building fully collapsed into rubble; no recognisable facade.",
+]
+
+_MOCK_HAZARDS = [
+    [],
+    ["loose debris"],
+    ["exposed rebar", "unstable masonry"],
+    ["structural collapse", "gas leak risk"],
+    ["total collapse", "buried voids", "fire risk"],
+]
+
 
 def _get_client() -> Client:
     global _client
@@ -26,11 +51,31 @@ def _get_client() -> Client:
     return _client
 
 
+def _mock_frame_analysis(
+    frame_path: Path,
+    frame_index: int,
+    timestamp_seconds: float,
+) -> FrameAnalysis:
+    seed = int(hashlib.md5(frame_path.name.encode()).hexdigest(), 16) + frame_index
+    bucket = seed % len(_MOCK_SEVERITIES)
+    return FrameAnalysis(
+        frame_index=frame_index,
+        timestamp_seconds=timestamp_seconds,
+        severity=_MOCK_SEVERITIES[bucket],
+        description=_MOCK_DESCRIPTIONS[bucket],
+        detected_hazards=list(_MOCK_HAZARDS[bucket]),
+        confidence=0.5 + (bucket * 0.1),
+    )
+
+
 def analyze_frame(
     frame_path: Path,
     frame_index: int,
     timestamp_seconds: float,
 ) -> FrameAnalysis:
+    if settings.vlm_mode == "mock":
+        return _mock_frame_analysis(frame_path, frame_index, timestamp_seconds)
+
     client = _get_client()
     response = client.generate(
         model=settings.vlm_model,
@@ -61,6 +106,17 @@ def analyze_frame(
 
 
 def chat_completion(messages: list[dict[str, str]]) -> str:
+    if settings.vlm_mode == "mock":
+        last_user = next(
+            (m["content"] for m in reversed(messages) if m.get("role") == "user"),
+            "",
+        )
+        preview = last_user.strip().splitlines()[0][:120] if last_user else "your question"
+        return (
+            "[mock VLM] I'd normally analyse the report to answer: "
+            f"'{preview}'. Set VLM_MODE=real to use Gemma via Ollama."
+        )
+
     client = _get_client()
     response = client.chat(
         model=settings.vlm_model,
