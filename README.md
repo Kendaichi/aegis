@@ -19,15 +19,16 @@ AEGIS ingests aerial or ground video of a disaster site, extracts frames, analyz
    - [3. Run Ollama + pull Gemma 3](#3-run-ollama--pull-gemma-3)
    - [4. Run the backend](#4-run-the-backend)
    - [5. Run the desktop app](#5-run-the-desktop-app)
-7. [Mock VLM mode (development)](#mock-vlm-mode-development)
-8. [API reference](#api-reference)
-9. [Supabase schema](#supabase-schema)
-10. [Environment variables](#environment-variables)
-11. [Scripts](#scripts)
-12. [Project structure (full)](#project-structure-full)
-13. [Troubleshooting](#troubleshooting)
-14. [Roadmap](#roadmap)
-15. [License](#license)
+7. [Run with Docker](#run-with-docker)
+8. [Mock VLM mode (development)](#mock-vlm-mode-development)
+9. [API reference](#api-reference)
+10. [Supabase schema](#supabase-schema)
+11. [Environment variables](#environment-variables)
+12. [Scripts](#scripts)
+13. [Project structure (full)](#project-structure-full)
+14. [Troubleshooting](#troubleshooting)
+15. [Roadmap](#roadmap)
+16. [License](#license)
 
 ---
 
@@ -200,6 +201,86 @@ npm run tauri build
 Output appears under `apps/desktop/src-tauri/target/release/bundle/`.
 
 > **First-time Tauri note:** generate real icons before `tauri build` — see `apps/desktop/src-tauri/icons/README.md`.
+
+---
+
+## Run with Docker
+
+The **backend API** and **Ollama** can run fully containerized via Docker Compose. The Tauri desktop app is a native GUI and still runs on your host — point it at the containerized API.
+
+### Prerequisites
+
+- **Docker Desktop** (Windows/macOS) or Docker Engine + Compose plugin (Linux)
+- (Optional) **NVIDIA Container Toolkit** if you want GPU-accelerated Ollama
+
+### 1. Configure environment
+
+From the repo root:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and fill in `SUPABASE_URL` / `SUPABASE_KEY` if you want persistence. The default `VLM_MODE=mock` lets the stack boot without pulling a multi-GB model.
+
+### 2. Build & start
+
+```bash
+docker compose up --build
+```
+
+This starts two services:
+
+| Service  | Port    | Purpose                                  |
+| -------- | ------- | ---------------------------------------- |
+| `api`    | `8000`  | FastAPI backend (includes ffmpeg)        |
+| `ollama` | `11434` | Ollama server, persisted to a volume     |
+
+Verify:
+
+```bash
+curl http://localhost:8000/health
+# {"status":"ok","model":"gemma3:4b"}
+```
+
+### 3. (Real VLM mode) pull the model
+
+Only needed if `VLM_MODE=real`:
+
+```bash
+docker compose exec ollama ollama pull gemma3:4b
+```
+
+Set `VLM_MODE=real` in `.env`, then `docker compose up -d` again.
+
+### 4. Point the desktop app at the container
+
+In `apps/desktop/.env`:
+
+```env
+VITE_API_URL=http://localhost:8000
+```
+
+Then `npm run tauri dev` on your host as usual.
+
+### GPU (optional)
+
+Uncomment the `deploy.resources.reservations.devices` block under the `ollama` service in `docker-compose.yml` to enable NVIDIA GPU passthrough.
+
+### Common commands
+
+```bash
+docker compose up --build       # build + start, foreground
+docker compose up -d            # start detached
+docker compose logs -f api      # tail API logs
+docker compose down             # stop and remove containers
+docker compose down -v          # also wipe uploads/frames + ollama models
+```
+
+### Volumes
+
+- `api-data` → `/data` inside the API container; holds `uploads/` and `frames/`.
+- `ollama-data` → `/root/.ollama` inside the Ollama container; holds pulled models.
 
 ---
 
