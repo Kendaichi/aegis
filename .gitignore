@@ -26,7 +26,8 @@ target/
 .idea/
 .DS_Store
 Thumbs.db
-
+.docx
+nul
 # App data
 uploads/
 frames/

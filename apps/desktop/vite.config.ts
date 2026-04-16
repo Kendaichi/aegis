@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 
 // https://vitejs.dev/config/
-export default defineConfig(async () => ({
+export default defineConfig({
   plugins: [react()],
   clearScreen: false,
   server: {
@@ -24,4 +24,4 @@ export default defineConfig(async () => ({
     minify: "esbuild",
     sourcemap: false,
   },
-}));
+});

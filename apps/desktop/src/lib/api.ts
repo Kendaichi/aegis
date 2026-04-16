@@ -1,3 +1,5 @@
+import { mockApi } from "./mockApi";
+
 const BASE = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
 
 export type DamageSeverity =
@@ -27,7 +29,15 @@ export interface FrameAnalysis {
   description: string;
   detected_hazards: string[];
   confidence: number;
+  /** Per-frame GPS when available (streaming / real analysis). */
+  location?: GeoPoint;
 }
+
+/** Called for each frame as analysis streams in (mock or SSE/WebSocket later). */
+export type StreamFrameCallback = (
+  frame: FrameAnalysis,
+  progress: { current: number; total: number }
+) => void;
 
 export interface AnalyzeResponse {
   video_id: string;
@@ -59,7 +69,7 @@ async function handle<T>(res: Response): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-export const api = {
+const realApi = {
   async upload(file: File): Promise<UploadResponse> {
     const body = new FormData();
     body.append("file", file);
@@ -87,7 +97,11 @@ export const api = {
 
   async chat(
     messages: ChatMessage[],
-    opts: { report_id?: string; video_id?: string } = {}
+    opts: {
+      report_id?: string;
+      video_id?: string;
+      frame_context?: FrameAnalysis;
+    } = {}
   ): Promise<{ message: ChatMessage }> {
     const res = await fetch(`${BASE}/chat`, {
       method: "POST",
@@ -96,4 +110,23 @@ export const api = {
     });
     return handle(res);
   },
+
+  /**
+   * Stream analysis: real backend may use SSE; placeholder yields batch frames sequentially.
+   */
+  async analyzeStream(
+    video_id: string,
+    onFrame: StreamFrameCallback,
+    location?: GeoPoint
+  ): Promise<AnalyzeResponse> {
+    const res = await realApi.analyze(video_id, location);
+    for (let i = 0; i < res.frames.length; i++) {
+      onFrame(res.frames[i], { current: i + 1, total: res.frames.length });
+    }
+    return res;
+  },
 };
+
+const useMockApi = import.meta.env.VITE_USE_MOCK_API === "true";
+
+export const api = useMockApi ? mockApi : realApi;

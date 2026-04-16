@@ -1,0 +1,207 @@
+import {
+  BarChart3,
+  Bookmark,
+  FileText,
+  LayoutDashboard,
+  Map,
+  MapPin,
+  Plus,
+  Settings,
+  Upload,
+} from "lucide-react";
+import {
+  BOOKMARKED_AREAS,
+  SIDEBAR_INCIDENTS,
+  type SidebarIncident,
+  type AssessmentStatus,
+} from "../../lib/mockData";
+import type { NavView } from "../layout/AppShell";
+import { SeverityBadge } from "../ui/Badges";
+
+interface Props {
+  active: NavView;
+  onNavigate: (view: NavView) => void;
+  onUploadClick: () => void;
+  showDashboardPanel?: boolean;
+}
+
+function IncidentRow({ row }: { row: SidebarIncident }) {
+  return (
+    <div className="rounded-card border border-aegis-border bg-aegis-surface2/90 p-3 shadow-card">
+      <div className="flex items-start justify-between gap-2">
+        <span className="font-mono text-[11px] text-aegis-accent">{row.id}</span>
+        <SeverityBadge level={row.severity} />
+      </div>
+      <p className="mt-2 text-[13px] leading-snug text-slate-200">{row.location}</p>
+      <div className="mt-3 flex items-center justify-between text-[11px] text-slate-500">
+        <span>{row.timeAgo}</span>
+        <StatusMini status={row.status} />
+      </div>
+    </div>
+  );
+}
+
+function StatusMini({ status }: { status: AssessmentStatus }) {
+  if (status === "analyzing") {
+    return (
+      <span className="flex items-center gap-1 text-aegis-accent">
+        <span className="inline-block h-1.5 w-1.5 animate-spin rounded-full border border-aegis-accent border-t-transparent" />
+        Analyzing...
+      </span>
+    );
+  }
+  if (status === "complete") {
+    return <span className="text-emerald-400">Complete</span>;
+  }
+  return <span className="text-slate-400">Pending</span>;
+}
+
+const primaryItems: Array<{
+  id: NavView;
+  label: string;
+  icon: typeof LayoutDashboard;
+}> = [
+  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { id: "assessments", label: "Assessments", icon: FileText },
+  { id: "map", label: "Map", icon: Map },
+  { id: "reports", label: "Reports", icon: BarChart3 },
+];
+
+export default function SideNav({
+  active,
+  onNavigate,
+  onUploadClick,
+  showDashboardPanel = false,
+}: Props) {
+  return (
+    <div className="flex h-full shrink-0">
+      <aside className="flex w-20 shrink-0 flex-col items-center border-r border-aegis-border bg-aegis-surface/70 px-3 py-4 backdrop-blur-xl">
+        <button
+          type="button"
+          onClick={() => onNavigate("dashboard")}
+          className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-aegis-border bg-aegis-surface2 text-sm font-semibold tracking-[0.3em] text-white shadow-card transition hover:bg-white/5"
+          title="AEGIS Dashboard"
+          aria-label="Go to dashboard"
+        >
+          AG
+        </button>
+
+        <nav className="flex w-full flex-1 flex-col items-center gap-2">
+          {primaryItems.map(({ id, label, icon: Icon }) => {
+            const isActive = active === id;
+            return (
+              <button
+                key={id}
+                type="button"
+                onClick={() => onNavigate(id)}
+                title={label}
+                aria-label={label}
+                className={`relative inline-flex h-12 w-12 items-center justify-center rounded-2xl border transition ${
+                  isActive
+                    ? "border-aegis-accent/40 bg-aegis-glow text-white shadow-glow"
+                    : "border-transparent text-slate-500 hover:border-aegis-border hover:bg-white/5 hover:text-slate-200"
+                }`}
+              >
+                {isActive && (
+                  <span className="absolute left-0 top-2 h-8 w-0.5 rounded-full bg-aegis-accent" />
+                )}
+                <Icon className="h-5 w-5" />
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="mt-auto flex flex-col items-center gap-2">
+          <button
+            type="button"
+            onClick={onUploadClick}
+            title="New assessment"
+            aria-label="New assessment"
+            className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-aegis-accent text-white shadow-glow transition hover:brightness-110"
+          >
+            <Plus className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            onClick={onUploadClick}
+            title="Upload drone footage"
+            aria-label="Upload drone footage"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-aegis-border bg-aegis-surface2 text-slate-400 transition hover:bg-white/5 hover:text-white"
+          >
+            <Upload className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => onNavigate("settings")}
+            title="Settings"
+            aria-label="Settings"
+            className={`inline-flex h-11 w-11 items-center justify-center rounded-2xl border transition ${
+              active === "settings"
+                ? "border-aegis-accent/40 bg-aegis-glow text-white shadow-glow"
+                : "border-aegis-border bg-aegis-surface2 text-slate-500 hover:bg-white/5 hover:text-slate-200"
+            }`}
+          >
+            <Settings className="h-4 w-4" />
+          </button>
+        </div>
+      </aside>
+
+      {showDashboardPanel && (
+        <aside className="flex w-[320px] shrink-0 flex-col gap-5 border-r border-aegis-border bg-aegis-surface/45 p-4 backdrop-blur-xl">
+          <div className="card overflow-hidden">
+            <div className="card-header">
+              <div>
+                <p className="card-header-title">Rapid Actions</p>
+                <p className="mt-1 text-[12px] text-slate-400">
+                  Launch a new ingest or jump into the most urgent incidents.
+                </p>
+              </div>
+            </div>
+            <div className="space-y-3 p-4">
+              <button type="button" onClick={onUploadClick} className="button-primary w-full">
+                <Plus className="h-4 w-4" />
+                New Assessment
+              </button>
+              <button type="button" onClick={onUploadClick} className="button-secondary w-full">
+                <Upload className="h-4 w-4" />
+                Upload Drone Footage
+              </button>
+            </div>
+          </div>
+
+          <section>
+            <div className="mb-3 flex items-center gap-2">
+              <Bookmark className="h-4 w-4 text-aegis-accent" />
+              <h2 className="section-title">Active Incidents</h2>
+            </div>
+            <div className="flex flex-col gap-3">
+              {SIDEBAR_INCIDENTS.map((row) => (
+                <IncidentRow key={row.id} row={row} />
+              ))}
+            </div>
+          </section>
+
+          <section className="card p-4">
+            <div className="mb-3 flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-aegis-accent" />
+              <h2 className="section-title">Bookmarked Areas</h2>
+            </div>
+            <ul className="space-y-2">
+              {BOOKMARKED_AREAS.map((area) => (
+                <li
+                  key={area}
+                  className="flex items-center gap-3 rounded-2xl border border-aegis-border bg-aegis-surface2/80 px-3 py-2 text-[13px] text-slate-300"
+                >
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-aegis-glow text-aegis-accent">
+                    <MapPin className="h-4 w-4" />
+                  </span>
+                  {area}
+                </li>
+              ))}
+            </ul>
+          </section>
+        </aside>
+      )}
+    </div>
+  );
+}
