@@ -32,3 +32,6 @@ nul
 uploads/
 frames/
 *.log
+
+# Large geospatial assets hosted in Supabase Storage
+apps/desktop/src/assets/*.geojson
