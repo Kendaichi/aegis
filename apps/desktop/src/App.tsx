@@ -1,6 +1,7 @@
 import AppShell from "./components/layout/AppShell";
 import DashboardPage from "./pages/DashboardPage";
 import AssessmentsPage from "./pages/AssessmentsPage";
+import AssessmentViewPage from "./pages/AssessmentViewPage";
 import MapViewPage from "./pages/MapViewPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -10,16 +11,25 @@ import AssessmentsWorkspacePage from "./pages/AssessmentsWorkspacePage";
 export default function App() {
   return (
     <AppShell>
-      {({ activeView, workspaceOpen, openWorkspace, closeWorkspace }) => {
+      {({ activeView, workspaceOpen, openWorkspace, closeWorkspace, viewingAssessmentId, openAssessmentView, closeAssessmentView }) => {
         if (workspaceOpen) {
           return <AssessmentsWorkspacePage onBack={closeWorkspace} />;
+        }
+
+        if (viewingAssessmentId) {
+          return (
+            <AssessmentViewPage
+              assessmentId={viewingAssessmentId}
+              onBack={closeAssessmentView}
+            />
+          );
         }
 
         switch (activeView) {
           case "dashboard":
             return <DashboardPage />;
           case "assessments":
-            return <AssessmentsPage onNewAssessment={openWorkspace} />;
+            return <AssessmentsPage onNewAssessment={openWorkspace} onViewAssessment={openAssessmentView} />;
           case "map":
             return <MapViewPage />;
           case "reports":

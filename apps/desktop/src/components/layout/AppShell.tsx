@@ -11,6 +11,9 @@ interface AppShellRenderProps {
   openWorkspace: () => void;
   closeWorkspace: () => void;
   navigate: (view: AppView) => void;
+  viewingAssessmentId: string | null;
+  openAssessmentView: (id: string) => void;
+  closeAssessmentView: () => void;
 }
 
 interface Props {
@@ -20,9 +23,11 @@ interface Props {
 export default function AppShell({ children }: Props) {
   const [activeView, setActiveView] = useState<AppView>("dashboard");
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
+  const [viewingAssessmentId, setViewingAssessmentId] = useState<string | null>(null);
 
   function navigate(view: AppView) {
     setWorkspaceOpen(false);
+    setViewingAssessmentId(null);
     setActiveView(view);
   }
 
@@ -31,6 +36,13 @@ export default function AppShell({ children }: Props) {
       return {
         title: "Assessment Workspace",
         subtitle: "Live ingest, frame analysis, map context, and AI-assisted review",
+      };
+    }
+
+    if (viewingAssessmentId) {
+      return {
+        title: "Assessment Details",
+        subtitle: `Viewing assessment ${viewingAssessmentId} — report, analysis frames, and spatial context`,
       };
     }
 
@@ -76,7 +88,7 @@ export default function AppShell({ children }: Props) {
           subtitle: "Autonomous emergency geospatial intelligence system",
         };
     }
-  }, [activeView, workspaceOpen]);
+  }, [activeView, workspaceOpen, viewingAssessmentId]);
 
   return (
     <div className="flex h-full bg-aegis-bg text-slate-100">
@@ -102,6 +114,9 @@ export default function AppShell({ children }: Props) {
               openWorkspace: () => setWorkspaceOpen(true),
               closeWorkspace: () => setWorkspaceOpen(false),
               navigate,
+              viewingAssessmentId,
+              openAssessmentView: (id: string) => setViewingAssessmentId(id),
+              closeAssessmentView: () => setViewingAssessmentId(null),
             })}
           </main>
         </div>
