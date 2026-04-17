@@ -56,7 +56,9 @@ def list_videos() -> VideoListResponse:
     size, and upload timestamp derived from the file's modification time.
     """
     videos: list[VideoListItem] = []
-    for path in sorted(settings.upload_dir.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True):
+    for path in sorted(
+        settings.upload_dir.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True
+    ):
         if not path.is_file():
             continue
         mime, _ = mimetypes.guess_type(path.name)
