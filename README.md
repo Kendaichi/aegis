@@ -4,6 +4,8 @@
 
 AEGIS ingests aerial or ground video of a disaster site, extracts frames, analyzes each frame with a local vision-language model (**Gemma 3 4B via Ollama**), aggregates the analyses into a structured damage report, and exposes the findings through an interactive map, a report panel, and a conversational AI assistant — all in a native desktop shell powered by **Tauri v2**.
 
+> This `README.md` is the technical source of truth for the current repository and documents the Tauri + FastAPI implementation that exists today. For the broader hackathon pitch, stakeholder framing, and target-product narrative, see `AEGIS_Project_Summary.docx`; that document describes proposal context rather than a literal snapshot of the current codebase.
+
 ---
 
 ## Table of contents
@@ -36,10 +38,10 @@ AEGIS ingests aerial or ground video of a disaster site, extracts frames, analyz
 
 - 🎞️ **Video ingest** — drag-and-drop `.mp4/.mov/.webm` into the desktop app; backend stores it and returns a `video_id`.
 - 🧠 **Local VLM analysis** — every N seconds of video is sampled as a JPEG and passed to **Gemma 3 4B** via Ollama. The model returns structured JSON (severity, description, hazards, confidence).
-- 🗺️ **Interactive map** — site location rendered on a Leaflet + OpenStreetMap canvas with severity-coded markers.
+- 🗺️ **Interactive map** — site location rendered on a MapLibre GL map (CARTO dark basemap) with severity-coded markers.
 - 📄 **Structured report** — per-site damage summary, key findings, and prioritized recommendations computed from frame-level analyses.
 - 💬 **Conversational AI** — ask follow-up questions about the current report; chat is grounded via the same Gemma 3 model.
-- 🗄️ **Supabase persistence** — uploads, analyses, and reports can be persisted and queried from both frontend and backend.
+- 🗄️ **Supabase-ready integration** — frontend and backend clients are wired for Supabase, and persistence can be enabled as the API routers are connected.
 - 🖥️ **Native desktop UX** — Tauri v2 produces a small cross-platform binary (Windows / macOS / Linux).
 
 ---
@@ -73,7 +75,7 @@ AEGIS ingests aerial or ground video of a disaster site, extracts frames, analyz
 ```
 aegis/
 ├── apps/
-│   ├── desktop/         Tauri v2 + React + TypeScript + Vite (SWC) + Tailwind + Leaflet
+│   ├── desktop/         Tauri v2 + React + TypeScript + Vite (SWC) + Tailwind + MapLibre GL
 │   └── api/             FastAPI backend (upload, analyze, report, chat)
 ├── package.json         npm workspace root
 ├── README.md            ← you are here
@@ -86,26 +88,26 @@ aegis/
 
 ### Desktop (`apps/desktop`)
 
-| Layer     | Choice                                                       |
-| --------- | ------------------------------------------------------------ |
-| Shell     | Tauri v2 (Rust)                                              |
-| UI        | React 18 + TypeScript                                        |
-| Bundler   | Vite 5 with `@vitejs/plugin-react-swc` (SWC, not Babel)      |
-| Styling   | Tailwind CSS 3                                               |
-| Maps      | Leaflet 1.9 + `react-leaflet` 4                              |
-| Data      | `@supabase/supabase-js`                                      |
-| API calls | `fetch` wrapper in `src/lib/api.ts`                          |
+| Layer     | Choice                                                  |
+| --------- | ------------------------------------------------------- |
+| Shell     | Tauri v2 (Rust)                                         |
+| UI        | React 18 + TypeScript                                   |
+| Bundler   | Vite 5 with `@vitejs/plugin-react-swc` (SWC, not Babel) |
+| Styling   | Tailwind CSS 3                                          |
+| Maps      | MapLibre GL (`maplibre-gl`) + CARTO raster/GL basemaps  |
+| Data      | `@supabase/supabase-js`                                 |
+| API calls | `fetch` wrapper in `src/lib/api.ts`                     |
 
 ### API (`apps/api`)
 
-| Layer        | Choice                                          |
-| ------------ | ----------------------------------------------- |
-| Framework    | FastAPI                                         |
-| Schemas      | Pydantic v2 (+ `pydantic-settings` for env)     |
-| Server       | Uvicorn                                         |
-| DB / Auth    | Supabase (`supabase-py`)                        |
-| VLM          | `ollama` Python client → `gemma3:4b`            |
-| Video        | `ffmpeg-python` (requires `ffmpeg` on `PATH`)   |
+| Layer     | Choice                                        |
+| --------- | --------------------------------------------- |
+| Framework | FastAPI                                       |
+| Schemas   | Pydantic v2 (+ `pydantic-settings` for env)   |
+| Server    | Uvicorn                                       |
+| DB / Auth | Supabase (`supabase-py`)                      |
+| VLM       | `ollama` Python client → `gemma3:4b`          |
+| Video     | `ffmpeg-python` (requires `ffmpeg` on `PATH`) |
 
 ---
 
@@ -231,10 +233,10 @@ docker compose up --build
 
 This starts two services:
 
-| Service  | Port    | Purpose                                  |
-| -------- | ------- | ---------------------------------------- |
-| `api`    | `8000`  | FastAPI backend (includes ffmpeg)        |
-| `ollama` | `11434` | Ollama server, persisted to a volume     |
+| Service  | Port    | Purpose                              |
+| -------- | ------- | ------------------------------------ |
+| `api`    | `8000`  | FastAPI backend (includes ffmpeg)    |
+| `ollama` | `11434` | Ollama server, persisted to a volume |
 
 Verify:
 
@@ -288,7 +290,7 @@ docker compose down -v          # also wipe uploads/frames + ollama models
 
 Running Gemma 3 4B locally needs a capable GPU/CPU and several gigabytes of RAM. If your dev machine can't spare it, run the backend in **mock mode** — the VLM is replaced with a deterministic stub that returns canned `FrameAnalysis` objects and chat replies. No Ollama, no model download, no GPU.
 
-Mock mode lets you build and test everything that *isn't* the model: the upload pipeline, frame extraction, report aggregation, map markers, chat UI, Supabase wiring, CORS, etc.
+Mock mode lets you build and test everything that _isn't_ the model: the upload pipeline, frame extraction, report aggregation, map markers, chat UI, Supabase wiring, CORS, etc.
 
 ### Enable it
 
@@ -354,11 +356,12 @@ All routes return JSON. Schemas are Pydantic v2 models defined in `apps/api/app/
 
 Upload a disaster-site video.
 
-| Field       | Type             | Notes                       |
-| ----------- | ---------------- | --------------------------- |
-| `file`      | multipart file   | `video/*` content-type      |
+| Field  | Type           | Notes                  |
+| ------ | -------------- | ---------------------- |
+| `file` | multipart file | `video/*` content-type |
 
 **Response** (`201`):
+
 ```json
 {
   "video_id": "a1b2c3...",
@@ -374,6 +377,7 @@ Upload a disaster-site video.
 Extract frames and run Gemma 3 on each.
 
 **Request:**
+
 ```json
 {
   "video_id": "a1b2c3...",
@@ -383,6 +387,7 @@ Extract frames and run Gemma 3 on each.
 ```
 
 **Response:**
+
 ```json
 {
   "video_id": "a1b2c3...",
@@ -405,6 +410,7 @@ Extract frames and run Gemma 3 on each.
 Generate a structured report by re-running analysis and aggregating.
 
 **Request:**
+
 ```json
 {
   "video_id": "a1b2c3...",
@@ -420,6 +426,7 @@ Generate a structured report by re-running analysis and aggregating.
 Conversational Q&A, grounded (optionally) by a `report_id` or `video_id`.
 
 **Request:**
+
 ```json
 {
   "report_id": "r_abc",
@@ -430,6 +437,7 @@ Conversational Q&A, grounded (optionally) by a `report_id` or `video_id`.
 ```
 
 **Response:**
+
 ```json
 { "message": { "role": "assistant", "content": "..." } }
 ```
@@ -486,24 +494,24 @@ Persisting into Supabase is scaffolded via `apps/api/app/db.py` (`get_supabase()
 
 ### `apps/api/.env`
 
-| Var                       | Default                    | Purpose                                   |
-| ------------------------- | -------------------------- | ----------------------------------------- |
-| `SUPABASE_URL`            | —                          | Supabase project URL                      |
-| `SUPABASE_KEY`            | —                          | Service-role or anon key                  |
-| `OLLAMA_HOST`             | `http://localhost:11434`   | Ollama HTTP endpoint                      |
-| `VLM_MODE`                | `real`                     | `real` calls Ollama; `mock` returns canned frame/chat responses — see [Mock VLM mode](#mock-vlm-mode-development) |
-| `VLM_MODEL`               | `gemma3:4b`                | Ollama model tag                          |
-| `UPLOAD_DIR`              | `./uploads`                | Where uploaded videos are stored          |
-| `FRAMES_DIR`              | `./frames`                 | Where extracted frames are stored         |
-| `FRAME_INTERVAL_SECONDS`  | `2`                        | Seconds between sampled frames            |
+| Var                      | Default                  | Purpose                                                                                                           |
+| ------------------------ | ------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| `SUPABASE_URL`           | —                        | Supabase project URL                                                                                              |
+| `SUPABASE_KEY`           | —                        | Service-role or anon key                                                                                          |
+| `OLLAMA_HOST`            | `http://localhost:11434` | Ollama HTTP endpoint                                                                                              |
+| `VLM_MODE`               | `real`                   | `real` calls Ollama; `mock` returns canned frame/chat responses — see [Mock VLM mode](#mock-vlm-mode-development) |
+| `VLM_MODEL`              | `gemma3:4b`              | Ollama model tag                                                                                                  |
+| `UPLOAD_DIR`             | `./uploads`              | Where uploaded videos are stored                                                                                  |
+| `FRAMES_DIR`             | `./frames`               | Where extracted frames are stored                                                                                 |
+| `FRAME_INTERVAL_SECONDS` | `2`                      | Seconds between sampled frames                                                                                    |
 
 ### `apps/desktop/.env`
 
-| Var                    | Purpose                                    |
-| ---------------------- | ------------------------------------------ |
-| `VITE_SUPABASE_URL`    | Supabase project URL (client-side)         |
-| `VITE_SUPABASE_KEY`    | Supabase **anon** key (client-side only)   |
-| `VITE_API_URL`         | Base URL of the FastAPI backend            |
+| Var                 | Purpose                                  |
+| ------------------- | ---------------------------------------- |
+| `VITE_SUPABASE_URL` | Supabase project URL (client-side)       |
+| `VITE_SUPABASE_KEY` | Supabase **anon** key (client-side only) |
+| `VITE_API_URL`      | Base URL of the FastAPI backend          |
 
 > Never put a Supabase service-role key in `VITE_*` — those are bundled into the client.
 
@@ -620,6 +628,8 @@ Add your frontend origin to `cors_origins` in `apps/api/app/config.py`. Tauri's 
 ---
 
 ## Roadmap
+
+This checklist tracks likely next implementation steps for the current repo. It is separate from the hackathon-specific milestones described in `AEGIS_Project_Summary.docx`.
 
 - [ ] Persist uploads/analyses/reports into Supabase tables on write
 - [ ] Stream `/analyze` progress via SSE/WebSocket so the UI can show per-frame progress

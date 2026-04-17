@@ -1,49 +1,147 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
-import { Report } from "../lib/api";
+import { useMemo } from "react";
+import type { FrameAnalysis, Report } from "../lib/api";
+import type { MapMarkerPoint } from "../lib/mockData";
+import { Map, Marker, SeverityDot, FitBounds } from "./ui/map";
 
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
-
-const DefaultIcon = L.icon({
-  iconUrl: markerIcon,
-  iconRetinaUrl: markerIcon2x,
-  shadowUrl: markerShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-});
-L.Marker.prototype.options.icon = DefaultIcon;
-
-interface Props {
-  report: Report | null;
+function severityColor(level: number): string {
+  if (level >= 5) return "#dc2626";
+  if (level === 4) return "#f97316";
+  if (level === 3) return "#eab308";
+  return "#22c55e";
 }
 
-export default function MapView({ report }: Props) {
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function severityLevelFromReport(sev: Report["overall_severity"]): number {
+  switch (sev) {
+    case "destroyed":
+      return 5;
+    case "severe":
+      return 4;
+    case "moderate":
+      return 3;
+    case "minor":
+      return 2;
+    case "none":
+    default:
+      return 1;
+  }
+}
+
+function severityLevelFromFrame(sev: FrameAnalysis["severity"]): number {
+  switch (sev) {
+    case "destroyed":
+      return 5;
+    case "severe":
+      return 4;
+    case "moderate":
+      return 3;
+    case "minor":
+      return 2;
+    case "none":
+    default:
+      return 1;
+  }
+}
+
+interface Props {
+  report?: Report | null;
+  /** Multi-point dashboard view; when non-empty, used instead of single report marker. */
+  markers?: MapMarkerPoint[];
+  /** Highlights one marker when syncing with a list selection (multi-marker mode only). */
+  selectedMarkerId?: string | null;
+  /** Per-frame analysis pins (streaming / workspace). */
+  analysisFrames?: FrameAnalysis[];
+  /** Highlights frame marker when syncing with feed / table / alerts. */
+  selectedFrameIndex?: number | null;
+}
+
+export default function MapView({
+  report,
+  markers,
+  selectedMarkerId,
+  analysisFrames,
+  selectedFrameIndex,
+}: Props) {
+  const multiPoints = useMemo(
+    () => (markers?.length ? markers.map((m) => [m.lng, m.lat] as [number, number]) : []),
+    [markers]
+  );
+
+  const framePoints = useMemo(() => {
+    if (!analysisFrames?.length) return [];
+    return analysisFrames
+      .filter((f) => f.location)
+      .map((f) => [f.location!.lng, f.location!.lat] as [number, number]);
+  }, [analysisFrames]);
+
   const center: [number, number] = report?.location
-    ? [report.location.lat, report.location.lng]
-    : [20, 0];
-  const zoom = report?.location ? 14 : 2;
+    ? [report.location.lng, report.location.lat]
+    : framePoints[0]
+      ? framePoints[0]
+      : [125.5, 8.5];
+  const zoom =
+    markers?.length || framePoints.length
+      ? 8
+      : report?.location
+        ? 14
+        : 7;
+
+  const showMulti = Boolean(markers && markers.length > 0);
+  const showFrames = Boolean(analysisFrames && analysisFrames.length > 0 && framePoints.length > 0);
 
   return (
-    <MapContainer
-      center={center}
-      zoom={zoom}
-      style={{ height: "100%", width: "100%" }}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {report?.location && (
-        <Marker position={[report.location.lat, report.location.lng]}>
-          <Popup>
-            <strong>Severity:</strong> {report.overall_severity}
-            <br />
-            {report.summary}
-          </Popup>
+    <Map center={center} zoom={zoom} className="h-full min-h-0">
+      {showMulti && markers && (
+        <>
+          <FitBounds points={multiPoints} />
+          {markers.map((m) => (
+            <Marker
+              key={m.id}
+              lngLat={[m.lng, m.lat]}
+              popupHtml={`<strong>${escapeHtml(m.label)}</strong><br/>SEV ${m.severity}`}
+            >
+              <SeverityDot
+                color={severityColor(m.severity)}
+                selected={selectedMarkerId != null && m.id === selectedMarkerId}
+              />
+            </Marker>
+          ))}
+        </>
+      )}
+      {!showMulti && showFrames && analysisFrames && (
+        <>
+          <FitBounds points={framePoints} />
+          {analysisFrames
+            .filter((f) => f.location)
+            .map((f) => (
+              <Marker
+                key={f.frame_index}
+                lngLat={[f.location!.lng, f.location!.lat]}
+                popupHtml={`<strong>Frame ${f.frame_index}</strong><br/>${escapeHtml(f.severity)}<br/>${escapeHtml(f.description.slice(0, 120))}`}
+              >
+                <SeverityDot
+                  color={severityColor(severityLevelFromFrame(f.severity))}
+                  selected={selectedFrameIndex != null && f.frame_index === selectedFrameIndex}
+                />
+              </Marker>
+            ))}
+        </>
+      )}
+      {!showMulti && !showFrames && report?.location && (
+        <Marker
+          lngLat={[report.location.lng, report.location.lat]}
+          popupHtml={`<strong>Severity:</strong> ${escapeHtml(String(report.overall_severity))}<br/>${escapeHtml(report.summary)}`}
+        >
+          <SeverityDot color={severityColor(severityLevelFromReport(report.overall_severity))} />
         </Marker>
       )}
-    </MapContainer>
+    </Map>
   );
 }
