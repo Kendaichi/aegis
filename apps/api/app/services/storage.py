@@ -33,7 +33,5 @@ def download_to_temp(storage_path: str, suffix: str) -> Path:
 
 def get_signed_url(storage_path: str, expires_in: int = 3600) -> str:
     sb = get_supabase()
-    result = sb.storage.from_(settings.supabase_bucket).create_signed_url(
-        storage_path, expires_in
-    )
+    result = sb.storage.from_(settings.supabase_bucket).create_signed_url(storage_path, expires_in)
     return result.get("signedURL") or result.get("signed_url") or ""

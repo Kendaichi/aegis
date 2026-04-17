@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException, status
 from app.config import settings
 from app.db import get_supabase
 from app.routers.analyze import _load_cached_frames, _persist_frames
-from app.schemas import AnalyzeRequest, FrameAnalysis, GeoPoint, Report, ReportRequest
+from app.schemas import AnalyzeRequest, GeoPoint, Report, ReportRequest
 from app.services.report import aggregate_severity, summarize
 from app.services.storage import download_to_temp
 from app.services.video import extract_frames
@@ -47,9 +47,7 @@ def generate_report(req: ReportRequest) -> Report:
         try:
             interval = settings.frame_interval_seconds
             frame_paths = extract_frames(video_path, req.video_id, interval_seconds=interval)
-            analyses = [
-                analyze_frame(p, i, i * interval) for i, p in enumerate(frame_paths)
-            ]
+            analyses = [analyze_frame(p, i, i * interval) for i, p in enumerate(frame_paths)]
         finally:
             video_path.unlink(missing_ok=True)
 
@@ -90,20 +88,16 @@ def generate_report(req: ReportRequest) -> Report:
 def get_report(report_id: str) -> Report:
     """Fetch a previously generated report by its ID."""
     sb = get_supabase()
-    result = (
-        sb.table("reports")
-        .select("*")
-        .eq("report_id", report_id)
-        .maybe_single()
-        .execute()
-    )
+    result = sb.table("reports").select("*").eq("report_id", report_id).maybe_single().execute()
     if not result.data:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"report_id {report_id} not found",
         )
     row = result.data
-    location = GeoPoint(lat=row["lat"], lng=row["lng"]) if row.get("lat") and row.get("lng") else None
+    location = (
+        GeoPoint(lat=row["lat"], lng=row["lng"]) if row.get("lat") and row.get("lng") else None
+    )
     return Report(
         report_id=row["report_id"],
         video_id=row["video_id"],
@@ -127,7 +121,9 @@ def list_reports(video_id: str | None = None) -> list[Report]:
 
     reports = []
     for row in result.data or []:
-        location = GeoPoint(lat=row["lat"], lng=row["lng"]) if row.get("lat") and row.get("lng") else None
+        location = (
+            GeoPoint(lat=row["lat"], lng=row["lng"]) if row.get("lat") and row.get("lng") else None
+        )
         reports.append(
             Report(
                 report_id=row["report_id"],

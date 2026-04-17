@@ -59,9 +59,7 @@ def _persist_messages(session_id: str, messages: list[dict[str, str]]) -> None:
             for m in messages
         ]
     ).execute()
-    sb.table("chat_sessions").update({"updated_at": now}).eq(
-        "session_id", session_id
-    ).execute()
+    sb.table("chat_sessions").update({"updated_at": now}).eq("session_id", session_id).execute()
 
 
 def _build_context_messages(report_id: str | None, video_id: str | None) -> list[dict[str, str]]:
