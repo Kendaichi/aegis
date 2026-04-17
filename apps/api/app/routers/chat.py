@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from functools import lru_cache
 
 from fastapi import APIRouter, HTTPException, status
 
@@ -62,6 +63,7 @@ def _persist_messages(session_id: str, messages: list[dict[str, str]]) -> None:
     sb.table("chat_sessions").update({"updated_at": now}).eq("session_id", session_id).execute()
 
 
+@lru_cache(maxsize=128)
 def _build_context_messages(report_id: str | None, video_id: str | None) -> list[dict[str, str]]:
     """Inject persisted report/analysis context into the system prompt."""
     context: list[dict[str, str]] = []
