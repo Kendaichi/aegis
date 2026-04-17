@@ -64,11 +64,7 @@ def get_analysis(video_id: str) -> AnalyzeResponse:
     """Return cached frame analyses for a previously analyzed video."""
     sb = get_supabase()
     video_row = (
-        sb.table("videos")
-        .select("video_id")
-        .eq("video_id", video_id)
-        .maybe_single()
-        .execute()
+        sb.table("videos").select("video_id").eq("video_id", video_id).maybe_single().execute()
     )
     if not video_row.data:
         raise HTTPException(
