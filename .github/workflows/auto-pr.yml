@@ -5,6 +5,9 @@ on:
     branches:
       - backend
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   create-pr:
     name: Open or update PR → main
