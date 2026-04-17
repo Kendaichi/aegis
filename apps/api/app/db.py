@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from supabase import Client, create_client
+from supabase import Client, create_client  # type: ignore[attr-defined]
 
 from app.config import settings
 

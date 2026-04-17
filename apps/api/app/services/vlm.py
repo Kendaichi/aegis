@@ -143,14 +143,14 @@ def analyze_frame(
         return _parse_frame_json(raw, frame_index, timestamp_seconds)
 
     client = _get_client()
-    response = client.generate(
+    ollama_response = client.generate(
         model=settings.vlm_model,
         prompt=FRAME_PROMPT,
         images=[str(frame_path)],
         format="json",
         stream=False,
     )
-    raw = response.get("response", "").strip()
+    raw = (ollama_response.response or "").strip()
     return _parse_frame_json(raw, frame_index, timestamp_seconds)
 
 
@@ -167,16 +167,16 @@ def chat_completion(messages: list[dict[str, str]]) -> str:
         )
 
     if settings.vlm_mode == "zai":
-        response = _get_zai_client().chat.completions.create(
+        zai_response = _get_zai_client().chat.completions.create(
             model=settings.vlm_model,
-            messages=messages,
+            messages=messages,  # type: ignore[arg-type]
         )
-        return response.choices[0].message.content or ""
+        return zai_response.choices[0].message.content or ""
 
     client = _get_client()
-    response = client.chat(
+    ollama_response = client.chat(
         model=settings.vlm_model,
         messages=messages,
         stream=False,
     )
-    return response["message"]["content"]
+    return ollama_response.message.content or ""

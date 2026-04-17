@@ -13,6 +13,7 @@ class Settings(BaseSettings):
 
     supabase_url: str = ""
     supabase_key: str = ""
+    supabase_bucket: str = "videos"
     database_url: str = ""  # postgresql://postgres:[password]@db.[ref].supabase.co:5432/postgres
     ollama_host: str = "http://localhost:11434"
 
