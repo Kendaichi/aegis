@@ -10,6 +10,13 @@ router = APIRouter(prefix="/analyze", tags=["analyze"])
 
 @router.post("", response_model=AnalyzeResponse)
 def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
+    """
+    Analyze a uploaded video frame-by-frame.
+
+    Extracts frames at the requested interval (or the server default), runs
+    each frame through the vision model, and returns per-frame damage
+    assessments including severity, detected hazards, and confidence scores.
+    """
     matches = list(settings.upload_dir.glob(f"{req.video_id}.*"))
     if not matches:
         raise HTTPException(

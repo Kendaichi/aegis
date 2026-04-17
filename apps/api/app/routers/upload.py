@@ -14,6 +14,12 @@ _ALLOWED_PREFIXES = ("video/",)
 
 @router.post("", response_model=UploadResponse, status_code=status.HTTP_201_CREATED)
 async def upload_video(file: UploadFile = File(...)) -> UploadResponse:
+    """
+    Upload a disaster footage video.
+
+    Accepts any `video/*` content type. The returned `video_id` is required
+    by the `/analyze`, `/report`, and `/chat` endpoints.
+    """
     if file.content_type and not file.content_type.startswith(_ALLOWED_PREFIXES):
         raise HTTPException(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,

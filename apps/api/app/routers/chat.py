@@ -14,6 +14,13 @@ SYSTEM_PROMPT = (
 
 @router.post("", response_model=ChatResponse)
 def chat(req: ChatRequest) -> ChatResponse:
+    """
+    Chat with the AEGIS disaster-assessment assistant.
+
+    Supports multi-turn conversations. Optionally pass a `report_id` or
+    `video_id` to give the assistant context about a specific assessment.
+    Include all prior turns in `messages` to maintain conversation history.
+    """
     messages: list[dict[str, str]] = [{"role": "system", "content": SYSTEM_PROMPT}]
     if req.report_id:
         messages.append(

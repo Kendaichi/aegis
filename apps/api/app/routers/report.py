@@ -14,6 +14,13 @@ router = APIRouter(prefix="/report", tags=["report"])
 
 @router.post("", response_model=Report)
 def generate_report(req: ReportRequest) -> Report:
+    """
+    Generate a full disaster assessment report from a video.
+
+    Runs frame extraction and VLM analysis internally, then aggregates the
+    results into a structured report with an overall severity rating, key
+    findings, and actionable recommendations for first responders.
+    """
     matches = list(settings.upload_dir.glob(f"{req.video_id}.*"))
     if not matches:
         raise HTTPException(
