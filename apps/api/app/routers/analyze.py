@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from functools import lru_cache
 
 from fastapi import APIRouter, HTTPException, status
 
@@ -12,6 +13,7 @@ from app.services.vlm import analyze_frame
 router = APIRouter(prefix="/analyze", tags=["analyze"])
 
 
+@lru_cache(maxsize=256)
 def _load_cached_frames(video_id: str) -> list[FrameAnalysis] | None:
     sb = get_supabase()
     result = (
@@ -39,6 +41,7 @@ def _load_cached_frames(video_id: str) -> list[FrameAnalysis] | None:
 def _persist_frames(video_id: str, analyses: list[FrameAnalysis]) -> None:
     sb = get_supabase()
     sb.table("frame_analyses").delete().eq("video_id", video_id).execute()
+    _load_cached_frames.cache_clear()
     sb.table("frame_analyses").insert(
         [
             {
