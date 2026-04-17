@@ -2,7 +2,6 @@ services:
   - type: web
     name: aegis-api
     runtime: docker
-    dockerfilePath: ./apps/api/Dockerfile
     dockerContext: ./apps/api
     envVars:
       - key: VLM_MODE
