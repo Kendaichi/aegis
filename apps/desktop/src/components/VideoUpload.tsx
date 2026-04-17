@@ -1,6 +1,7 @@
 import { FileVideo, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { api, Report } from "../lib/api";
+import { compressVideo } from "../lib/compress";
 
 interface Props {
   videoId: string | null;
@@ -16,9 +17,16 @@ export default function VideoUpload({ videoId, onUploaded, onReport }: Props) {
   async function handleFile(file: File) {
     setBusy(true);
     setError(null);
-    setStatus("Uploading footage...");
     try {
-      const res = await api.upload(file);
+      setStatus("Compressing footage...");
+      const { file: toUpload, skipped, originalSize, compressedSize } = await compressVideo(file);
+      if (!skipped) {
+        const pct = Math.round((1 - compressedSize / originalSize) * 100);
+        setStatus(`Compressed ${formatSize(originalSize)} -> ${formatSize(compressedSize)} (${pct}% smaller). Uploading...`);
+      } else {
+        setStatus("Uploading footage...");
+      }
+      const res = await api.upload(toUpload);
       onUploaded(res.video_id);
       setStatus(`Uploaded ${res.filename}`);
     } catch (error) {
@@ -26,6 +34,11 @@ export default function VideoUpload({ videoId, onUploaded, onReport }: Props) {
     } finally {
       setBusy(false);
     }
+  }
+
+  function formatSize(bytes: number) {
+    const mb = bytes / (1024 * 1024);
+    return mb >= 1 ? `${mb.toFixed(1)} MB` : `${(bytes / 1024).toFixed(0)} KB`;
   }
 
   async function generateReport() {
