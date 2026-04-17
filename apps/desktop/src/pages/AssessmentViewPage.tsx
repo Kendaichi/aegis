@@ -1,14 +1,10 @@
 import { ArrowLeft, MapPin, Calendar, Clock } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MapView from "../components/Map";
 import { SeverityBadge, StatusBadge } from "../components/ui/Badges";
 import DetailedInsights from "../components/workspace/DetailedInsights";
-import type { FrameAnalysis } from "../lib/api";
-import {
-  MOCK_ASSESSMENTS,
-  MOCK_FRAMES_BY_ASSESSMENT_ID,
-  MOCK_REPORT_BY_ASSESSMENT_ID,
-} from "../lib/mockData";
+import { api, type FrameAnalysis, type Report, type VideoListItem } from "../lib/api";
+import type { AssessmentStatus, SeverityLevel } from "../lib/mockData";
 
 interface Props {
   assessmentId: string;
@@ -31,16 +27,109 @@ function countBySeverity(frames: FrameAnalysis[]) {
   return counts;
 }
 
-export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
-  const assessment = MOCK_ASSESSMENTS.find((a) => a.id === assessmentId);
-  const report = MOCK_REPORT_BY_ASSESSMENT_ID[assessmentId];
-  const frames = MOCK_FRAMES_BY_ASSESSMENT_ID[assessmentId] ?? [];
-  const [selectedFrameIndex, setSelectedFrameIndex] = useState<number | null>(null);
+function severityToLevel(sev: Report["overall_severity"] | undefined): SeverityLevel {
+  switch (sev) {
+    case "destroyed":
+      return 5;
+    case "severe":
+      return 4;
+    case "moderate":
+      return 3;
+    case "minor":
+    case "none":
+    default:
+      return 2;
+  }
+}
 
-  if (!assessment) {
+function filenameToTitle(filename: string): string {
+  const withoutExt = filename.replace(/\.[^.]+$/, "");
+  return withoutExt.replace(/[_-]+/g, " ").trim() || filename;
+}
+
+interface AssessmentHeader {
+  id: string;
+  title: string;
+  subtitle: string;
+  location: string;
+  date: string;
+  severity: SeverityLevel;
+  status: AssessmentStatus;
+}
+
+function buildHeader(video: VideoListItem, report: Report | null): AssessmentHeader {
+  const location =
+    video.location_name ??
+    (video.lat != null && video.lng != null
+      ? `${video.lat.toFixed(4)}, ${video.lng.toFixed(4)}`
+      : report?.location
+        ? `${report.location.lat.toFixed(4)}, ${report.location.lng.toFixed(4)}`
+        : "Unknown location");
+  return {
+    id: video.video_id,
+    title: video.title || filenameToTitle(video.filename),
+    subtitle: video.incident_type ?? video.content_type ?? "",
+    location,
+    date: new Date(video.created_at).toISOString().slice(0, 10),
+    severity: severityToLevel(report?.overall_severity),
+    status: report ? "complete" : (video.status as AssessmentStatus),
+  };
+}
+
+export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
+  const [header, setHeader] = useState<AssessmentHeader | null>(null);
+  const [report, setReport] = useState<Report | null>(null);
+  const [frames, setFrames] = useState<FrameAnalysis[]>([]);
+  const [selectedFrameIndex, setSelectedFrameIndex] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const [videosRes, reports, framesRes] = await Promise.all([
+          api.listVideos(),
+          api.listReports(assessmentId),
+          api.getFrames(assessmentId).catch(() => ({ frames: [] as FrameAnalysis[] })),
+        ]);
+        if (cancelled) return;
+
+        const video = videosRes.videos.find((v) => v.video_id === assessmentId);
+        if (!video) {
+          setError("Assessment not found.");
+          return;
+        }
+        const latestReport = reports[0] ?? null;
+        setReport(latestReport);
+        setFrames(framesRes.frames);
+        setHeader(buildHeader(video, latestReport));
+      } catch (e) {
+        if (cancelled) return;
+        setError(e instanceof Error ? e.message : "Failed to load assessment");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [assessmentId]);
+
+  if (loading) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-4">
-        <p className="text-slate-400">Assessment not found.</p>
+        <p className="text-slate-400">Loading assessment...</p>
+      </div>
+    );
+  }
+
+  if (error || !header) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center gap-4">
+        <p className="text-slate-400">{error ?? "Assessment not found."}</p>
         <button type="button" onClick={onBack} className="button-secondary">
           <ArrowLeft className="h-4 w-4" /> Back to Assessments
         </button>
@@ -65,22 +154,24 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
           </button>
           <div>
             <div className="flex items-center gap-3">
-              <span className="font-mono text-[12px] text-aegis-accent">{assessment.id}</span>
-              <StatusBadge status={assessment.status} />
-              <SeverityBadge level={assessment.severity} />
+              <span className="font-mono text-[12px] text-aegis-accent">
+                {header.id.slice(0, 10)}
+              </span>
+              <StatusBadge status={header.status} />
+              <SeverityBadge level={header.severity} />
             </div>
-            <h1 className="mt-1 text-lg font-semibold text-white">{assessment.title}</h1>
+            <h1 className="mt-1 text-lg font-semibold text-white">{header.title}</h1>
           </div>
         </div>
         <div className="flex items-center gap-6 text-[12px] text-slate-400">
           <span className="flex items-center gap-1.5">
-            <MapPin className="h-3.5 w-3.5" /> {assessment.location}
+            <MapPin className="h-3.5 w-3.5" /> {header.location}
           </span>
           <span className="flex items-center gap-1.5">
-            <Calendar className="h-3.5 w-3.5" /> {assessment.date}
+            <Calendar className="h-3.5 w-3.5" /> {header.date}
           </span>
           <span className="flex items-center gap-1.5">
-            <Clock className="h-3.5 w-3.5" /> {assessment.subtitle}
+            <Clock className="h-3.5 w-3.5" /> {header.subtitle}
           </span>
         </div>
       </header>
@@ -179,7 +270,7 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
           ) : (
             <div className="flex flex-1 flex-col items-center justify-center gap-3 text-slate-500">
               <p className="text-[14px]">
-                {assessment.status === "pending"
+                {header.status === "pending"
                   ? "This assessment is pending — no analysis data yet."
                   : "Analysis is in progress..."}
               </p>
