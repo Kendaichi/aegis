@@ -7,9 +7,10 @@ const FILTERS: Array<AssessmentStatus | "all"> = ["all", "complete", "analyzing"
 
 interface Props {
   onNewAssessment?: () => void;
+  onViewAssessment?: (id: string) => void;
 }
 
-export default function AssessmentsPage({ onNewAssessment }: Props) {
+export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: Props) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("all");
 
@@ -92,7 +93,7 @@ export default function AssessmentsPage({ onNewAssessment }: Props) {
             </thead>
             <tbody>
               {rows.map((r) => (
-                <tr key={r.id} className="table-row-interactive">
+                <tr key={r.id} className="table-row-interactive cursor-pointer" onClick={() => onViewAssessment?.(r.id)}>
                   <td className="px-4 py-3 font-mono text-aegis-accent">{r.id}</td>
                   <td className="px-4 py-3">
                     <div className="font-medium text-slate-100">{r.title}</div>
@@ -110,6 +111,7 @@ export default function AssessmentsPage({ onNewAssessment }: Props) {
                   <td className="px-4 py-3 text-right">
                     <button
                       type="button"
+                      onClick={() => onViewAssessment?.(r.id)}
                       className="inline-flex items-center gap-1 text-[12px] font-medium text-aegis-accent transition hover:text-blue-300"
                     >
                       View

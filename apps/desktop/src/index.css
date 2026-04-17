@@ -27,6 +27,34 @@ body {
   color: #f8fafc;
 }
 
+/* ── Modern scrollbar ── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.15) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.15);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.3);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 @layer components {
   .card {
     @apply rounded-card border border-aegis-border bg-aegis-surface shadow-card backdrop-blur-sm;
