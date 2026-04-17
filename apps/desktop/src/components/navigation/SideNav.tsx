@@ -9,12 +9,13 @@ import {
   Settings,
   Upload,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   BOOKMARKED_AREAS,
-  SIDEBAR_INCIDENTS,
   type SidebarIncident,
   type AssessmentStatus,
 } from "../../lib/mockData";
+import { fetchActiveIncidents, subscribeToQueueUpdates } from "../../lib/supabaseQueries";
 import type { NavView } from "../layout/AppShell";
 import { SeverityBadge } from "../ui/Badges";
 
@@ -67,12 +68,50 @@ const primaryItems: Array<{
   { id: "reports", label: "Reports", icon: BarChart3 },
 ];
 
+function useActiveIncidents(enabled: boolean): {
+  incidents: SidebarIncident[];
+  loading: boolean;
+} {
+  const [incidents, setIncidents] = useState<SidebarIncident[]>([]);
+  const [loading, setLoading] = useState(enabled);
+
+  useEffect(() => {
+    if (!enabled) return;
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const next = await fetchActiveIncidents(3);
+        if (!cancelled) setIncidents(next);
+      } catch {
+        if (!cancelled) setIncidents([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    void load();
+    const unsubscribe = subscribeToQueueUpdates(() => {
+      void load();
+    });
+
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
+  }, [enabled]);
+
+  return { incidents, loading };
+}
+
 export default function SideNav({
   active,
   onNavigate,
   onUploadClick,
   showDashboardPanel = false,
 }: Props) {
+  const { incidents, loading } = useActiveIncidents(showDashboardPanel);
+
   return (
     <div className="flex h-full shrink-0">
       <aside className="flex w-20 shrink-0 flex-col items-center border-r border-aegis-border bg-aegis-surface/70 px-3 py-4 backdrop-blur-xl">
@@ -175,7 +214,17 @@ export default function SideNav({
               <h2 className="section-title">Active Incidents</h2>
             </div>
             <div className="flex flex-col gap-3">
-              {SIDEBAR_INCIDENTS.map((row) => (
+              {loading && incidents.length === 0 && (
+                <p className="rounded-card border border-dashed border-aegis-border bg-aegis-surface2/60 p-3 text-[12px] text-slate-500">
+                  Loading live queue...
+                </p>
+              )}
+              {!loading && incidents.length === 0 && (
+                <p className="rounded-card border border-dashed border-aegis-border bg-aegis-surface2/60 p-3 text-[12px] text-slate-500">
+                  No active incidents in the queue.
+                </p>
+              )}
+              {incidents.map((row) => (
                 <IncidentRow key={row.id} row={row} />
               ))}
             </div>

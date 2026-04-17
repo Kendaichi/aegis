@@ -1,12 +1,19 @@
 import { Layers, Maximize2 } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import MapView from "../components/Map";
 import MapContextPanel from "../components/map/MapContextPanel";
-import {
-  MAP_VIEW_MARKERS,
-  MAP_VIEW_SUMMARY,
-  type MapSeverityFilter,
+import type {
+  AssessmentStatus,
+  MapSeverityFilter,
+  MapViewMarker,
+  MapViewSummary,
 } from "../lib/mockData";
+import {
+  fetchMapMarkers,
+  fetchMarkerStatusMap,
+  subscribeToQueueUpdates,
+  summarizeMarkers,
+} from "../lib/supabaseQueries";
 
 const SEVERITY_FILTERS: Array<{ id: MapSeverityFilter; label: string }> = [
   { id: "all", label: "All" },
@@ -16,23 +23,76 @@ const SEVERITY_FILTERS: Array<{ id: MapSeverityFilter; label: string }> = [
   { id: 2, label: "SEV 2" },
 ];
 
+const EMPTY_SUMMARY: MapViewSummary = {
+  critical: 0,
+  severe: 0,
+  moderate: 0,
+  minor: 0,
+  roadsBlocked: 0,
+  lastUpdated: "—",
+};
+
 export default function MapViewPage() {
   const [severityFilter, setSeverityFilter] = useState<MapSeverityFilter>("all");
-  const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(
-    MAP_VIEW_MARKERS[0]?.id ?? null
-  );
+  const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
   const [showProvinces, setShowProvinces] = useState(true);
 
+  const [markers, setMarkers] = useState<MapViewMarker[]>([]);
+  const [summary, setSummary] = useState<MapViewSummary>(EMPTY_SUMMARY);
+  const [statusByMarker, setStatusByMarker] = useState<Record<string, AssessmentStatus>>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const [nextMarkers, nextStatuses] = await Promise.all([
+          fetchMapMarkers(),
+          fetchMarkerStatusMap(),
+        ]);
+        if (cancelled) return;
+        setMarkers(nextMarkers);
+        setSummary(summarizeMarkers(nextMarkers));
+        setStatusByMarker(nextStatuses);
+        setError(null);
+      } catch (e) {
+        if (cancelled) return;
+        setError(e instanceof Error ? e.message : "Failed to load map data");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    void load();
+    const unsubscribe = subscribeToQueueUpdates(() => {
+      void load();
+    });
+
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
+  }, []);
+
   const filteredMarkers = useMemo(() => {
-    if (severityFilter === "all") return MAP_VIEW_MARKERS;
-    return MAP_VIEW_MARKERS.filter((m) => m.severity === severityFilter);
-  }, [severityFilter]);
+    if (severityFilter === "all") return markers;
+    return markers.filter((m) => m.severity === severityFilter);
+  }, [markers, severityFilter]);
+
+  useEffect(() => {
+    if (!filteredMarkers.length) {
+      setSelectedMarkerId(null);
+      return;
+    }
+    if (!selectedMarkerId || !filteredMarkers.some((m) => m.id === selectedMarkerId)) {
+      setSelectedMarkerId(filteredMarkers[0].id);
+    }
+  }, [filteredMarkers, selectedMarkerId]);
 
   const setFilter = useCallback((value: MapSeverityFilter) => {
     setSeverityFilter(value);
-    const next =
-      value === "all" ? MAP_VIEW_MARKERS : MAP_VIEW_MARKERS.filter((m) => m.severity === value);
-    setSelectedMarkerId(next[0]?.id ?? null);
   }, []);
 
   return (
@@ -71,6 +131,12 @@ export default function MapViewPage() {
         </div>
       </div>
 
+      {error && (
+        <div className="card border border-red-500/30 bg-red-500/10 p-4 text-[13px] text-red-200">
+          {error}
+        </div>
+      )}
+
       <div className="card flex min-h-0 flex-1 overflow-hidden p-0">
         <section className="relative flex min-h-0 min-w-0 flex-1 flex-col">
           <div className="card-header">
@@ -78,7 +144,9 @@ export default function MapViewPage() {
               <p className="card-header-title">Coverage</p>
               <h2 className="mt-1 text-base font-semibold text-white">Caraga Region</h2>
               <p className="mt-1 text-[12px] text-slate-500">
-                {filteredMarkers.length} incident{filteredMarkers.length === 1 ? "" : "s"} shown
+                {loading
+                  ? "Loading incidents..."
+                  : `${filteredMarkers.length} incident${filteredMarkers.length === 1 ? "" : "s"} shown`}
               </p>
             </div>
           </div>
@@ -108,10 +176,11 @@ export default function MapViewPage() {
         </section>
 
         <MapContextPanel
-          summary={MAP_VIEW_SUMMARY}
+          summary={summary}
           incidents={filteredMarkers}
           selectedId={selectedMarkerId}
           onSelect={setSelectedMarkerId}
+          statusByMarkerId={statusByMarker}
         />
       </div>
     </div>
