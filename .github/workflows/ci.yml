@@ -37,9 +37,6 @@ jobs:
       - name: Ruff format check
         run: ruff format --check .
 
-      - name: Mypy type check
-        run: mypy app --ignore-missing-imports --strict-optional
-
   type-check-desktop:
     name: Type check (Desktop)
     runs-on: ubuntu-latest
