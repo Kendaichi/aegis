@@ -106,7 +106,7 @@ aegis/
 | Schemas   | Pydantic v2 (+ `pydantic-settings` for env)   |
 | Server    | Uvicorn                                       |
 | DB / Auth | Supabase (`supabase-py`)                      |
-| VLM       | `ollama` Python client → `gemma3:4b`          |
+| VLM       | `z.ai` Python client → `glm-4.6v-flash`       |
 | Video     | `ffmpeg-python` (requires `ffmpeg` on `PATH`) |
 
 ---

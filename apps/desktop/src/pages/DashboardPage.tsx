@@ -5,7 +5,7 @@ import StatsCards from "../components/dashboard/StatsCards";
 import SeverityDistribution from "../components/dashboard/SeverityDistribution";
 import RecentAssessments from "../components/dashboard/RecentAssessments";
 import LiveActivity from "../components/dashboard/LiveActivity";
-import { DASHBOARD_MAP_MARKERS, DASHBOARD_STATS } from "../lib/mockData";
+import { DASHBOARD_MAP_MARKERS } from "../lib/mockData";
 
 export default function DashboardPage() {
   const mapSectionRef = useRef<HTMLElement>(null);
@@ -51,7 +51,7 @@ export default function DashboardPage() {
         </button>
       </div>
 
-      <StatsCards stats={DASHBOARD_STATS} />
+      <StatsCards />
 
       <div className="grid min-h-0 flex-1 grid-cols-1 gap-4 xl:grid-cols-12">
         <div className="flex min-h-0 flex-col gap-4 xl:col-span-8">

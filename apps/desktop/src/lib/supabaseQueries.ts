@@ -11,6 +11,7 @@ import type {
   ActivityItem,
   AssessmentRow,
   AssessmentStatus,
+  DashboardStats,
   MapViewMarker,
   MapViewSummary,
   SeverityDistributionItem,
@@ -228,6 +229,78 @@ export async function fetchMarkerStatusMap(): Promise<Record<string, AssessmentS
       : (v.status as AssessmentStatus);
   }
   return out;
+}
+
+export async function fetchDashboardStats(): Promise<DashboardStats> {
+  const { videos, reports } = await loadVideosAndReports();
+
+  const inProgress = videos.filter((v) => v.status === "analyzing").length;
+  const pending = videos.filter((v) => v.status === "pending").length;
+
+  const reportByVideo = buildReportByVideo(reports);
+  const barangays = new Set<string>();
+  for (const v of videos) {
+    if (reportByVideo.has(v.video_id) && v.location_name) {
+      barangays.add(v.location_name);
+    }
+  }
+
+  const now = new Date();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const startOfYesterday = startOfToday - 24 * 60 * 60 * 1000;
+
+  let assessmentsToday = 0;
+  let assessmentsYesterday = 0;
+  for (const v of videos) {
+    const ts = new Date(v.created_at).getTime();
+    if (ts >= startOfToday) assessmentsToday += 1;
+    else if (ts >= startOfYesterday) assessmentsYesterday += 1;
+  }
+
+  const videoCreatedAt = new Map(videos.map((v) => [v.video_id, new Date(v.created_at).getTime()]));
+  const durationsMs: number[] = [];
+  for (const r of reports) {
+    const uploadedTs = videoCreatedAt.get(r.video_id);
+    if (uploadedTs == null) continue;
+    const elapsed = new Date(r.created_at).getTime() - uploadedTs;
+    if (elapsed > 0) durationsMs.push(elapsed);
+  }
+  const avgAssessmentTimeMinutes =
+    durationsMs.length === 0
+      ? 0
+      : Math.round(durationsMs.reduce((a, b) => a + b, 0) / durationsMs.length / 60000);
+
+  return {
+    activeAssessments: {
+      total: inProgress + pending,
+      inProgress,
+      pending,
+    },
+    affectedBarangays: barangays.size,
+    assessmentsToday,
+    deltaFromYesterday: assessmentsToday - assessmentsYesterday,
+    avgAssessmentTimeMinutes,
+  };
+}
+
+export async function fetchBookmarkedAreas(limit = 5): Promise<string[]> {
+  const { data, error } = await supabase
+    .from("videos")
+    .select("location_name")
+    .not("location_name", "is", null);
+  if (error) throw error;
+
+  const counts = new Map<string, number>();
+  for (const row of (data ?? []) as Array<{ location_name: string | null }>) {
+    const name = row.location_name?.trim();
+    if (!name) continue;
+    counts.set(name, (counts.get(name) ?? 0) + 1);
+  }
+
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, limit)
+    .map(([name]) => name);
 }
 
 export async function fetchActivityFeed(limit = 8): Promise<ActivityItem[]> {
