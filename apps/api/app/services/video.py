@@ -22,8 +22,7 @@ def extract_frames(
     fps = 1.0 / max(interval, 0.1)
 
     (
-        ffmpeg
-        .input(str(video_path))
+        ffmpeg.input(str(video_path))
         .output(pattern, vf=f"fps={fps}", **{"qscale:v": 2})
         .overwrite_output()
         .run(quiet=True)

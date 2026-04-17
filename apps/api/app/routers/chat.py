@@ -23,13 +23,9 @@ def chat(req: ChatRequest) -> ChatResponse:
     """
     messages: list[dict[str, str]] = [{"role": "system", "content": SYSTEM_PROMPT}]
     if req.report_id:
-        messages.append(
-            {"role": "system", "content": f"Active report_id: {req.report_id}"}
-        )
+        messages.append({"role": "system", "content": f"Active report_id: {req.report_id}"})
     if req.video_id:
-        messages.append(
-            {"role": "system", "content": f"Active video_id: {req.video_id}"}
-        )
+        messages.append({"role": "system", "content": f"Active video_id: {req.video_id}"})
     messages.extend({"role": m.role, "content": m.content} for m in req.messages)
 
     reply = chat_completion(messages)

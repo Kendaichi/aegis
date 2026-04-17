@@ -31,9 +31,7 @@ def generate_report(req: ReportRequest) -> Report:
 
     interval = settings.frame_interval_seconds
     frame_paths = extract_frames(video_path, req.video_id, interval_seconds=interval)
-    analyses = [
-        analyze_frame(p, i, i * interval) for i, p in enumerate(frame_paths)
-    ]
+    analyses = [analyze_frame(p, i, i * interval) for i, p in enumerate(frame_paths)]
 
     summary, findings, recs = summarize(analyses)
 
