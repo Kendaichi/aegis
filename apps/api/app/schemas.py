@@ -30,9 +30,11 @@ class UploadResponse(BaseModel):
 
 class VideoListItem(BaseModel):
     video_id: str = Field(..., description="Unique identifier for the uploaded video")
-    filename: str = Field(..., description="Filename as stored on disk")
+    filename: str = Field(..., description="Original filename of the uploaded video")
     size_bytes: int = Field(..., description="File size in bytes")
+    content_type: str | None = Field(None, description="MIME type of the uploaded file")
     created_at: datetime = Field(..., description="UTC timestamp of when the file was uploaded")
+    url: str | None = Field(None, description="Signed URL for temporary playback access")
 
 
 class VideoListResponse(BaseModel):
@@ -111,6 +113,9 @@ class ChatMessage(BaseModel):
 
 
 class ChatRequest(BaseModel):
+    session_id: str | None = Field(
+        None, description="Existing chat session ID to continue a conversation"
+    )
     report_id: str | None = Field(
         None, description="Optional report ID to give the assistant context about a specific report"
     )
@@ -118,9 +123,10 @@ class ChatRequest(BaseModel):
         None, description="Optional video ID to give the assistant context about a specific video"
     )
     messages: list[ChatMessage] = Field(
-        ..., description="Conversation history; include all prior turns for multi-turn chat"
+        ..., description="New messages to send; prior history is loaded from the session"
     )
 
 
 class ChatResponse(BaseModel):
+    session_id: str = Field(..., description="Session ID to pass in follow-up requests")
     message: ChatMessage = Field(..., description="The assistant's reply")
