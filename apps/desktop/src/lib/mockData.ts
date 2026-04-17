@@ -3,7 +3,7 @@
  * Independent of API contracts until backend integration.
  */
 
-import type { Report } from "./api";
+import type { DamageSeverity, FrameAnalysis, Report } from "./api";
 
 export type AssessmentStatus = "complete" | "analyzing" | "pending";
 
@@ -471,6 +471,104 @@ function reportForAssessment(
     created_at: created,
   };
 }
+
+/** Mock frames per assessment for the view screen */
+function generateFrames(
+  _assessmentId: string,
+  baseLat: number,
+  baseLng: number,
+  count: number,
+  hazardType: string
+): FrameAnalysis[] {
+  const severities: DamageSeverity[] = ["none", "minor", "moderate", "severe", "destroyed"];
+  const hazardSets: Record<string, string[][]> = {
+    Flooding: [
+      ["flooding", "debris"],
+      ["flooding", "access blockage"],
+      ["flooding"],
+      ["road damage", "flooding"],
+      ["flooding", "structural collapse"],
+    ],
+    Landslide: [
+      ["landslide", "debris"],
+      ["slope instability"],
+      ["road damage", "landslide"],
+      ["debris"],
+      ["landslide", "structural collapse"],
+    ],
+    "Typhoon Damage": [
+      ["wind damage", "debris"],
+      ["structural collapse"],
+      ["flooding", "wind damage"],
+      ["debris", "access blockage"],
+      ["structural collapse", "flooding"],
+    ],
+    Earthquake: [
+      ["structural collapse", "debris"],
+      ["ground fracture"],
+      ["structural collapse"],
+      ["debris", "access blockage"],
+      ["structural collapse", "trap"],
+    ],
+  };
+  const hazards = hazardSets[hazardType] ?? hazardSets.Flooding;
+  const descriptions: Record<string, string[]> = {
+    Flooding: [
+      "Standing water observed around residential structures.",
+      "Road submerged with debris accumulation.",
+      "Flood line visible on building facades.",
+      "Bridge approach partially submerged.",
+      "Deep water blocking main access route.",
+    ],
+    Landslide: [
+      "Slope failure visible with debris flow onto road.",
+      "Hillside erosion threatening structures below.",
+      "Road partially obstructed by displaced soil.",
+      "Retaining wall failure near residential area.",
+      "Active debris flow channel identified.",
+    ],
+    "Typhoon Damage": [
+      "Roof sections missing from multiple structures.",
+      "Downed power lines across roadway.",
+      "Coastal surge damage to shoreline properties.",
+      "Wind-driven debris scattered across area.",
+      "Structural wall collapse from wind loading.",
+    ],
+    Earthquake: [
+      "Visible cracking in masonry building walls.",
+      "Partial structural collapse of older buildings.",
+      "Ground fracturing along road surface.",
+      "Debris from collapsed facade blocking access.",
+      "Building lean detected — possible foundation shift.",
+    ],
+  };
+  const descs = descriptions[hazardType] ?? descriptions.Flooding;
+
+  return Array.from({ length: count }, (_, i) => {
+    const sevIdx = Math.floor(((i * 7 + 3) % count) / (count / severities.length));
+    return {
+      frame_index: i,
+      timestamp_seconds: i * 2,
+      severity: severities[Math.min(sevIdx, severities.length - 1)],
+      description: descs[i % descs.length],
+      detected_hazards: hazards[i % hazards.length],
+      confidence: 0.72 + ((i * 3) % 20) / 100,
+      location: {
+        lat: baseLat + (Math.sin(i * 1.7) * 0.5 + 0.5) * 0.025 - 0.0125,
+        lng: baseLng + (Math.sin((i + 2) * 1.7) * 0.5 + 0.5) * 0.035 - 0.0175,
+      },
+    };
+  });
+}
+
+export const MOCK_FRAMES_BY_ASSESSMENT_ID: Record<string, FrameAnalysis[]> = {
+  "AE-2024-047": generateFrames("AE-2024-047", 8.9475, 125.5406, 127, "Flooding"),
+  "AE-2024-046": generateFrames("AE-2024-046", 8.9778, 125.4108, 84, "Landslide"),
+  "AE-2024-044": generateFrames("AE-2024-044", 8.1582, 126.2164, 56, "Flooding"),
+  "AE-2024-043": generateFrames("AE-2024-043", 8.7143, 125.7511, 91, "Flooding"),
+  "AE-2024-042": generateFrames("AE-2024-042", 9.7579, 125.4708, 72, "Typhoon Damage"),
+  "AE-2024-041": generateFrames("AE-2024-041", 9.0782, 126.1989, 140, "Earthquake"),
+};
 
 /** Full report payloads for preview (keyed by assessment id) */
 export const MOCK_REPORT_BY_ASSESSMENT_ID: Record<string, Report> = {
