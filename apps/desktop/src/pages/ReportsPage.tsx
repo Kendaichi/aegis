@@ -126,7 +126,7 @@ export default function ReportsPage() {
                 </button>
               </div>
               <div className="min-h-0 flex-1">
-                <ReportPreviewCard report={previewReport} />
+                <ReportPreviewCard report={previewReport} assessmentId={selectedAssessmentId ?? undefined} />
               </div>
             </div>
           )}
