@@ -46,6 +46,8 @@ export default function ProvinceLayers() {
     }
 
     return () => {
+      map.off("load", add);
+      if (!map.getStyle()) return;
       for (const p of PROVINCES) {
         if (map.getLayer(`${p.id}-line`)) map.removeLayer(`${p.id}-line`);
         if (map.getLayer(`${p.id}-fill`)) map.removeLayer(`${p.id}-fill`);
