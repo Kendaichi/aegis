@@ -3,6 +3,7 @@ services:
     name: aegis-api
     runtime: docker
     dockerContext: ./apps/api
+    dockerBuildCache: true
     envVars:
       - key: VLM_MODE
         value: mock
