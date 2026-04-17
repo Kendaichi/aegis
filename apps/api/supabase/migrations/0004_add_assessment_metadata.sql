@@ -14,9 +14,13 @@ alter table videos
     check (status in ('pending','analyzing','complete')),
   add column if not exists assessment_code text unique;
 
-alter table videos
-  add constraint videos_lat_range check (lat is null or (lat between -90 and 90)),
-  add constraint videos_lng_range check (lng is null or (lng between -180 and 180));
+do $$ begin
+  alter table videos add constraint videos_lat_range check (lat is null or (lat between -90 and 90));
+exception when duplicate_object then null; end $$;
+
+do $$ begin
+  alter table videos add constraint videos_lng_range check (lng is null or (lng between -180 and 180));
+exception when duplicate_object then null; end $$;
 
 create index if not exists videos_status_idx        on videos (status);
 create index if not exists videos_incident_type_idx on videos (incident_type);
@@ -33,6 +37,10 @@ alter table frame_analyses
   add column if not exists lat float,
   add column if not exists lng float;
 
-alter table frame_analyses
-  add constraint frame_analyses_lat_range check (lat is null or (lat between -90 and 90)),
-  add constraint frame_analyses_lng_range check (lng is null or (lng between -180 and 180));
+do $$ begin
+  alter table frame_analyses add constraint frame_analyses_lat_range check (lat is null or (lat between -90 and 90));
+exception when duplicate_object then null; end $$;
+
+do $$ begin
+  alter table frame_analyses add constraint frame_analyses_lng_range check (lng is null or (lng between -180 and 180));
+exception when duplicate_object then null; end $$;
