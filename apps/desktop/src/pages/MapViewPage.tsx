@@ -1,4 +1,4 @@
-import { Maximize2 } from "lucide-react";
+import { Layers, Maximize2 } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import MapView from "../components/Map";
 import MapContextPanel from "../components/map/MapContextPanel";
@@ -21,6 +21,7 @@ export default function MapViewPage() {
   const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(
     MAP_VIEW_MARKERS[0]?.id ?? null
   );
+  const [showProvinces, setShowProvinces] = useState(true);
 
   const filteredMarkers = useMemo(() => {
     if (severityFilter === "all") return MAP_VIEW_MARKERS;
@@ -55,6 +56,14 @@ export default function MapViewPage() {
               {label}
             </button>
           ))}
+          <button
+            type="button"
+            onClick={() => setShowProvinces((v) => !v)}
+            className={`button-secondary ${showProvinces ? "ring-1 ring-blue-500" : ""}`}
+          >
+            <Layers className="h-4 w-4" />
+            Provinces
+          </button>
           <button type="button" className="button-secondary">
             <Maximize2 className="h-4 w-4" />
             Fullscreen
@@ -75,7 +84,7 @@ export default function MapViewPage() {
           </div>
           <div className="min-h-0 flex-1 p-3">
             <div className="h-full overflow-hidden rounded-[1.25rem] border border-aegis-border bg-aegis-surface2">
-              <MapView markers={filteredMarkers} selectedMarkerId={selectedMarkerId} />
+              <MapView markers={filteredMarkers} selectedMarkerId={selectedMarkerId} showProvinces={showProvinces} />
             </div>
           </div>
           <div className="flex flex-wrap gap-3 border-t border-aegis-border px-4 py-3 text-[11px] text-slate-400">

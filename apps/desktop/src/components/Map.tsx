@@ -1,7 +1,9 @@
-import { useMemo } from "react";
+import { Suspense, lazy, useMemo } from "react";
 import type { FrameAnalysis, Report } from "../lib/api";
 import type { MapMarkerPoint } from "../lib/mockData";
 import { Map, Marker, SeverityDot, FitBounds } from "./ui/map";
+
+const ProvinceLayers = lazy(() => import("./ui/ProvinceLayers"));
 
 function severityColor(level: number): string {
   if (level >= 5) return "#dc2626";
@@ -60,6 +62,8 @@ interface Props {
   analysisFrames?: FrameAnalysis[];
   /** Highlights frame marker when syncing with feed / table / alerts. */
   selectedFrameIndex?: number | null;
+  /** Show Caraga province boundary overlays. */
+  showProvinces?: boolean;
 }
 
 export default function MapView({
@@ -68,6 +72,7 @@ export default function MapView({
   selectedMarkerId,
   analysisFrames,
   selectedFrameIndex,
+  showProvinces = true,
 }: Props) {
   const multiPoints = useMemo(
     () => (markers?.length ? markers.map((m) => [m.lng, m.lat] as [number, number]) : []),
@@ -98,6 +103,11 @@ export default function MapView({
 
   return (
     <Map center={center} zoom={zoom} className="h-full min-h-0">
+      {showProvinces && (
+        <Suspense fallback={null}>
+          <ProvinceLayers />
+        </Suspense>
+      )}
       {showMulti && markers && (
         <>
           <FitBounds points={multiPoints} />
