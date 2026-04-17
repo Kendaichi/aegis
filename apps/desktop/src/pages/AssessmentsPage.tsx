@@ -1,7 +1,8 @@
 import { ChevronRight, Plus, Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SeverityBadge, StatusBadge } from "../components/ui/Badges";
-import { MOCK_ASSESSMENTS, type AssessmentStatus } from "../lib/mockData";
+import { api, type Report, type VideoListItem } from "../lib/api";
+import type { AssessmentRow, AssessmentStatus, SeverityLevel } from "../lib/mockData";
 
 const FILTERS: Array<AssessmentStatus | "all"> = ["all", "complete", "analyzing", "pending"];
 
@@ -10,12 +11,85 @@ interface Props {
   onViewAssessment?: (id: string) => void;
 }
 
+function severityToLevel(sev: Report["overall_severity"] | undefined): SeverityLevel {
+  switch (sev) {
+    case "destroyed":
+      return 5;
+    case "severe":
+      return 4;
+    case "moderate":
+      return 3;
+    case "minor":
+    case "none":
+    default:
+      return 2;
+  }
+}
+
+function filenameToTitle(filename: string): string {
+  const withoutExt = filename.replace(/\.[^.]+$/, "");
+  return withoutExt.replace(/[_-]+/g, " ").trim() || filename;
+}
+
+function formatDate(iso: string): string {
+  return new Date(iso).toISOString().slice(0, 10);
+}
+
+function mergeToRows(videos: VideoListItem[], reports: Report[]): AssessmentRow[] {
+  const reportByVideo = new Map<string, Report>();
+  for (const r of reports) reportByVideo.set(r.video_id, r);
+
+  return videos.map((v) => {
+    const report = reportByVideo.get(v.video_id);
+    const status: AssessmentStatus = report ? "complete" : (v.status as AssessmentStatus);
+    const location =
+      v.location_name ??
+      (v.lat != null && v.lng != null
+        ? `${v.lat.toFixed(3)}, ${v.lng.toFixed(3)}`
+        : "Unknown location");
+    return {
+      id: v.video_id,
+      title: v.title || filenameToTitle(v.filename),
+      subtitle: v.size_bytes ? `${(v.size_bytes / (1024 * 1024)).toFixed(1)} MB` : "",
+      location,
+      type: v.incident_type ?? "Unknown",
+      severity: severityToLevel(report?.overall_severity),
+      status,
+      date: formatDate(v.created_at),
+    };
+  });
+}
+
 export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: Props) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("all");
+  const [rows, setRows] = useState<AssessmentRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const rows = useMemo(() => {
-    let list = MOCK_ASSESSMENTS;
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const [videosRes, reports] = await Promise.all([api.listVideos(), api.listReports()]);
+        if (cancelled) return;
+        setRows(mergeToRows(videosRes.videos, reports));
+      } catch (e) {
+        if (cancelled) return;
+        setError(e instanceof Error ? e.message : "Failed to load assessments");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const filteredRows = useMemo(() => {
+    let list = rows;
     if (filter !== "all") {
       list = list.filter((r) => r.status === filter);
     }
@@ -32,7 +106,7 @@ export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: P
     }
 
     return list;
-  }, [filter, query]);
+  }, [filter, query, rows]);
 
   return (
     <div className="flex h-full flex-col gap-4 overflow-auto p-6">
@@ -41,8 +115,9 @@ export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: P
           <p className="section-title">Assessment Library</p>
           <h1 className="mt-2 text-lg font-semibold text-white">Drone assessment queue</h1>
           <p className="mt-1 text-[13px] text-slate-400">
-            {MOCK_ASSESSMENTS.length} total assessments across flood, landslide, and typhoon
-            response workflows.
+            {loading
+              ? "Loading assessments..."
+              : `${rows.length} total assessments across flood, landslide, and typhoon response workflows.`}
           </p>
         </div>
         <button type="button" onClick={onNewAssessment} className="button-primary">
@@ -76,6 +151,12 @@ export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: P
         </div>
       </div>
 
+      {error && (
+        <div className="card border border-red-500/30 bg-red-500/10 p-4 text-[13px] text-red-200">
+          {error}
+        </div>
+      )}
+
       <div className="card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[920px] text-left text-[13px]">
@@ -92,9 +173,13 @@ export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: P
               </tr>
             </thead>
             <tbody>
-              {rows.map((r) => (
-                <tr key={r.id} className="table-row-interactive cursor-pointer" onClick={() => onViewAssessment?.(r.id)}>
-                  <td className="px-4 py-3 font-mono text-aegis-accent">{r.id}</td>
+              {filteredRows.map((r) => (
+                <tr
+                  key={r.id}
+                  className="table-row-interactive cursor-pointer"
+                  onClick={() => onViewAssessment?.(r.id)}
+                >
+                  <td className="px-4 py-3 font-mono text-aegis-accent">{r.id.slice(0, 10)}</td>
                   <td className="px-4 py-3">
                     <div className="font-medium text-slate-100">{r.title}</div>
                     <div className="mt-1 text-[11px] text-slate-500">{r.subtitle}</div>
@@ -123,10 +208,15 @@ export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: P
             </tbody>
           </table>
         </div>
-        {rows.length === 0 && (
+        {!loading && filteredRows.length === 0 && (
           <p className="p-10 text-center text-sm text-slate-500">
-            No assessments match the current filters.
+            {rows.length === 0
+              ? "No assessments yet — upload a video to get started."
+              : "No assessments match the current filters."}
           </p>
+        )}
+        {loading && (
+          <p className="p-10 text-center text-sm text-slate-500">Loading assessments...</p>
         )}
       </div>
     </div>

@@ -59,6 +59,26 @@ def _persist_frames(video_id: str, analyses: list[FrameAnalysis]) -> None:
     ).execute()
 
 
+@router.get("/{video_id}", response_model=AnalyzeResponse)
+def get_analysis(video_id: str) -> AnalyzeResponse:
+    """Return cached frame analyses for a previously analyzed video."""
+    sb = get_supabase()
+    video_row = (
+        sb.table("videos")
+        .select("video_id")
+        .eq("video_id", video_id)
+        .maybe_single()
+        .execute()
+    )
+    if not video_row.data:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"video_id {video_id} not found",
+        )
+    frames = _load_cached_frames(video_id) or []
+    return AnalyzeResponse(video_id=video_id, frame_count=len(frames), frames=frames)
+
+
 @router.post("", response_model=AnalyzeResponse)
 def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
     """

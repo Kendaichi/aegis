@@ -5,7 +5,9 @@ import type {
   GeoPoint,
   Report,
   StreamFrameCallback,
+  UploadMetadata,
   UploadResponse,
+  VideoListResponse,
 } from "./api";
 
 function sleep(ms = 500): Promise<void> {
@@ -155,14 +157,44 @@ function buildMockReport(videoId: string, location?: GeoPoint): Report {
 }
 
 export const mockApi = {
-  async upload(file: File): Promise<UploadResponse> {
+  async upload(file: File, metadata: UploadMetadata = {}): Promise<UploadResponse> {
     await sleep(500);
     return {
       video_id: makeVideoId(),
       filename: file.name || "mock-video.mp4",
       size_bytes: file.size || 123456,
       content_type: file.type || "video/mp4",
+      title: metadata.title ?? file.name ?? "mock-video",
+      location_name: metadata.location_name ?? null,
+      incident_type: metadata.incident_type ?? null,
+      lat: metadata.lat ?? null,
+      lng: metadata.lng ?? null,
+      status: "pending",
       created_at: nowIso(),
+    };
+  },
+
+  async listVideos(): Promise<VideoListResponse> {
+    await sleep(300);
+    return { videos: [], total: 0 };
+  },
+
+  async listReports(_video_id?: string): Promise<Report[]> {
+    await sleep(300);
+    return [];
+  },
+
+  async getReport(report_id: string): Promise<Report> {
+    await sleep(300);
+    return buildMockReport(report_id);
+  },
+
+  async getFrames(video_id: string): Promise<AnalyzeResponse> {
+    await sleep(300);
+    return {
+      ...MOCK_ANALYZE,
+      video_id,
+      frames: MOCK_ANALYZE.frames.map((f) => ({ ...f })),
     };
   },
 

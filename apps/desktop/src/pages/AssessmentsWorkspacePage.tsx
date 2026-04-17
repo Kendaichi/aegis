@@ -1,8 +1,8 @@
 import { ArrowLeft, RotateCcw, ShieldCheck, Video } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import MapView from "../components/Map";
 import Chat from "../components/Chat";
-import { api, type FrameAnalysis, type Report } from "../lib/api";
+import { api, type FrameAnalysis, type Report, type UploadMetadata } from "../lib/api";
 import { AlertProvider, useAlert } from "../components/workspace/AlertToast";
 import VideoPlayer from "../components/workspace/VideoPlayer";
 import FrameAnalysisFeed from "../components/workspace/FrameAnalysisFeed";
@@ -64,6 +64,10 @@ function WorkspaceMain({ onBack, selectedFrameIndex, onSelectFrame }: WorkspaceM
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [leftView, setLeftView] = useState<"video" | "assessment">("assessment");
+  const [metaTitle, setMetaTitle] = useState("");
+  const [metaLocation, setMetaLocation] = useState("");
+  const [metaIncidentType, setMetaIncidentType] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const frameForChat = useMemo(() => {
     if (selectedFrameIndex == null) return null;
@@ -79,6 +83,9 @@ function WorkspaceMain({ onBack, selectedFrameIndex, onSelectFrame }: WorkspaceM
     setError(null);
     onSelectFrame(null);
     setLeftView("assessment");
+    setMetaTitle("");
+    setMetaLocation("");
+    setMetaIncidentType("");
   }, [onSelectFrame]);
 
   async function handleFile(file: File) {
@@ -86,7 +93,11 @@ function WorkspaceMain({ onBack, selectedFrameIndex, onSelectFrame }: WorkspaceM
     setError(null);
     setPhase("uploading");
     try {
-      const res = await api.upload(file);
+      const metadata: UploadMetadata = {};
+      if (metaTitle.trim()) metadata.title = metaTitle.trim();
+      if (metaLocation.trim()) metadata.location_name = metaLocation.trim();
+      if (metaIncidentType.trim()) metadata.incident_type = metaIncidentType.trim();
+      const res = await api.upload(file, metadata);
       setVideoFile(file);
       setVideoId(res.video_id);
       setFrames([]);
@@ -185,24 +196,80 @@ function WorkspaceMain({ onBack, selectedFrameIndex, onSelectFrame }: WorkspaceM
                   <div>
                     <h3 className="text-sm font-semibold text-white">Video file</h3>
                     <p className="mt-1 text-[13px] text-slate-400">
-                      Upload recorded footage to simulate a live response run.
+                      Add assessment details, then upload recorded footage to start the run.
                     </p>
                   </div>
                 </div>
-                <label className="mt-4 block">
-                  <span className="sr-only">Choose video</span>
-                  <input
-                    id="workspace-video-file"
-                    type="file"
-                    accept="video/*"
-                    disabled={busy}
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) void handleFile(file);
-                    }}
-                    className="block w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-aegis-accent file:px-4 file:py-2 file:font-medium file:text-white hover:file:brightness-110"
-                  />
-                </label>
+
+                <div className="mt-4 space-y-3">
+                  <label className="block">
+                    <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
+                      Title
+                    </span>
+                    <input
+                      type="text"
+                      value={metaTitle}
+                      onChange={(e) => setMetaTitle(e.target.value)}
+                      placeholder="Butuan City Flooding"
+                      disabled={busy}
+                      className="input-shell mt-1.5"
+                    />
+                  </label>
+                  <label className="block">
+                    <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
+                      Location
+                    </span>
+                    <input
+                      type="text"
+                      value={metaLocation}
+                      onChange={(e) => setMetaLocation(e.target.value)}
+                      placeholder="Butuan City, Agusan del Norte"
+                      disabled={busy}
+                      className="input-shell mt-1.5"
+                    />
+                  </label>
+                  <label className="block">
+                    <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
+                      Incident type
+                    </span>
+                    <select
+                      value={metaIncidentType}
+                      onChange={(e) => setMetaIncidentType(e.target.value)}
+                      disabled={busy}
+                      className="input-shell mt-1.5"
+                    >
+                      <option value="">Select incident type...</option>
+                      <option value="Flooding">Flooding</option>
+                      <option value="Landslide">Landslide</option>
+                      <option value="Typhoon Damage">Typhoon Damage</option>
+                      <option value="Earthquake">Earthquake</option>
+                      <option value="Fire">Fire</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </label>
+                </div>
+
+                <input
+                  ref={fileInputRef}
+                  id="workspace-video-file"
+                  type="file"
+                  accept="video/*"
+                  disabled={busy}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) void handleFile(file);
+                  }}
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={() => fileInputRef.current?.click()}
+                  className="button-primary mt-4 w-full"
+                >
+                  <Video className="h-4 w-4" />
+                  Choose video and upload
+                </button>
               </div>
             </>
           )}
