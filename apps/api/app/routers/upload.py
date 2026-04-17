@@ -1,3 +1,4 @@
+import mimetypes
 import shutil
 import uuid
 from datetime import datetime, timezone
@@ -5,7 +6,7 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, File, HTTPException, UploadFile, status
 
 from app.config import settings
-from app.schemas import UploadResponse
+from app.schemas import UploadResponse, VideoListItem, VideoListResponse
 
 router = APIRouter(prefix="/upload", tags=["upload"])
 
@@ -44,3 +45,31 @@ async def upload_video(file: UploadFile = File(...)) -> UploadResponse:
         content_type=file.content_type,
         created_at=datetime.now(timezone.utc),
     )
+
+
+@router.get("", response_model=VideoListResponse)
+def list_videos() -> VideoListResponse:
+    """
+    List all uploaded videos.
+
+    Returns every file in the upload directory with its video_id, filename,
+    size, and upload timestamp derived from the file's modification time.
+    """
+    videos: list[VideoListItem] = []
+    for path in sorted(settings.upload_dir.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True):
+        if not path.is_file():
+            continue
+        mime, _ = mimetypes.guess_type(path.name)
+        if not mime or not mime.startswith("video/"):
+            continue
+        stat = path.stat()
+        video_id = path.stem
+        videos.append(
+            VideoListItem(
+                video_id=video_id,
+                filename=path.name,
+                size_bytes=stat.st_size,
+                created_at=datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc),
+            )
+        )
+    return VideoListResponse(videos=videos, total=len(videos))

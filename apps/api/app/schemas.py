@@ -28,6 +28,18 @@ class UploadResponse(BaseModel):
     created_at: datetime = Field(..., description="UTC timestamp of when the file was uploaded")
 
 
+class VideoListItem(BaseModel):
+    video_id: str = Field(..., description="Unique identifier for the uploaded video")
+    filename: str = Field(..., description="Filename as stored on disk")
+    size_bytes: int = Field(..., description="File size in bytes")
+    created_at: datetime = Field(..., description="UTC timestamp of when the file was uploaded")
+
+
+class VideoListResponse(BaseModel):
+    videos: list[VideoListItem] = Field(..., description="List of uploaded videos")
+    total: int = Field(..., description="Total number of uploaded videos")
+
+
 class FrameAnalysis(BaseModel):
     frame_index: int = Field(..., description="Zero-based index of the frame within the video")
     timestamp_seconds: float = Field(
