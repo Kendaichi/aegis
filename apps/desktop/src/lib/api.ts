@@ -22,6 +22,20 @@ export interface UploadResponse {
   created_at: string;
 }
 
+export interface VideoListItem {
+  video_id: string;
+  filename: string;
+  size_bytes: number;
+  content_type: string | null;
+  created_at: string;
+  url: string | null;
+}
+
+export interface VideoListResponse {
+  videos: VideoListItem[];
+  total: number;
+}
+
 export interface FrameAnalysis {
   frame_index: number;
   timestamp_seconds: number;
@@ -61,6 +75,16 @@ export interface ChatMessage {
   content: string;
 }
 
+export interface ChatResponse {
+  session_id: string;
+  message: ChatMessage;
+}
+
+export interface HealthResponse {
+  status: string;
+  model: string;
+}
+
 async function handle<T>(res: Response): Promise<T> {
   if (!res.ok) {
     const text = await res.text().catch(() => res.statusText);
@@ -77,12 +101,22 @@ const realApi = {
     return handle(res);
   },
 
+  async listVideos(): Promise<VideoListResponse> {
+    const res = await fetch(`${BASE}/upload`);
+    return handle(res);
+  },
+
   async analyze(video_id: string, location?: GeoPoint): Promise<AnalyzeResponse> {
     const res = await fetch(`${BASE}/analyze`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ video_id, location }),
     });
+    return handle(res);
+  },
+
+  async getAnalysis(video_id: string): Promise<AnalyzeResponse> {
+    const res = await fetch(`${BASE}/analyze/${encodeURIComponent(video_id)}`);
     return handle(res);
   },
 
@@ -95,19 +129,35 @@ const realApi = {
     return handle(res);
   },
 
+  async listReports(video_id?: string): Promise<Report[]> {
+    const qs = video_id ? `?video_id=${encodeURIComponent(video_id)}` : "";
+    const res = await fetch(`${BASE}/report${qs}`);
+    return handle(res);
+  },
+
+  async getReport(report_id: string): Promise<Report> {
+    const res = await fetch(`${BASE}/report/${encodeURIComponent(report_id)}`);
+    return handle(res);
+  },
+
   async chat(
     messages: ChatMessage[],
     opts: {
+      session_id?: string;
       report_id?: string;
       video_id?: string;
-      frame_context?: FrameAnalysis;
     } = {}
-  ): Promise<{ message: ChatMessage }> {
+  ): Promise<ChatResponse> {
     const res = await fetch(`${BASE}/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ messages, ...opts }),
     });
+    return handle(res);
+  },
+
+  async health(): Promise<HealthResponse> {
+    const res = await fetch(`${BASE}/health`);
     return handle(res);
   },
 

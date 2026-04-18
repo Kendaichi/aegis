@@ -1,7 +1,9 @@
-import { ChevronRight, Plus, Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import { ChevronRight, Loader2, Plus, Search } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { SeverityBadge, StatusBadge } from "../components/ui/Badges";
-import { MOCK_ASSESSMENTS, type AssessmentStatus } from "../lib/mockData";
+import { api } from "../lib/api";
+import { deriveAssessments } from "../lib/assessments";
+import type { AssessmentRow, AssessmentStatus } from "../lib/mockData";
 
 const FILTERS: Array<AssessmentStatus | "all"> = ["all", "complete", "analyzing", "pending"];
 
@@ -13,9 +15,33 @@ interface Props {
 export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: Props) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("all");
+  const [rows, setRows] = useState<AssessmentRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const rows = useMemo(() => {
-    let list = MOCK_ASSESSMENTS;
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    Promise.all([api.listVideos(), api.listReports()])
+      .then(([videos, reports]) => {
+        if (cancelled) return;
+        setRows(deriveAssessments(videos.videos, reports));
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        setError(err instanceof Error ? err.message : String(err));
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const filtered = useMemo(() => {
+    let list = rows;
     if (filter !== "all") {
       list = list.filter((r) => r.status === filter);
     }
@@ -32,7 +58,7 @@ export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: P
     }
 
     return list;
-  }, [filter, query]);
+  }, [filter, query, rows]);
 
   return (
     <div className="flex h-full flex-col gap-4 overflow-auto p-6">
@@ -41,8 +67,9 @@ export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: P
           <p className="section-title">Assessment Library</p>
           <h1 className="mt-2 text-lg font-semibold text-white">Drone assessment queue</h1>
           <p className="mt-1 text-[13px] text-slate-400">
-            {MOCK_ASSESSMENTS.length} total assessments across flood, landslide, and typhoon
-            response workflows.
+            {loading
+              ? "Loading assessments..."
+              : `${rows.length} total assessments synced from the AEGIS backend.`}
           </p>
         </div>
         <button type="button" onClick={onNewAssessment} className="button-primary">
@@ -76,6 +103,12 @@ export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: P
         </div>
       </div>
 
+      {error && (
+        <div className="card border border-red-500/30 bg-red-500/5 p-4 text-[13px] text-red-200">
+          Failed to load assessments: {error}
+        </div>
+      )}
+
       <div className="card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[920px] text-left text-[13px]">
@@ -92,9 +125,9 @@ export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: P
               </tr>
             </thead>
             <tbody>
-              {rows.map((r) => (
+              {filtered.map((r) => (
                 <tr key={r.id} className="table-row-interactive cursor-pointer" onClick={() => onViewAssessment?.(r.id)}>
-                  <td className="px-4 py-3 font-mono text-aegis-accent">{r.id}</td>
+                  <td className="px-4 py-3 font-mono text-aegis-accent">{r.id.slice(0, 10)}</td>
                   <td className="px-4 py-3">
                     <div className="font-medium text-slate-100">{r.title}</div>
                     <div className="mt-1 text-[11px] text-slate-500">{r.subtitle}</div>
@@ -123,9 +156,17 @@ export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: P
             </tbody>
           </table>
         </div>
-        {rows.length === 0 && (
+        {loading && (
+          <div className="flex items-center justify-center gap-2 p-10 text-sm text-slate-500">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Syncing assessments...
+          </div>
+        )}
+        {!loading && filtered.length === 0 && (
           <p className="p-10 text-center text-sm text-slate-500">
-            No assessments match the current filters.
+            {rows.length === 0
+              ? "No assessments yet. Start a new one to begin."
+              : "No assessments match the current filters."}
           </p>
         )}
       </div>

@@ -228,8 +228,9 @@ function WorkspaceMain({ onBack, selectedFrameIndex, onSelectFrame }: WorkspaceM
             <div className="card p-4">
               <VideoPlayer file={videoFile} liveMode className="shrink-0" />
               <p className="mt-4 text-[12px] leading-6 text-slate-400">
-                Frames stream in as analysis runs. Severe and critical detections trigger priority
-                alerts and map focus.
+                Frames stream in as analysis runs. This can take a few minutes while the VLM works
+                through the footage. Severe and critical detections trigger priority alerts and map
+                focus.
               </p>
             </div>
           )}
@@ -317,6 +318,7 @@ function WorkspaceMain({ onBack, selectedFrameIndex, onSelectFrame }: WorkspaceM
           )}
           <div className="mt-4 min-h-[220px] border-t border-aegis-border pt-4">
             <Chat
+              key={videoId ?? "idle"}
               reportId={report?.report_id}
               videoId={videoId ?? undefined}
               frameContext={frameForChat}

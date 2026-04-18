@@ -1,14 +1,11 @@
-import { ArrowLeft, MapPin, Calendar, Clock } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft, Calendar, Clock, Loader2, MapPin } from "lucide-react";
+import { useEffect, useState } from "react";
 import MapView from "../components/Map";
 import { SeverityBadge, StatusBadge } from "../components/ui/Badges";
 import DetailedInsights from "../components/workspace/DetailedInsights";
-import type { FrameAnalysis } from "../lib/api";
-import {
-  MOCK_ASSESSMENTS,
-  MOCK_FRAMES_BY_ASSESSMENT_ID,
-  MOCK_REPORT_BY_ASSESSMENT_ID,
-} from "../lib/mockData";
+import { api, type FrameAnalysis, type Report } from "../lib/api";
+import { severityToLevel } from "../lib/assessments";
+import type { AssessmentStatus } from "../lib/mockData";
 
 interface Props {
   assessmentId: string;
@@ -32,24 +29,71 @@ function countBySeverity(frames: FrameAnalysis[]) {
 }
 
 export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
-  const assessment = MOCK_ASSESSMENTS.find((a) => a.id === assessmentId);
-  const report = MOCK_REPORT_BY_ASSESSMENT_ID[assessmentId];
-  const frames = MOCK_FRAMES_BY_ASSESSMENT_ID[assessmentId] ?? [];
+  const [frames, setFrames] = useState<FrameAnalysis[]>([]);
+  const [report, setReport] = useState<Report | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedFrameIndex, setSelectedFrameIndex] = useState<number | null>(null);
 
-  if (!assessment) {
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    setFrames([]);
+    setReport(null);
+
+    Promise.all([
+      api.getAnalysis(assessmentId).then((a) => a.frames).catch(() => [] as FrameAnalysis[]),
+      api.listReports(assessmentId).then((r) => r[0] ?? null).catch(() => null),
+    ])
+      .then(([fetchedFrames, fetchedReport]) => {
+        if (cancelled) return;
+        setFrames(fetchedFrames);
+        setReport(fetchedReport);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        setError(err instanceof Error ? err.message : String(err));
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [assessmentId]);
+
+  const counts = countBySeverity(frames);
+  const total = frames.length || 1;
+  const status: AssessmentStatus = report ? "complete" : frames.length > 0 ? "analyzing" : "pending";
+  const severityLevel = severityToLevel(report?.overall_severity);
+  const createdDate = report ? new Date(report.created_at).toLocaleDateString() : "—";
+  const createdTime = report ? new Date(report.created_at).toLocaleTimeString() : "—";
+  const locationLabel = report?.location
+    ? `${report.location.lat.toFixed(3)}, ${report.location.lng.toFixed(3)}`
+    : "Location pending";
+
+  if (loading) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-4">
-        <p className="text-slate-400">Assessment not found.</p>
+      <div className="flex h-full flex-col items-center justify-center gap-3 text-slate-400">
+        <Loader2 className="h-5 w-5 animate-spin text-aegis-accent" />
+        <p className="text-[13px]">Loading assessment {assessmentId.slice(0, 10)}...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center gap-4 text-slate-300">
+        <p className="text-[14px] text-red-300">Failed to load assessment.</p>
+        <p className="text-[12px] text-slate-500">{error}</p>
         <button type="button" onClick={onBack} className="button-secondary">
           <ArrowLeft className="h-4 w-4" /> Back to Assessments
         </button>
       </div>
     );
   }
-
-  const counts = countBySeverity(frames);
-  const total = frames.length || 1;
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
@@ -65,22 +109,24 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
           </button>
           <div>
             <div className="flex items-center gap-3">
-              <span className="font-mono text-[12px] text-aegis-accent">{assessment.id}</span>
-              <StatusBadge status={assessment.status} />
-              <SeverityBadge level={assessment.severity} />
+              <span className="font-mono text-[12px] text-aegis-accent">{assessmentId.slice(0, 12)}</span>
+              <StatusBadge status={status} />
+              <SeverityBadge level={severityLevel} />
             </div>
-            <h1 className="mt-1 text-lg font-semibold text-white">{assessment.title}</h1>
+            <h1 className="mt-1 text-lg font-semibold text-white">
+              {report ? report.summary.split(".")[0] : `Assessment ${assessmentId.slice(0, 8)}`}
+            </h1>
           </div>
         </div>
         <div className="flex items-center gap-6 text-[12px] text-slate-400">
           <span className="flex items-center gap-1.5">
-            <MapPin className="h-3.5 w-3.5" /> {assessment.location}
+            <MapPin className="h-3.5 w-3.5" /> {locationLabel}
           </span>
           <span className="flex items-center gap-1.5">
-            <Calendar className="h-3.5 w-3.5" /> {assessment.date}
+            <Calendar className="h-3.5 w-3.5" /> {createdDate}
           </span>
           <span className="flex items-center gap-1.5">
-            <Clock className="h-3.5 w-3.5" /> {assessment.subtitle}
+            <Clock className="h-3.5 w-3.5" /> {createdTime}
           </span>
         </div>
       </header>
@@ -179,9 +225,9 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
           ) : (
             <div className="flex flex-1 flex-col items-center justify-center gap-3 text-slate-500">
               <p className="text-[14px]">
-                {assessment.status === "pending"
-                  ? "This assessment is pending — no analysis data yet."
-                  : "Analysis is in progress..."}
+                {frames.length === 0
+                  ? "This assessment has no analysis yet."
+                  : "Analysis frames are available, but the report has not been generated yet."}
               </p>
             </div>
           )}
