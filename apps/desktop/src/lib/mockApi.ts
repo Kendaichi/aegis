@@ -167,7 +167,6 @@ const videoStore: VideoListItem[] = SEED_VIDEO_IDS.map((id, i) => ({
   size_bytes: 1024 * 1024 * (12 + i * 3),
   content_type: "video/mp4",
   created_at: new Date(Date.now() - (i + 1) * 86_400_000).toISOString(),
-  url: null,
 }));
 const reportStore: Report[] = SEED_VIDEO_IDS.map((id) => buildMockReport(id));
 
@@ -179,14 +178,7 @@ export const mockApi = {
       filename: file.name || "mock-video.mp4",
       size_bytes: file.size || 123456,
       content_type: file.type || "video/mp4",
-      title: metadata.title ?? file.name ?? "mock-video",
-      location_name: metadata.location_name ?? null,
-      incident_type: metadata.incident_type ?? null,
-      lat: metadata.lat ?? null,
-      lng: metadata.lng ?? null,
-      status: "pending",
       created_at: nowIso(),
-      url: null,
     };
     videoStore.unshift(item);
     return {
@@ -194,6 +186,12 @@ export const mockApi = {
       filename: item.filename,
       size_bytes: item.size_bytes,
       content_type: item.content_type,
+      title: metadata.title ?? file.name ?? "mock-video",
+      location_name: metadata.location_name ?? null,
+      incident_type: metadata.incident_type ?? null,
+      lat: metadata.lat ?? null,
+      lng: metadata.lng ?? null,
+      status: "pending",
       created_at: item.created_at,
     };
   },
@@ -201,21 +199,6 @@ export const mockApi = {
   async listVideos(): Promise<VideoListResponse> {
     await sleep(250);
     return { videos: [...videoStore], total: videoStore.length };
-  },
-
-  async listVideos(): Promise<VideoListResponse> {
-    await sleep(300);
-    return { videos: [], total: 0 };
-  },
-
-  async listReports(_video_id?: string): Promise<Report[]> {
-    await sleep(300);
-    return [];
-  },
-
-  async getReport(report_id: string): Promise<Report> {
-    await sleep(300);
-    return buildMockReport(report_id);
   },
 
   async getFrames(video_id: string): Promise<AnalyzeResponse> {
