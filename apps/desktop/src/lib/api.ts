@@ -43,7 +43,7 @@ export interface FrameAnalysis {
   description: string;
   detected_hazards: string[];
   confidence: number;
-  /** Per-frame GPS when available (streaming / real analysis). */
+  /** Per-frame GPS when available (streaming / real analysis). /*/
   location?: GeoPoint;
 }
 
