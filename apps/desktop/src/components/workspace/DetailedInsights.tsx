@@ -5,7 +5,7 @@ const ALL: DamageSeverity[] = ["none", "minor", "moderate", "severe", "destroyed
 
 interface Props {
   frames: FrameAnalysis[];
-  onSelectRow?: (frameIndex: number) => void;
+  onSelectRow?: (frame: FrameAnalysis) => void;
   className?: string;
 }
 
@@ -50,7 +50,7 @@ export default function DetailedInsights({ frames, onSelectRow, className = "" }
               <tr
                 key={frame.frame_index}
                 className="cursor-pointer border-t border-aegis-border/80 transition hover:bg-white/[0.03]"
-                onClick={() => onSelectRow?.(frame.frame_index)}
+                onClick={() => onSelectRow?.(frame)}
               >
                 <td className="px-3 py-2 font-mono text-slate-400">{frame.frame_index}</td>
                 <td className="px-3 py-2 text-slate-400">{frame.timestamp_seconds.toFixed(1)}</td>

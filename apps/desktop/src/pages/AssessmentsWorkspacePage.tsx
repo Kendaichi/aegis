@@ -8,6 +8,7 @@ import VideoPlayer from "../components/workspace/VideoPlayer";
 import FrameAnalysisFeed from "../components/workspace/FrameAnalysisFeed";
 import DroneConnect from "../components/workspace/DroneConnect";
 import OverallAssessment from "../components/workspace/OverallAssessment";
+import FrameImageModal from "../components/workspace/FrameImageModal";
 
 interface Props {
   onBack: () => void;
@@ -52,9 +53,21 @@ interface WorkspaceMainProps {
   onBack: () => void;
   selectedFrameIndex: number | null;
   onSelectFrame: (index: number | null) => void;
+  inspectFrame: (frame: FrameAnalysis) => void;
+  modalFrame: FrameAnalysis | null;
+  onCloseModal: () => void;
+  onClearFrameContext: () => void;
 }
 
-function WorkspaceMain({ onBack, selectedFrameIndex, onSelectFrame }: WorkspaceMainProps) {
+function WorkspaceMain({
+  onBack,
+  selectedFrameIndex,
+  onSelectFrame,
+  inspectFrame,
+  modalFrame,
+  onCloseModal,
+  onClearFrameContext,
+}: WorkspaceMainProps) {
   const { showAlert } = useAlert();
   const [phase, setPhase] = useState<Phase>("idle");
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -74,6 +87,14 @@ function WorkspaceMain({ onBack, selectedFrameIndex, onSelectFrame }: WorkspaceM
     return frames.find((frame) => frame.frame_index === selectedFrameIndex) ?? null;
   }, [frames, selectedFrameIndex]);
 
+  const metadataReady = useMemo(
+    () =>
+      metaTitle.trim().length > 0 &&
+      metaLocation.trim().length > 0 &&
+      metaIncidentType.trim().length > 0,
+    [metaTitle, metaLocation, metaIncidentType]
+  );
+
   const resetSession = useCallback(() => {
     setPhase("idle");
     setVideoFile(null);
@@ -89,22 +110,25 @@ function WorkspaceMain({ onBack, selectedFrameIndex, onSelectFrame }: WorkspaceM
   }, [onSelectFrame]);
 
   async function handleFile(file: File) {
+    if (!metadataReady) return;
     setBusy(true);
     setError(null);
     setPhase("uploading");
+    setVideoFile(file);
+    setFrames([]);
+    setReport(null);
     try {
-      const metadata: UploadMetadata = {};
-      if (metaTitle.trim()) metadata.title = metaTitle.trim();
-      if (metaLocation.trim()) metadata.location_name = metaLocation.trim();
-      if (metaIncidentType.trim()) metadata.incident_type = metaIncidentType.trim();
+      const metadata: UploadMetadata = {
+        title: metaTitle.trim(),
+        location_name: metaLocation.trim(),
+        incident_type: metaIncidentType.trim(),
+      };
       const res = await api.upload(file, metadata);
-      setVideoFile(file);
       setVideoId(res.video_id);
-      setFrames([]);
-      setReport(null);
       setPhase("streaming");
     } catch (error) {
       setError(error instanceof Error ? error.message : String(error));
+      setVideoFile(null);
       setPhase("idle");
     } finally {
       setBusy(false);
@@ -184,7 +208,9 @@ function WorkspaceMain({ onBack, selectedFrameIndex, onSelectFrame }: WorkspaceM
           {phase === "idle" && (
             <>
               <DroneConnect
+                uploadDisabled={!metadataReady}
                 onFallbackToUpload={() => {
+                  if (!metadataReady) return;
                   document.getElementById("workspace-video-file")?.click();
                 }}
               />
@@ -249,21 +275,33 @@ function WorkspaceMain({ onBack, selectedFrameIndex, onSelectFrame }: WorkspaceM
                   </label>
                 </div>
 
+                {!metadataReady && (
+                  <p className="mt-3 text-[12px] text-amber-400/90">
+                    All fields required to enable upload.
+                  </p>
+                )}
+
                 <input
                   ref={fileInputRef}
                   id="workspace-video-file"
                   type="file"
                   accept="video/*"
-                  disabled={busy}
+                  disabled={busy || !metadataReady}
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) void handleFile(file);
+                    e.target.value = "";
                   }}
                   className="hidden"
                 />
                 <button
                   type="button"
-                  disabled={busy}
+                  disabled={busy || !metadataReady}
+                  title={
+                    metadataReady
+                      ? undefined
+                      : "Fill in title, location, and incident type first."
+                  }
                   onClick={() => fileInputRef.current?.click()}
                   className="button-primary mt-4 w-full"
                 >
@@ -276,7 +314,12 @@ function WorkspaceMain({ onBack, selectedFrameIndex, onSelectFrame }: WorkspaceM
 
           {(phase === "uploading" || phase === "streaming") && (
             <div className="card p-4">
-              <VideoPlayer file={videoFile} liveMode={phase === "streaming"} className="shrink-0" />
+              <VideoPlayer
+                file={videoFile}
+                liveMode={phase === "streaming"}
+                autoPlay
+                className="shrink-0"
+              />
               {phase === "streaming" && (
                 <button
                   type="button"
@@ -293,7 +336,7 @@ function WorkspaceMain({ onBack, selectedFrameIndex, onSelectFrame }: WorkspaceM
 
           {phase === "analyzing" && (
             <div className="card p-4">
-              <VideoPlayer file={videoFile} liveMode className="shrink-0" />
+              <VideoPlayer file={videoFile} liveMode autoPlay className="shrink-0" />
               <p className="mt-4 text-[12px] leading-6 text-slate-400">
                 Frames stream in as analysis runs. This can take a few minutes while the VLM works
                 through the footage. Severe and critical detections trigger priority alerts and map
@@ -337,7 +380,7 @@ function WorkspaceMain({ onBack, selectedFrameIndex, onSelectFrame }: WorkspaceM
                 <OverallAssessment
                   report={report}
                   frames={frames}
-                  onSelectFrame={(index) => onSelectFrame(index)}
+                  onSelectFrame={inspectFrame}
                   className="min-h-0 flex-1 overflow-auto"
                 />
               )}
@@ -369,7 +412,7 @@ function WorkspaceMain({ onBack, selectedFrameIndex, onSelectFrame }: WorkspaceM
           <FrameAnalysisFeed
             frames={frames}
             selectedFrameIndex={selectedFrameIndex}
-            onSelectFrame={(index) => onSelectFrame(index)}
+            onSelectFrame={inspectFrame}
             className="min-h-0 flex-1"
           />
           {phase !== "complete" && (
@@ -389,24 +432,45 @@ function WorkspaceMain({ onBack, selectedFrameIndex, onSelectFrame }: WorkspaceM
               reportId={report?.report_id}
               videoId={videoId ?? undefined}
               frameContext={frameForChat}
-              onClearFrameContext={() => onSelectFrame(null)}
+              onClearFrameContext={onClearFrameContext}
             />
           </div>
         </aside>
       </div>
+
+      <FrameImageModal
+        frame={modalFrame}
+        videoFile={videoFile}
+        onClose={onCloseModal}
+      />
     </div>
   );
 }
 
 export default function AssessmentsWorkspacePage({ onBack }: Props) {
   const [selectedFrameIndex, setSelectedFrameIndex] = useState<number | null>(null);
+  const [modalFrame, setModalFrame] = useState<FrameAnalysis | null>(null);
+
+  const inspectFrame = useCallback((frame: FrameAnalysis) => {
+    setSelectedFrameIndex(frame.frame_index);
+    setModalFrame(frame);
+  }, []);
+
+  const onClearFrameContext = useCallback(() => {
+    setSelectedFrameIndex(null);
+    setModalFrame(null);
+  }, []);
 
   return (
-    <AlertProvider onJumpToFrame={(frame) => setSelectedFrameIndex(frame.frame_index)}>
+    <AlertProvider onJumpToFrame={inspectFrame}>
       <WorkspaceMain
         onBack={onBack}
         selectedFrameIndex={selectedFrameIndex}
         onSelectFrame={setSelectedFrameIndex}
+        inspectFrame={inspectFrame}
+        modalFrame={modalFrame}
+        onCloseModal={() => setModalFrame(null)}
+        onClearFrameContext={onClearFrameContext}
       />
     </AlertProvider>
   );

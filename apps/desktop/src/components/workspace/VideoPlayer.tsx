@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 interface Props {
   file: File | null;
   liveMode?: boolean;
+  /** When true, starts muted playback after metadata loads (browser autoplay policies). */
+  autoPlay?: boolean;
   onTimeUpdate?: (seconds: number) => void;
   className?: string;
 }
@@ -15,7 +17,13 @@ function formatTime(seconds: number): string {
   return `${minutes}:${secs.toString().padStart(2, "0")}`;
 }
 
-export default function VideoPlayer({ file, liveMode = false, onTimeUpdate, className = "" }: Props) {
+export default function VideoPlayer({
+  file,
+  liveMode = false,
+  autoPlay = false,
+  onTimeUpdate,
+  className = "",
+}: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [url, setUrl] = useState<string | null>(null);
   const [playing, setPlaying] = useState(false);
@@ -40,7 +48,15 @@ export default function VideoPlayer({ file, liveMode = false, onTimeUpdate, clas
     const video = videoRef.current;
     if (!video || !url) return;
 
-    const onLoaded = () => setDuration(video.duration || 0);
+    const onLoaded = () => {
+      setDuration(video.duration || 0);
+      if (autoPlay) {
+        video.muted = true;
+        void video.play().catch(() => {
+          /* autoplay may be blocked until user gesture */
+        });
+      }
+    };
     const onTime = () => {
       const time = video.currentTime;
       setCurrent(time);
@@ -60,7 +76,7 @@ export default function VideoPlayer({ file, liveMode = false, onTimeUpdate, clas
       video.removeEventListener("play", onPlay);
       video.removeEventListener("pause", onPause);
     };
-  }, [onTimeUpdate, url]);
+  }, [autoPlay, onTimeUpdate, url]);
 
   if (!file || !url) {
     return (
@@ -81,7 +97,13 @@ export default function VideoPlayer({ file, liveMode = false, onTimeUpdate, clas
             Live
           </span>
         )}
-        <video ref={videoRef} src={url} className="aspect-video w-full object-contain" playsInline />
+        <video
+          ref={videoRef}
+          src={url}
+          className="aspect-video w-full object-contain"
+          playsInline
+          muted={autoPlay}
+        />
       </div>
 
       <div className="flex items-center gap-3">

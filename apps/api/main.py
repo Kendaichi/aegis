@@ -26,4 +26,8 @@ app.include_router(chat.router)
 
 @app.get("/health", tags=["meta"])
 def health() -> dict[str, str]:
-    return {"status": "ok", "model": settings.vlm_model}
+    return {
+        "status": "ok",
+        "model": settings.vlm_model,
+        "vlm_mode": settings.vlm_mode,
+    }

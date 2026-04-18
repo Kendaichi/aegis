@@ -5,10 +5,16 @@ type Status = "disconnected" | "connecting" | "connected";
 
 interface Props {
   onFallbackToUpload?: () => void;
+  /** When true, the "Use a recorded video" action is disabled (e.g. metadata not filled). */
+  uploadDisabled?: boolean;
   className?: string;
 }
 
-export default function DroneConnect({ onFallbackToUpload, className = "" }: Props) {
+export default function DroneConnect({
+  onFallbackToUpload,
+  uploadDisabled = false,
+  className = "",
+}: Props) {
   const [rtspUrl, setRtspUrl] = useState("rtsp://drone.local:554/stream");
   const [status, setStatus] = useState<Status>("disconnected");
 
@@ -85,7 +91,13 @@ export default function DroneConnect({ onFallbackToUpload, className = "" }: Pro
           Demo mode only.{" "}
           <button
             type="button"
-            className="font-medium text-aegis-accent underline underline-offset-4 transition hover:text-blue-300"
+            disabled={uploadDisabled}
+            title={
+              uploadDisabled
+                ? "Fill in title, location, and incident type in the Video file card first."
+                : undefined
+            }
+            className="font-medium text-aegis-accent underline underline-offset-4 transition hover:text-blue-300 disabled:cursor-not-allowed disabled:opacity-40 disabled:no-underline"
             onClick={() => onFallbackToUpload?.()}
           >
             Use a recorded video

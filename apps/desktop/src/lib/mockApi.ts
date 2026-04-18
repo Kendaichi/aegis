@@ -40,101 +40,127 @@ function frameLocation(index: number): GeoPoint {
   };
 }
 
+function withMockVisuals(frames: FrameAnalysis[]): FrameAnalysis[] {
+  return frames.map((f) => {
+    const j = (f.frame_index % 5) * 0.015;
+    return {
+      ...f,
+      image_url: `https://picsum.photos/seed/aegis${f.frame_index}/800/450`,
+      detections: [
+        {
+          label: "Primary damage / hazard region",
+          severity: f.severity,
+          bbox: [0.15 + j, 0.2, 0.62 + j, 0.78] as [number, number, number, number],
+          confidence: 0.78,
+        },
+        {
+          label: "Secondary risk zone",
+          severity: f.severity === "none" ? "minor" : "moderate",
+          bbox: [0.52, 0.1, 0.9, 0.45] as [number, number, number, number],
+          confidence: 0.65,
+        },
+      ],
+    };
+  });
+}
+
+const MOCK_FRAMES_RAW: FrameAnalysis[] = [
+  {
+    frame_index: 0,
+    timestamp_seconds: 0,
+    severity: "moderate",
+    description: "Flooding around roadside homes; water line visible against foundations.",
+    detected_hazards: ["flooding", "debris"],
+    confidence: 0.82,
+    location: frameLocation(0),
+  },
+  {
+    frame_index: 1,
+    timestamp_seconds: 2,
+    severity: "severe",
+    description: "Visible roof collapse on adjacent structures.",
+    detected_hazards: ["structural collapse"],
+    confidence: 0.88,
+    location: frameLocation(1),
+  },
+  {
+    frame_index: 2,
+    timestamp_seconds: 4,
+    severity: "moderate",
+    description: "Road shoulder erosion and standing water.",
+    detected_hazards: ["road damage", "flooding"],
+    confidence: 0.79,
+    location: frameLocation(2),
+  },
+  {
+    frame_index: 3,
+    timestamp_seconds: 6,
+    severity: "minor",
+    description: "Debris accumulation near drainage lines.",
+    detected_hazards: ["debris"],
+    confidence: 0.74,
+    location: frameLocation(3),
+  },
+  {
+    frame_index: 4,
+    timestamp_seconds: 8,
+    severity: "severe",
+    description: "Route may be impassable due to deep water.",
+    detected_hazards: ["flooding", "access blockage"],
+    confidence: 0.86,
+    location: frameLocation(4),
+  },
+  {
+    frame_index: 5,
+    timestamp_seconds: 10,
+    severity: "none",
+    description: "Open stretch; no immediate structural threat in frame.",
+    detected_hazards: [],
+    confidence: 0.71,
+    location: frameLocation(5),
+  },
+  {
+    frame_index: 6,
+    timestamp_seconds: 12,
+    severity: "destroyed",
+    description: "Multiple structures show total roof loss; possible trap hazard under debris.",
+    detected_hazards: ["structural collapse", "trap", "debris"],
+    confidence: 0.91,
+    location: frameLocation(6),
+  },
+  {
+    frame_index: 7,
+    timestamp_seconds: 14,
+    severity: "moderate",
+    description: "Downed power lines near standing water — electrocution risk.",
+    detected_hazards: ["electrical", "flooding"],
+    confidence: 0.84,
+    location: frameLocation(7),
+  },
+  {
+    frame_index: 8,
+    timestamp_seconds: 16,
+    severity: "minor",
+    description: "Localized mudslides on embankment; monitor for further slip.",
+    detected_hazards: ["landslide"],
+    confidence: 0.77,
+    location: frameLocation(8),
+  },
+  {
+    frame_index: 9,
+    timestamp_seconds: 18,
+    severity: "severe",
+    description: "Bridge approach submerged; alternate route required.",
+    detected_hazards: ["flooding", "access blockage"],
+    confidence: 0.89,
+    location: frameLocation(9),
+  },
+];
+
 const MOCK_ANALYZE: AnalyzeResponse = {
   video_id: "mock_video",
-  frame_count: 10,
-  frames: [
-    {
-      frame_index: 0,
-      timestamp_seconds: 0,
-      severity: "moderate",
-      description: "Flooding around roadside homes; water line visible against foundations.",
-      detected_hazards: ["flooding", "debris"],
-      confidence: 0.82,
-      location: frameLocation(0),
-    },
-    {
-      frame_index: 1,
-      timestamp_seconds: 2,
-      severity: "severe",
-      description: "Visible roof collapse on adjacent structures.",
-      detected_hazards: ["structural collapse"],
-      confidence: 0.88,
-      location: frameLocation(1),
-    },
-    {
-      frame_index: 2,
-      timestamp_seconds: 4,
-      severity: "moderate",
-      description: "Road shoulder erosion and standing water.",
-      detected_hazards: ["road damage", "flooding"],
-      confidence: 0.79,
-      location: frameLocation(2),
-    },
-    {
-      frame_index: 3,
-      timestamp_seconds: 6,
-      severity: "minor",
-      description: "Debris accumulation near drainage lines.",
-      detected_hazards: ["debris"],
-      confidence: 0.74,
-      location: frameLocation(3),
-    },
-    {
-      frame_index: 4,
-      timestamp_seconds: 8,
-      severity: "severe",
-      description: "Route may be impassable due to deep water.",
-      detected_hazards: ["flooding", "access blockage"],
-      confidence: 0.86,
-      location: frameLocation(4),
-    },
-    {
-      frame_index: 5,
-      timestamp_seconds: 10,
-      severity: "none",
-      description: "Open stretch; no immediate structural threat in frame.",
-      detected_hazards: [],
-      confidence: 0.71,
-      location: frameLocation(5),
-    },
-    {
-      frame_index: 6,
-      timestamp_seconds: 12,
-      severity: "destroyed",
-      description: "Multiple structures show total roof loss; possible trap hazard under debris.",
-      detected_hazards: ["structural collapse", "trap", "debris"],
-      confidence: 0.91,
-      location: frameLocation(6),
-    },
-    {
-      frame_index: 7,
-      timestamp_seconds: 14,
-      severity: "moderate",
-      description: "Downed power lines near standing water — electrocution risk.",
-      detected_hazards: ["electrical", "flooding"],
-      confidence: 0.84,
-      location: frameLocation(7),
-    },
-    {
-      frame_index: 8,
-      timestamp_seconds: 16,
-      severity: "minor",
-      description: "Localized mudslides on embankment; monitor for further slip.",
-      detected_hazards: ["landslide"],
-      confidence: 0.77,
-      location: frameLocation(8),
-    },
-    {
-      frame_index: 9,
-      timestamp_seconds: 18,
-      severity: "severe",
-      description: "Bridge approach submerged; alternate route required.",
-      detected_hazards: ["flooding", "access blockage"],
-      confidence: 0.89,
-      location: frameLocation(9),
-    },
-  ],
+  frame_count: MOCK_FRAMES_RAW.length,
+  frames: withMockVisuals(MOCK_FRAMES_RAW),
 };
 
 function buildMockReport(videoId: string, location?: GeoPoint): Report {
@@ -295,6 +321,6 @@ export const mockApi = {
 
   async health(): Promise<HealthResponse> {
     await sleep(100);
-    return { status: "ok", model: "mock" };
+    return { status: "ok", model: "mock", vlm_mode: "mock" };
   },
 };

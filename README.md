@@ -18,6 +18,7 @@ AEGIS ingests aerial or ground video of a disaster site, extracts frames, analyz
 6. [Setup](#setup)
    - [1. Clone & install](#1-clone--install)
    - [2. Configure environment](#2-configure-environment)
+   - [2a. Wire up the AI (end-to-end)](#2a-wire-up-the-ai-end-to-end)
    - [3. Run Ollama + pull Gemma 3](#3-run-ollama--pull-gemma-3)
    - [4. Run the backend](#4-run-the-backend)
    - [5. Run the desktop app](#5-run-the-desktop-app)
@@ -160,6 +161,19 @@ cp apps/desktop/.env.example apps/desktop/.env
 
 Fill in the Supabase and Ollama values — see [Environment variables](#environment-variables).
 
+### 2a. Wire up the AI (end-to-end)
+
+Real AI flows through **two** switches (both must be right for non-deterministic frame analysis):
+
+1. **Desktop** — In `apps/desktop/.env`, set **`VITE_USE_MOCK_API=false`** so the UI uses `fetch` to **`VITE_API_URL`** instead of the in-browser [`mockApi`](apps/desktop/src/lib/mockApi.ts). If this stays `true`, no request hits your FastAPI server for assessments.
+2. **API** — In `apps/api/.env`, set **`VLM_MODE=real`** (local Ollama) or **`VLM_MODE=zai`** (z.ai). With **`VLM_MODE=mock`**, [`analyze_frame`](apps/api/app/services/vlm.py) returns canned `FrameAnalysis` data regardless of the video.
+
+**Supabase** (`SUPABASE_*`, `DATABASE_URL`) is required for **`POST /upload`** and **`POST /analyze`** as implemented today: the analyzer loads the video row from Postgres and downloads the file from Storage.
+
+**Check configuration:** `GET /health` returns `status`, `model`, and **`vlm_mode`** (`mock` | `real` | `zai`) so you can confirm the running backend.
+
+For **Ollama**, set **`VLM_MODEL`** to a **vision** model tag from `ollama list` (the default `glm-4.6v-flash` in [`config.py`](apps/api/app/config.py) is aimed at z.ai, not Ollama).
+
 ### 3. Run Ollama + pull Gemma 3
 
 ```bash
@@ -242,7 +256,7 @@ Verify:
 
 ```bash
 curl http://localhost:8000/health
-# {"status":"ok","model":"gemma3:4b"}
+# {"status":"ok","model":"gemma3:4b","vlm_mode":"real"}
 ```
 
 ### 3. (Real VLM mode) pull the model
@@ -311,7 +325,7 @@ The stub lives in `apps/api/app/services/vlm.py` (see `_mock_frame_analysis` and
 
 ### Switching back to the real model
 
-Set `VLM_MODE=real` (or remove the line — `real` is the default), make sure Ollama is running and `gemma3:4b` is pulled, then restart the backend. No frontend changes are needed.
+Set `VLM_MODE=real`, set `VLM_MODEL` to your pulled **vision** model, ensure Ollama is running, then restart the backend. Set **`VITE_USE_MOCK_API=false`** on the desktop if you want the UI to call the API.
 
 ### When you still need the real model
 
@@ -444,7 +458,7 @@ Conversational Q&A, grounded (optionally) by a `report_id` or `video_id`.
 
 ### `GET /health`
 
-Returns `{"status":"ok","model":"gemma3:4b"}`.
+Returns `{"status":"ok","model":"<VLM_MODEL>","vlm_mode":"mock|real|zai"}`.
 
 ---
 
@@ -499,19 +513,21 @@ Persisting into Supabase is scaffolded via `apps/api/app/db.py` (`get_supabase()
 | `SUPABASE_URL`           | —                        | Supabase project URL                                                                                              |
 | `SUPABASE_KEY`           | —                        | Service-role or anon key                                                                                          |
 | `OLLAMA_HOST`            | `http://localhost:11434` | Ollama HTTP endpoint                                                                                              |
-| `VLM_MODE`               | `real`                   | `real` calls Ollama; `mock` returns canned frame/chat responses — see [Mock VLM mode](#mock-vlm-mode-development) |
-| `VLM_MODEL`              | `gemma3:4b`              | Ollama model tag                                                                                                  |
+| `VLM_MODE`               | `mock`                   | `real` = Ollama; `zai` = z.ai; `mock` = canned frame/chat — see [Mock VLM mode](#mock-vlm-mode-development) and [z.ai](#zai-vlm-mode-cloud) |
+| `VLM_MODEL`              | `glm-4.6v-flash`         | z.ai vision tag when `VLM_MODE=zai`; for Ollama use a pulled **vision** model name (e.g. from `ollama list`)      |
+| `ZAI_API_KEY` / `ZAI_BASE_URL` | —                  | Required when `VLM_MODE=zai`                                                                                       |
 | `UPLOAD_DIR`             | `./uploads`              | Where uploaded videos are stored                                                                                  |
 | `FRAMES_DIR`             | `./frames`               | Where extracted frames are stored                                                                                 |
 | `FRAME_INTERVAL_SECONDS` | `2`                      | Seconds between sampled frames                                                                                    |
 
 ### `apps/desktop/.env`
 
-| Var                 | Purpose                                  |
-| ------------------- | ---------------------------------------- |
-| `VITE_SUPABASE_URL` | Supabase project URL (client-side)       |
-| `VITE_SUPABASE_KEY` | Supabase **anon** key (client-side only) |
-| `VITE_API_URL`      | Base URL of the FastAPI backend          |
+| Var                   | Purpose                                                                 |
+| --------------------- | ----------------------------------------------------------------------- |
+| `VITE_SUPABASE_URL`   | Supabase project URL (client-side)                                      |
+| `VITE_SUPABASE_KEY`   | Supabase **anon** key (client-side only)                                |
+| `VITE_API_URL`        | Base URL of the FastAPI backend (e.g. `http://localhost:8000`)          |
+| `VITE_USE_MOCK_API`   | `true` = in-browser mock API; **`false`** to call the real backend — see [§2a](#2a-wire-up-the-ai-end-to-end) |
 
 > Never put a Supabase service-role key in `VITE_*` — those are bundled into the client.
 
@@ -621,6 +637,9 @@ Add your frontend origin to `cors_origins` in `apps/api/app/config.py`. Tauri's 
 
 **Supabase credentials errors on first API call**
 `SUPABASE_URL`/`SUPABASE_KEY` are validated lazily via `get_supabase()`. Confirm `.env` is in `apps/api/` (not the repo root) and that the venv is active.
+
+**`pip install` fails building `pyiceberg` (Windows, “Microsoft Visual C++ 14.0…”)**
+`supabase` 2.26+ pulls `pyiceberg` via `storage3`, which compiles a C extension. This repo pins **`supabase>=2.7.0,<2.26`** in [apps/api/requirements.txt](apps/api/requirements.txt) so a normal Windows install uses wheels only. If you overrode the version, remove the override or install [Build Tools for Visual Studio](https://visualstudio.microsoft.com/visual-cpp-build-tools/) with the C++ workload.
 
 **Gemma 3 returns non-JSON**
 `/analyze` falls back to a safe default. If it happens often, confirm you're using the `:4b` tag (the `:1b` model's instruction following is weaker) and that `format="json"` is supported by your Ollama version.
