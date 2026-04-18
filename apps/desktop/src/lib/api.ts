@@ -44,8 +44,6 @@ export interface VideoListItem {
   size_bytes: number;
   content_type: string | null;
   created_at: string;
-export interface VideoListItem extends UploadResponse {
-  url: string | null;
 }
 
 export interface VideoListResponse {
@@ -166,17 +164,6 @@ const realApi = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ video_id, location }),
     });
-    return handle(res);
-  },
-
-  async listReports(video_id?: string): Promise<Report[]> {
-    const qs = video_id ? `?video_id=${encodeURIComponent(video_id)}` : "";
-    const res = await fetch(`${BASE}/report${qs}`);
-    return handle(res);
-  },
-
-  async getReport(report_id: string): Promise<Report> {
-    const res = await fetch(`${BASE}/report/${encodeURIComponent(report_id)}`);
     return handle(res);
   },
 
