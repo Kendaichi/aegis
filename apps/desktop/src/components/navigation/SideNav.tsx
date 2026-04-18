@@ -9,12 +9,16 @@ import {
   Settings,
   Upload,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
-  BOOKMARKED_AREAS,
-  SIDEBAR_INCIDENTS,
   type SidebarIncident,
   type AssessmentStatus,
 } from "../../lib/mockData";
+import {
+  fetchActiveIncidents,
+  fetchBookmarkedAreas,
+  subscribeToQueueUpdates,
+} from "../../lib/supabaseQueries";
 import type { NavView } from "../layout/AppShell";
 import { SeverityBadge } from "../ui/Badges";
 
@@ -67,12 +71,88 @@ const primaryItems: Array<{
   { id: "reports", label: "Reports", icon: BarChart3 },
 ];
 
+function useActiveIncidents(enabled: boolean): {
+  incidents: SidebarIncident[];
+  loading: boolean;
+} {
+  const [incidents, setIncidents] = useState<SidebarIncident[]>([]);
+  const [loading, setLoading] = useState(enabled);
+
+  useEffect(() => {
+    if (!enabled) return;
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const next = await fetchActiveIncidents(3);
+        if (!cancelled) setIncidents(next);
+      } catch {
+        if (!cancelled) setIncidents([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    void load();
+    const unsubscribe = subscribeToQueueUpdates(() => {
+      void load();
+    });
+
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
+  }, [enabled]);
+
+  return { incidents, loading };
+}
+
+function useBookmarkedAreas(enabled: boolean): {
+  areas: string[];
+  loading: boolean;
+} {
+  const [areas, setAreas] = useState<string[]>([]);
+  const [loading, setLoading] = useState(enabled);
+
+  useEffect(() => {
+    if (!enabled) return;
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const next = await fetchBookmarkedAreas(5);
+        if (!cancelled) setAreas(next);
+      } catch {
+        if (!cancelled) setAreas([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    void load();
+    const unsubscribe = subscribeToQueueUpdates(() => {
+      void load();
+    });
+
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
+  }, [enabled]);
+
+  return { areas, loading };
+}
+
 export default function SideNav({
   active,
   onNavigate,
   onUploadClick,
   showDashboardPanel = false,
 }: Props) {
+  const { incidents, loading } = useActiveIncidents(showDashboardPanel);
+  const { areas: bookmarkedAreas, loading: bookmarksLoading } =
+    useBookmarkedAreas(showDashboardPanel);
+
   return (
     <div className="flex h-full shrink-0">
       <aside className="flex w-20 shrink-0 flex-col items-center border-r border-aegis-border bg-aegis-surface/70 px-3 py-4 backdrop-blur-xl">
@@ -175,7 +255,17 @@ export default function SideNav({
               <h2 className="section-title">Active Incidents</h2>
             </div>
             <div className="flex flex-col gap-3">
-              {SIDEBAR_INCIDENTS.map((row) => (
+              {loading && incidents.length === 0 && (
+                <p className="rounded-card border border-dashed border-aegis-border bg-aegis-surface2/60 p-3 text-[12px] text-slate-500">
+                  Loading live queue...
+                </p>
+              )}
+              {!loading && incidents.length === 0 && (
+                <p className="rounded-card border border-dashed border-aegis-border bg-aegis-surface2/60 p-3 text-[12px] text-slate-500">
+                  No active incidents in the queue.
+                </p>
+              )}
+              {incidents.map((row) => (
                 <IncidentRow key={row.id} row={row} />
               ))}
             </div>
@@ -186,19 +276,31 @@ export default function SideNav({
               <MapPin className="h-4 w-4 text-aegis-accent" />
               <h2 className="section-title">Bookmarked Areas</h2>
             </div>
-            <ul className="space-y-2">
-              {BOOKMARKED_AREAS.map((area) => (
-                <li
-                  key={area}
-                  className="flex items-center gap-3 rounded-2xl border border-aegis-border bg-aegis-surface2/80 px-3 py-2 text-[13px] text-slate-300"
-                >
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-aegis-glow text-aegis-accent">
-                    <MapPin className="h-4 w-4" />
-                  </span>
-                  {area}
-                </li>
-              ))}
-            </ul>
+            {bookmarksLoading && bookmarkedAreas.length === 0 && (
+              <p className="rounded-2xl border border-dashed border-aegis-border bg-aegis-surface2/60 px-3 py-2 text-[12px] text-slate-500">
+                Loading areas...
+              </p>
+            )}
+            {!bookmarksLoading && bookmarkedAreas.length === 0 && (
+              <p className="rounded-2xl border border-dashed border-aegis-border bg-aegis-surface2/60 px-3 py-2 text-[12px] text-slate-500">
+                No tracked areas yet — upload footage to populate.
+              </p>
+            )}
+            {bookmarkedAreas.length > 0 && (
+              <ul className="space-y-2">
+                {bookmarkedAreas.map((area) => (
+                  <li
+                    key={area}
+                    className="flex items-center gap-3 rounded-2xl border border-aegis-border bg-aegis-surface2/80 px-3 py-2 text-[13px] text-slate-300"
+                  >
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-aegis-glow text-aegis-accent">
+                      <MapPin className="h-4 w-4" />
+                    </span>
+                    {area}
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
         </aside>
       )}

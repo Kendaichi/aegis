@@ -1,8 +1,8 @@
 import { Activity, Route } from "lucide-react";
-import {
-  MOCK_ASSESSMENTS,
-  type MapViewMarker,
-  type MapViewSummary,
+import type {
+  AssessmentStatus,
+  MapViewMarker,
+  MapViewSummary,
 } from "../../lib/mockData";
 import { SeverityBadge, StatusBadge } from "../ui/Badges";
 
@@ -11,10 +11,8 @@ interface Props {
   incidents: MapViewMarker[];
   selectedId: string | null;
   onSelect: (markerId: string) => void;
-}
-
-function statusForAssessment(assessmentId: string) {
-  return MOCK_ASSESSMENTS.find((assessment) => assessment.id === assessmentId)?.status;
+  /** Marker id -> queue status, used to render the live status pill. */
+  statusByMarkerId?: Record<string, AssessmentStatus>;
 }
 
 export default function MapContextPanel({
@@ -22,6 +20,7 @@ export default function MapContextPanel({
   incidents,
   selectedId,
   onSelect,
+  statusByMarkerId,
 }: Props) {
   return (
     <aside className="flex h-full min-h-0 w-full max-w-[340px] shrink-0 flex-col border-l border-aegis-border bg-aegis-surface/65 backdrop-blur-xl">
@@ -72,7 +71,7 @@ export default function MapContextPanel({
         </div>
         <ul className="space-y-3">
           {incidents.map((incident) => {
-            const status = statusForAssessment(incident.assessmentId);
+            const status = statusByMarkerId?.[incident.id];
             const selected = selectedId === incident.id;
 
             return (

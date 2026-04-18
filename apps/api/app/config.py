@@ -20,8 +20,8 @@ class Settings(BaseSettings):
     zai_api_key: str = ""
     zai_base_url: str = "https://api.z.ai/api/paas/v4"
 
-    vlm_mode: Literal["real", "mock", "zai"] = "real"
-    vlm_model: str = "gemma3:4b"
+    vlm_mode: Literal["real", "mock", "zai"] = "mock"
+    vlm_model: str = "glm-4.6v-flash"
     upload_dir: Path = Path("./uploads")
     frames_dir: Path = Path("./frames")
     frame_interval_seconds: float = 2.0
