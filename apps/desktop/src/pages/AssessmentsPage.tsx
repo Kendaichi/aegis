@@ -4,12 +4,66 @@ import { SeverityBadge, StatusBadge } from "../components/ui/Badges";
 import { api } from "../lib/api";
 import { deriveAssessments } from "../lib/assessments";
 import type { AssessmentRow, AssessmentStatus } from "../lib/mockData";
+import { ChevronRight, Plus, Search } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { SeverityBadge, StatusBadge } from "../components/ui/Badges";
+import { api, type Report, type VideoListItem } from "../lib/api";
+import type { AssessmentRow, AssessmentStatus, SeverityLevel } from "../lib/mockData";
 
 const FILTERS: Array<AssessmentStatus | "all"> = ["all", "complete", "analyzing", "pending"];
 
 interface Props {
   onNewAssessment?: () => void;
   onViewAssessment?: (id: string) => void;
+}
+
+function severityToLevel(sev: Report["overall_severity"] | undefined): SeverityLevel {
+  switch (sev) {
+    case "destroyed":
+      return 5;
+    case "severe":
+      return 4;
+    case "moderate":
+      return 3;
+    case "minor":
+    case "none":
+    default:
+      return 2;
+  }
+}
+
+function filenameToTitle(filename: string): string {
+  const withoutExt = filename.replace(/\.[^.]+$/, "");
+  return withoutExt.replace(/[_-]+/g, " ").trim() || filename;
+}
+
+function formatDate(iso: string): string {
+  return new Date(iso).toISOString().slice(0, 10);
+}
+
+function mergeToRows(videos: VideoListItem[], reports: Report[]): AssessmentRow[] {
+  const reportByVideo = new Map<string, Report>();
+  for (const r of reports) reportByVideo.set(r.video_id, r);
+
+  return videos.map((v) => {
+    const report = reportByVideo.get(v.video_id);
+    const status: AssessmentStatus = report ? "complete" : (v.status as AssessmentStatus);
+    const location =
+      v.location_name ??
+      (v.lat != null && v.lng != null
+        ? `${v.lat.toFixed(3)}, ${v.lng.toFixed(3)}`
+        : "Unknown location");
+    return {
+      id: v.video_id,
+      title: v.title || filenameToTitle(v.filename),
+      subtitle: v.size_bytes ? `${(v.size_bytes / (1024 * 1024)).toFixed(1)} MB` : "",
+      location,
+      type: v.incident_type ?? "Unknown",
+      severity: severityToLevel(report?.overall_severity),
+      status,
+      date: formatDate(v.created_at),
+    };
+  });
 }
 
 export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: Props) {
@@ -70,6 +124,7 @@ export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: P
             {loading
               ? "Loading assessments..."
               : `${rows.length} total assessments synced from the AEGIS backend.`}
+              : `${rows.length} total assessments across flood, landslide, and typhoon response workflows.`}
           </p>
         </div>
         <button type="button" onClick={onNewAssessment} className="button-primary">
@@ -106,6 +161,8 @@ export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: P
       {error && (
         <div className="card border border-red-500/30 bg-red-500/5 p-4 text-[13px] text-red-200">
           Failed to load assessments: {error}
+        <div className="card border border-red-500/30 bg-red-500/10 p-4 text-[13px] text-red-200">
+          {error}
         </div>
       )}
 
@@ -127,6 +184,12 @@ export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: P
             <tbody>
               {filtered.map((r) => (
                 <tr key={r.id} className="table-row-interactive cursor-pointer" onClick={() => onViewAssessment?.(r.id)}>
+              {filteredRows.map((r) => (
+                <tr
+                  key={r.id}
+                  className="table-row-interactive cursor-pointer"
+                  onClick={() => onViewAssessment?.(r.id)}
+                >
                   <td className="px-4 py-3 font-mono text-aegis-accent">{r.id.slice(0, 10)}</td>
                   <td className="px-4 py-3">
                     <div className="font-medium text-slate-100">{r.title}</div>
@@ -166,8 +229,15 @@ export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: P
           <p className="p-10 text-center text-sm text-slate-500">
             {rows.length === 0
               ? "No assessments yet. Start a new one to begin."
+        {!loading && filteredRows.length === 0 && (
+          <p className="p-10 text-center text-sm text-slate-500">
+            {rows.length === 0
+              ? "No assessments yet — upload a video to get started."
               : "No assessments match the current filters."}
           </p>
+        )}
+        {loading && (
+          <p className="p-10 text-center text-sm text-slate-500">Loading assessments...</p>
         )}
       </div>
     </div>

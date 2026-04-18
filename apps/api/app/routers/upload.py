@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, File, HTTPException, UploadFile, status
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile, status
 
 from app.db import get_supabase
 from app.schemas import UploadResponse, VideoListItem, VideoListResponse
@@ -13,12 +13,21 @@ _ALLOWED_PREFIXES = ("video/",)
 
 
 @router.post("", response_model=UploadResponse, status_code=status.HTTP_201_CREATED)
-async def upload_video(file: UploadFile = File(...)) -> UploadResponse:
+async def upload_video(
+    file: UploadFile = File(...),
+    title: str | None = Form(None),
+    location_name: str | None = Form(None),
+    incident_type: str | None = Form(None),
+    lat: float | None = Form(None),
+    lng: float | None = Form(None),
+) -> UploadResponse:
     """
     Upload a disaster footage video.
 
-    Accepts any `video/*` content type. The returned `video_id` is required
-    by the `/analyze`, `/report`, and `/chat` endpoints.
+    Accepts any `video/*` content type. Optional `title`, `location_name`,
+    `incident_type`, `lat`, and `lng` are stored as assessment metadata.
+    The returned `video_id` is required by the `/analyze`, `/report`, and
+    `/chat` endpoints.
     """
     if file.content_type and not file.content_type.startswith(_ALLOWED_PREFIXES):
         raise HTTPException(
@@ -36,6 +45,8 @@ async def upload_video(file: UploadFile = File(...)) -> UploadResponse:
     size = len(file_bytes)
     content_type = file.content_type or "video/mp4"
     now = datetime.now(timezone.utc)
+    resolved_filename = file.filename or f"{video_id}{suffix}"
+    resolved_title = title or resolved_filename
 
     try:
         upload_to_bucket(file_bytes, storage_path, content_type)
@@ -49,19 +60,31 @@ async def upload_video(file: UploadFile = File(...)) -> UploadResponse:
     sb.table("videos").insert(
         {
             "video_id": video_id,
-            "filename": file.filename or f"{video_id}{suffix}",
+            "filename": resolved_filename,
             "size_bytes": size,
             "content_type": content_type,
             "storage_path": storage_path,
+            "title": resolved_title,
+            "location_name": location_name,
+            "incident_type": incident_type,
+            "lat": lat,
+            "lng": lng,
+            "status": "pending",
             "created_at": now.isoformat(),
         }
     ).execute()
 
     return UploadResponse(
         video_id=video_id,
-        filename=file.filename or f"{video_id}{suffix}",
+        filename=resolved_filename,
         size_bytes=size,
         content_type=content_type,
+        title=resolved_title,
+        location_name=location_name,
+        incident_type=incident_type,
+        lat=lat,
+        lng=lng,
+        status="pending",
         created_at=now,
     )
 
@@ -86,6 +109,12 @@ def list_videos() -> VideoListResponse:
                 filename=row["filename"],
                 size_bytes=row["size_bytes"],
                 content_type=row.get("content_type"),
+                title=row.get("title"),
+                location_name=row.get("location_name"),
+                incident_type=row.get("incident_type"),
+                lat=row.get("lat"),
+                lng=row.get("lng"),
+                status=row.get("status") or "pending",
                 created_at=datetime.fromisoformat(row["created_at"]),
                 url=signed_url or None,
             )

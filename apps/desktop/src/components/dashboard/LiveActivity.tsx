@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import type { ActivityItem } from "../../lib/mockData";
+import { fetchActivityFeed, subscribeToQueueUpdates } from "../../lib/supabaseQueries";
 
 const kindDot: Record<ActivityItem["kind"], string> = {
   extract: "bg-aegis-accent",
@@ -7,11 +9,35 @@ const kindDot: Record<ActivityItem["kind"], string> = {
   system: "bg-slate-500",
 };
 
-interface Props {
-  items: ActivityItem[];
-}
+export default function LiveActivity() {
+  const [items, setItems] = useState<ActivityItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export default function LiveActivity({ items }: Props) {
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const next = await fetchActivityFeed(10);
+        if (!cancelled) setItems(next);
+      } catch {
+        if (!cancelled) setItems([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    void load();
+    const unsubscribe = subscribeToQueueUpdates(() => {
+      void load();
+    });
+
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
+  }, []);
+
   return (
     <div className="card flex h-full min-h-0 flex-col overflow-hidden">
       <div className="card-header">
@@ -41,6 +67,16 @@ export default function LiveActivity({ items }: Props) {
             </div>
           </li>
         ))}
+        {loading && items.length === 0 && (
+          <li className="rounded-2xl border border-dashed border-aegis-border bg-aegis-surface2/40 p-4 text-center text-[12px] text-slate-500">
+            Loading activity...
+          </li>
+        )}
+        {!loading && items.length === 0 && (
+          <li className="rounded-2xl border border-dashed border-aegis-border bg-aegis-surface2/40 p-4 text-center text-[12px] text-slate-500">
+            No recent activity in the queue.
+          </li>
+        )}
       </ul>
     </div>
   );

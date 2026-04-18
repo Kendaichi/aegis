@@ -20,11 +20,22 @@ class GeoPoint(BaseModel):
     )
 
 
+AssessmentStatus = Literal["pending", "analyzing", "complete"]
+
+
 class UploadResponse(BaseModel):
     video_id: str = Field(..., description="Unique identifier for the uploaded video")
     filename: str = Field(..., description="Original filename of the uploaded video")
     size_bytes: int = Field(..., description="File size in bytes")
     content_type: str | None = Field(None, description="MIME type of the uploaded file")
+    title: str | None = Field(None, description="Human-readable assessment title")
+    location_name: str | None = Field(None, description="Human-readable location label")
+    incident_type: str | None = Field(
+        None, description="Incident classification (e.g. 'Flooding', 'Landslide')"
+    )
+    lat: float | None = Field(None, ge=-90, le=90, description="Incident latitude")
+    lng: float | None = Field(None, ge=-180, le=180, description="Incident longitude")
+    status: AssessmentStatus = Field("pending", description="Assessment pipeline status")
     created_at: datetime = Field(..., description="UTC timestamp of when the file was uploaded")
 
 
@@ -33,6 +44,14 @@ class VideoListItem(BaseModel):
     filename: str = Field(..., description="Original filename of the uploaded video")
     size_bytes: int = Field(..., description="File size in bytes")
     content_type: str | None = Field(None, description="MIME type of the uploaded file")
+    title: str | None = Field(None, description="Human-readable assessment title")
+    location_name: str | None = Field(None, description="Human-readable location label")
+    incident_type: str | None = Field(
+        None, description="Incident classification (e.g. 'Flooding', 'Landslide')"
+    )
+    lat: float | None = Field(None, ge=-90, le=90, description="Incident latitude")
+    lng: float | None = Field(None, ge=-180, le=180, description="Incident longitude")
+    status: AssessmentStatus = Field("pending", description="Assessment pipeline status")
     created_at: datetime = Field(..., description="UTC timestamp of when the file was uploaded")
     url: str | None = Field(None, description="Signed URL for temporary playback access")
 

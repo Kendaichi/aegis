@@ -14,11 +14,27 @@ export interface GeoPoint {
   lng: number;
 }
 
+export type AssessmentStatus = "pending" | "analyzing" | "complete";
+
+export interface UploadMetadata {
+  title?: string;
+  location_name?: string;
+  incident_type?: string;
+  lat?: number;
+  lng?: number;
+}
+
 export interface UploadResponse {
   video_id: string;
   filename: string;
   size_bytes: number;
   content_type: string | null;
+  title: string | null;
+  location_name: string | null;
+  incident_type: string | null;
+  lat: number | null;
+  lng: number | null;
+  status: AssessmentStatus;
   created_at: string;
 }
 
@@ -28,6 +44,7 @@ export interface VideoListItem {
   size_bytes: number;
   content_type: string | null;
   created_at: string;
+export interface VideoListItem extends UploadResponse {
   url: string | null;
 }
 
@@ -94,15 +111,38 @@ async function handle<T>(res: Response): Promise<T> {
 }
 
 const realApi = {
-  async upload(file: File): Promise<UploadResponse> {
+  async upload(file: File, metadata: UploadMetadata = {}): Promise<UploadResponse> {
     const body = new FormData();
     body.append("file", file);
+    if (metadata.title) body.append("title", metadata.title);
+    if (metadata.location_name) body.append("location_name", metadata.location_name);
+    if (metadata.incident_type) body.append("incident_type", metadata.incident_type);
+    if (metadata.lat !== undefined) body.append("lat", String(metadata.lat));
+    if (metadata.lng !== undefined) body.append("lng", String(metadata.lng));
     const res = await fetch(`${BASE}/upload`, { method: "POST", body });
     return handle(res);
   },
 
   async listVideos(): Promise<VideoListResponse> {
     const res = await fetch(`${BASE}/upload`);
+    return handle(res);
+  },
+
+  async listReports(video_id?: string): Promise<Report[]> {
+    const url = video_id
+      ? `${BASE}/report?video_id=${encodeURIComponent(video_id)}`
+      : `${BASE}/report`;
+    const res = await fetch(url);
+    return handle(res);
+  },
+
+  async getReport(report_id: string): Promise<Report> {
+    const res = await fetch(`${BASE}/report/${encodeURIComponent(report_id)}`);
+    return handle(res);
+  },
+
+  async getFrames(video_id: string): Promise<AnalyzeResponse> {
+    const res = await fetch(`${BASE}/analyze/${encodeURIComponent(video_id)}`);
     return handle(res);
   },
 

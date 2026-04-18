@@ -1,5 +1,7 @@
 import { ChevronRight } from "lucide-react";
-import { MOCK_ASSESSMENTS } from "../../lib/mockData";
+import { useEffect, useState } from "react";
+import type { AssessmentRow } from "../../lib/mockData";
+import { fetchRecentAssessments, subscribeToQueueUpdates } from "../../lib/supabaseQueries";
 import { SeverityBadge, StatusBadge } from "../ui/Badges";
 
 interface Props {
@@ -7,7 +9,37 @@ interface Props {
 }
 
 export default function RecentAssessments({ className = "" }: Props) {
-  const rows = MOCK_ASSESSMENTS.slice(0, 4);
+  const [rows, setRows] = useState<AssessmentRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const next = await fetchRecentAssessments(4);
+        if (cancelled) return;
+        setRows(next);
+        setError(null);
+      } catch (e) {
+        if (cancelled) return;
+        setError(e instanceof Error ? e.message : "Failed to load assessments");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    void load();
+    const unsubscribe = subscribeToQueueUpdates(() => {
+      void load();
+    });
+
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
+  }, []);
 
   return (
     <div className={`card overflow-hidden ${className}`}>
@@ -56,6 +88,17 @@ export default function RecentAssessments({ className = "" }: Props) {
             ))}
           </tbody>
         </table>
+        {loading && rows.length === 0 && (
+          <p className="p-6 text-center text-[12px] text-slate-500">Loading assessments...</p>
+        )}
+        {!loading && rows.length === 0 && !error && (
+          <p className="p-6 text-center text-[12px] text-slate-500">
+            No assessments yet — upload a video to get started.
+          </p>
+        )}
+        {error && (
+          <p className="p-6 text-center text-[12px] text-red-300">{error}</p>
+        )}
       </div>
     </div>
   );
