@@ -35,3 +35,19 @@ def get_signed_url(storage_path: str, expires_in: int = 3600) -> str:
     sb = get_supabase()
     result = sb.storage.from_(settings.supabase_bucket).create_signed_url(storage_path, expires_in)
     return result.get("signedURL") or result.get("signed_url") or ""
+
+
+_FRAMES_BUCKET = "frames"
+
+
+def upload_frame_jpeg(video_id: str, frame_index: int, jpeg_bytes: bytes) -> str:
+    """Upload a frame JPEG to the public frames bucket and return its public URL."""
+    sb = get_supabase()
+    storage_path = f"{video_id}/frame_{frame_index:05d}.jpg"
+    sb.storage.from_(_FRAMES_BUCKET).upload(
+        storage_path,
+        jpeg_bytes,
+        {"content-type": "image/jpeg", "upsert": "true"},
+    )
+    result = sb.storage.from_(_FRAMES_BUCKET).get_public_url(storage_path)
+    return result if isinstance(result, str) else result.get("publicUrl", "")
