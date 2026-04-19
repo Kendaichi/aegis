@@ -353,6 +353,37 @@ export async function fetchActivityFeed(limit = 8): Promise<ActivityItem[]> {
     .map(({ __ts: _ts, ...rest }) => rest);
 }
 
+// ── Chat persistence ──────────────────────────────────────────────────────────
+
+export interface ChatRow {
+  role: "user" | "assistant";
+  content: string;
+  session_id: string | null;
+}
+
+export async function fetchChatMessages(videoId: string): Promise<{ rows: ChatRow[]; sessionId: string | undefined }> {
+  const { data, error } = await supabase
+    .from("chat_history")
+    .select("role, content, session_id")
+    .eq("video_id", videoId)
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  const rows = (data ?? []) as ChatRow[];
+  const sessionId = [...rows].reverse().find((r) => r.session_id != null)?.session_id ?? undefined;
+  return { rows, sessionId };
+}
+
+export async function appendChatMessages(
+  videoId: string,
+  sessionId: string | undefined,
+  messages: Array<{ role: "user" | "assistant"; content: string }>
+): Promise<void> {
+  const { error } = await supabase.from("chat_history").insert(
+    messages.map((m) => ({ video_id: videoId, session_id: sessionId ?? null, ...m }))
+  );
+  if (error) throw error;
+}
+
 /**
  * Subscribe to any changes that affect queue-derived dashboard views.
  * The caller re-queries its data on each notification; this keeps the
