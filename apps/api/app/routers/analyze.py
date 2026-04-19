@@ -172,9 +172,7 @@ async def _run_analysis_job(
                 timestamp_seconds=i * interval,
             )
             raw_frames.append(frame)
-            hydrated = frame.model_copy(
-                update={"image_url": f"/analyze/{video_id}/frame/{i}.jpg"}
-            )
+            hydrated = frame.model_copy(update={"image_url": f"/analyze/{video_id}/frame/{i}.jpg"})
             job.frames.append(hydrated)
             job.event.set()
             if i < len(frame_paths) - 1:
