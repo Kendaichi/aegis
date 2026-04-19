@@ -27,19 +27,20 @@ CHAT_SYSTEM_PROMPT = (
 )
 
 FRAME_PROMPT = """You are a disaster-response analyst reviewing a single frame of site footage.
-Locate visible disaster damage: draw conceptual bounding boxes around each distinct damaged region
-(buildings, road sections, debris piles, flood water, etc.). Coordinates are NORMALIZED to the
-image: origin top-left, x and y from 0.0 to 1.0.
+
+PRIORITY — PEOPLE IN DANGER: First, scan for any visible person or human figure. If a person appears to be in a hazardous situation (surrounded by flood water, debris, fire, collapsed structure, etc.), draw a bounding box around them and assign severity "destroyed" to reflect the life-threatening nature of their situation. Label such detections as "Person in danger".
+
+Then locate visible disaster damage: draw conceptual bounding boxes around each distinct damaged region (buildings, road sections, debris piles, flood water, etc.). Coordinates are NORMALIZED to the image: origin top-left, x and y from 0.0 to 1.0.
 
 Respond with STRICT JSON matching this schema:
 {
   "severity": "none|minor|moderate|severe|destroyed",
-  "description": "one to two sentence description of visible damage",
+  "description": "one to two sentence description of visible damage and any people in danger",
   "detected_hazards": ["list", "of", "hazards"],
   "confidence": 0.85,
   "detections": [
     {
-      "label": "short region label e.g. collapsed roof",
+      "label": "short region label e.g. collapsed roof OR Person in danger",
       "severity": "none|minor|moderate|severe|destroyed",
       "bbox": [x1, y1, x2, y2],
       "confidence": 0.72
@@ -47,8 +48,9 @@ Respond with STRICT JSON matching this schema:
   ]
 }
 Rules:
+- If any person is in danger, the top-level severity must be at least "destroyed".
 - confidence fields: your actual certainty estimate as a float from 0.0 (uncertain) to 1.0 (certain). Do NOT copy the example values — replace them with your real estimate.
-- bbox: x1 < x2, y1 < y2, all values in [0, 1]. Use 1–5 boxes when damage is visible; use an empty array if none.
+- bbox: x1 < x2, y1 < y2, all values in [0, 1]. Use 1–6 boxes when damage or people in danger are visible; use an empty array if none.
 Only output the JSON object. No prose, no markdown fences."""
 
 _MOCK_SEVERITIES: list[DamageSeverity] = [
@@ -140,17 +142,46 @@ def _parse_detections(raw: object) -> list[Detection]:
     return out
 
 
+def _extract_json_object(raw: str) -> str:
+    """Best-effort extraction of the first complete {...} block from raw text."""
+    start = raw.find("{")
+    if start == -1:
+        return raw
+    depth = 0
+    for i, ch in enumerate(raw[start:], start):
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                return raw[start : i + 1]
+    return raw[start:]
+
+
+def _clean_vlm_response(raw: str) -> str:
+    """Strip markdown fences then extract the JSON object."""
+    text = raw.strip()
+    if text.startswith("```"):
+        lines = text.splitlines()
+        inner = lines[1:] if lines[0].startswith("```") else lines
+        if inner and inner[-1].strip() == "```":
+            inner = inner[:-1]
+        text = "\n".join(inner).strip()
+    return _extract_json_object(text)
+
+
 def _parse_frame_json(
     raw: str,
     frame_index: int,
     timestamp_seconds: float,
 ) -> FrameAnalysis:
+    cleaned = _clean_vlm_response(raw)
     try:
-        data = json.loads(raw)
+        data = json.loads(cleaned)
     except json.JSONDecodeError:
         data = {
             "severity": "none",
-            "description": raw[:400] or "Model returned non-JSON output.",
+            "description": "Model returned unparseable output.",
             "detected_hazards": [],
             "confidence": 0.0,
             "detections": [],
