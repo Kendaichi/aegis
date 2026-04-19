@@ -52,7 +52,7 @@
       "label": ".ensure_dirs()",
       "file_type": "code",
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\config.py",
-      "source_location": "L44",
+      "source_location": "L45",
       "id": "config_settings_ensure_dirs",
       "community": 2,
       "norm_label": ".ensure_dirs()"
@@ -749,18 +749,18 @@
       "file_type": "rationale",
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
       "source_location": "L146",
-      "id": "vlm_rationale_146",
       "community": 1,
-      "norm_label": "best-effort extraction of the first complete {...} block from raw text."
+      "norm_label": "best-effort extraction of the first complete {...} block from raw text.",
+      "id": "vlm_rationale_146"
     },
     {
       "label": "Strip markdown fences then extract the JSON object.",
       "file_type": "rationale",
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
       "source_location": "L162",
-      "id": "vlm_rationale_162",
       "community": 1,
-      "norm_label": "strip markdown fences then extract the json object."
+      "norm_label": "strip markdown fences then extract the json object.",
+      "id": "vlm_rationale_162"
     },
     {
       "label": "__init__.py",
@@ -806,9 +806,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "aegis_design_system",
       "community": 9,
-      "norm_label": "aegis design system (tailwind tokens)"
+      "norm_label": "aegis design system (tailwind tokens)",
+      "id": "aegis_design_system"
     },
     {
       "label": "vite.config.d.ts",
@@ -2232,7 +2232,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\config.py",
-      "source_location": "L44",
+      "source_location": "L45",
       "weight": 1.0,
       "_src": "config_settings",
       "_tgt": "config_settings_ensure_dirs",
@@ -2714,11 +2714,11 @@
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
       "source_location": "L13",
       "weight": 0.8,
-      "_src": "vlm_rationale_146",
-      "_tgt": "schemas_damageseverity",
+      "_src": "schemas_damageseverity",
+      "_tgt": "vlm_rationale_146",
+      "confidence_score": 0.5,
       "source": "schemas_damageseverity",
-      "target": "vlm_rationale_146",
-      "confidence_score": 0.5
+      "target": "vlm_rationale_146"
     },
     {
       "relation": "uses",
@@ -2726,11 +2726,11 @@
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
       "source_location": "L13",
       "weight": 0.8,
-      "_src": "vlm_rationale_162",
-      "_tgt": "schemas_damageseverity",
+      "_src": "schemas_damageseverity",
+      "_tgt": "vlm_rationale_162",
+      "confidence_score": 0.5,
       "source": "schemas_damageseverity",
-      "target": "vlm_rationale_162",
-      "confidence_score": 0.5
+      "target": "vlm_rationale_162"
     },
     {
       "relation": "calls",
@@ -3266,11 +3266,11 @@
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
       "source_location": "L13",
       "weight": 0.8,
-      "_src": "vlm_rationale_146",
-      "_tgt": "schemas_detection",
+      "_src": "schemas_detection",
+      "_tgt": "vlm_rationale_146",
+      "confidence_score": 0.5,
       "source": "schemas_detection",
-      "target": "vlm_rationale_146",
-      "confidence_score": 0.5
+      "target": "vlm_rationale_146"
     },
     {
       "relation": "uses",
@@ -3278,11 +3278,11 @@
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
       "source_location": "L13",
       "weight": 0.8,
-      "_src": "vlm_rationale_162",
-      "_tgt": "schemas_detection",
+      "_src": "schemas_detection",
+      "_tgt": "vlm_rationale_162",
+      "confidence_score": 0.5,
       "source": "schemas_detection",
-      "target": "vlm_rationale_162",
-      "confidence_score": 0.5
+      "target": "vlm_rationale_162"
     },
     {
       "relation": "calls",
@@ -3386,11 +3386,11 @@
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
       "source_location": "L13",
       "weight": 0.8,
-      "_src": "vlm_rationale_146",
-      "_tgt": "schemas_frameanalysis",
+      "_src": "schemas_frameanalysis",
+      "_tgt": "vlm_rationale_146",
+      "confidence_score": 0.5,
       "source": "schemas_frameanalysis",
-      "target": "vlm_rationale_146",
-      "confidence_score": 0.5
+      "target": "vlm_rationale_146"
     },
     {
       "relation": "uses",
@@ -3398,11 +3398,11 @@
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
       "source_location": "L13",
       "weight": 0.8,
-      "_src": "vlm_rationale_162",
-      "_tgt": "schemas_frameanalysis",
+      "_src": "schemas_frameanalysis",
+      "_tgt": "vlm_rationale_162",
+      "confidence_score": 0.5,
       "source": "schemas_frameanalysis",
-      "target": "vlm_rationale_162",
-      "confidence_score": 0.5
+      "target": "vlm_rationale_162"
     },
     {
       "relation": "calls",
@@ -5151,8 +5151,8 @@
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
       "source_location": "L71",
       "weight": 1.0,
-      "_src": "frameimagemodal_cleanupvideo",
-      "_tgt": "severitydistribution_load",
+      "_src": "severitydistribution_load",
+      "_tgt": "frameimagemodal_cleanupvideo",
       "source": "severitydistribution_load",
       "target": "frameimagemodal_cleanupvideo"
     },

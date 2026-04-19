@@ -315,7 +315,7 @@ def chat_completion(messages: list[dict[str, str]]) -> str:
 
     if settings.vlm_mode == "zai":
         zai_response = _get_zai_client().chat.completions.create(
-            model=settings.vlm_model,
+            model=settings.chat_model,
             messages=scoped_messages,  # type: ignore[arg-type]
         )
         return zai_response.choices[0].message.content or ""
