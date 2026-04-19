@@ -159,11 +159,7 @@ def list_reports(video_id: str | None = None) -> list[Report]:
     result = query.execute()
 
     rows = result.data or []
-    need_fallback = [
-        str(r["video_id"])
-        for r in rows
-        if _geo_from_lat_lng_row(r) is None
-    ]
+    need_fallback = [str(r["video_id"]) for r in rows if _geo_from_lat_lng_row(r) is None]
     video_locations = _video_locations_by_id(sb, list(dict.fromkeys(need_fallback)))
 
     reports = []

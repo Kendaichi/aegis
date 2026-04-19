@@ -28,13 +28,7 @@ def main() -> None:
             skipped_no_video_coords += 1
             continue
 
-        vr = (
-            sb.table("videos")
-            .select("lat, lng")
-            .eq("video_id", vid)
-            .maybe_single()
-            .execute()
-        )
+        vr = sb.table("videos").select("lat, lng").eq("video_id", vid).maybe_single().execute()
         if not vr.data:
             skipped_no_video_coords += 1
             continue
@@ -44,7 +38,9 @@ def main() -> None:
             skipped_no_video_coords += 1
             continue
 
-        sb.table("reports").update({"lat": lat, "lng": lng}).eq("report_id", row["report_id"]).execute()
+        sb.table("reports").update({"lat": lat, "lng": lng}).eq(
+            "report_id", row["report_id"]
+        ).execute()
         updated += 1
 
     print(
