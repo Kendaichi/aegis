@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     vlm_model: str = "glm-4.6v-flash"
     upload_dir: Path = Path("./uploads")
     frames_dir: Path = Path("./frames")
-    frame_interval_seconds: float = 2.0
+    frame_interval_seconds: float = 10.0
     ffmpeg_bin: str = "ffmpeg"
     ffprobe_bin: str = "ffprobe"
 

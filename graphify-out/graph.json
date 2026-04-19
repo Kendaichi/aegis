@@ -3245,8 +3245,8 @@
       "source_file": "apps/desktop/tailwind.config.js",
       "source_location": null,
       "weight": 0.8,
-      "_src": "app_tsx",
-      "_tgt": "aegis_design_system",
+      "_src": "aegis_design_system",
+      "_tgt": "app_tsx",
       "source": "aegis_design_system",
       "target": "app_tsx"
     },
@@ -4541,8 +4541,8 @@
       "source_file": "apps/desktop/src/pages/AssessmentsWorkspacePage.tsx",
       "source_location": null,
       "weight": 0.2,
-      "_src": "pages_AssessmentsWorkspacePage",
-      "_tgt": "concept_supabaseRealtime",
+      "_src": "concept_supabaseRealtime",
+      "_tgt": "pages_AssessmentsWorkspacePage",
       "source": "concept_supabaseRealtime",
       "target": "pages_AssessmentsWorkspacePage"
     },
@@ -4565,8 +4565,8 @@
       "source_file": "apps/desktop/src-tauri/build.rs",
       "source_location": null,
       "weight": 0.75,
-      "_src": "tauri_librs",
-      "_tgt": "tauri_buildrs",
+      "_src": "tauri_buildrs",
+      "_tgt": "tauri_librs",
       "source": "tauri_buildrs",
       "target": "tauri_librs"
     },
