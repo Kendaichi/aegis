@@ -2,10 +2,12 @@ import base64
 import hashlib
 import json
 import mimetypes
+import time
 from pathlib import Path
 
+from fastapi import HTTPException, status
 from ollama import Client
-from openai import OpenAI
+from openai import OpenAI, RateLimitError
 
 from app.config import settings
 from app.schemas import DamageSeverity, Detection, FrameAnalysis
@@ -206,24 +208,35 @@ def analyze_frame(
         return _mock_frame_analysis(frame_path, frame_index, timestamp_seconds)
 
     if settings.vlm_mode == "zai":
-        response = _get_zai_client().chat.completions.create(
-            model=settings.vlm_model,
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": FRAME_PROMPT},
+        last_exc: RateLimitError | None = None
+        for attempt in range(4):
+            if attempt:
+                time.sleep(2**attempt)
+            try:
+                response = _get_zai_client().chat.completions.create(
+                    model=settings.vlm_model,
+                    messages=[
                         {
-                            "type": "image_url",
-                            "image_url": {"url": _frame_data_url(frame_path)},
-                        },
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": FRAME_PROMPT},
+                                {
+                                    "type": "image_url",
+                                    "image_url": {"url": _frame_data_url(frame_path)},
+                                },
+                            ],
+                        }
                     ],
-                }
-            ],
-            response_format={"type": "json_object"},
+                    response_format={"type": "json_object"},
+                )
+                raw = (response.choices[0].message.content or "").strip()
+                return _parse_frame_json(raw, frame_index, timestamp_seconds)
+            except RateLimitError as exc:
+                last_exc = exc
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"VLM service rate-limited after retries: {last_exc}",
         )
-        raw = (response.choices[0].message.content or "").strip()
-        return _parse_frame_json(raw, frame_index, timestamp_seconds)
 
     client = _get_client()
     ollama_response = client.generate(
