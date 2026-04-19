@@ -1,17 +1,42 @@
+import asyncio
+import json
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from functools import lru_cache
-from fastapi import APIRouter, HTTPException, status
-from fastapi.responses import FileResponse
+from pathlib import Path
+
+from fastapi import APIRouter, BackgroundTasks, HTTPException, status
+from fastapi.responses import FileResponse, StreamingResponse
 from postgrest.exceptions import APIError
 
 from app.config import settings
 from app.db import get_supabase
-from app.schemas import AnalyzeRequest, AnalyzeResponse, DamageSeverity, Detection, FrameAnalysis
+from app.schemas import (
+    AnalyzeJobResponse,
+    AnalyzeRequest,
+    AnalyzeResponse,
+    DamageSeverity,
+    Detection,
+    FrameAnalysis,
+)
 from app.services.storage import download_to_temp
 from app.services.video import extract_frames
 from app.services.vlm import analyze_frame
 
 router = APIRouter(prefix="/analyze", tags=["analyze"])
+
+_INTER_FRAME_DELAY = 2.0  # seconds between VLM API calls to avoid rate limits
+
+
+@dataclass
+class _AnalysisJob:
+    frames: list[FrameAnalysis] = field(default_factory=list)
+    done: bool = False
+    error: str | None = None
+    event: asyncio.Event = field(default_factory=asyncio.Event)
+
+
+_active_jobs: dict[str, _AnalysisJob] = {}
 
 
 def _is_missing_column_error(exc: APIError, column: str) -> bool:
@@ -122,9 +147,53 @@ def _persist_frames(video_id: str, analyses: list[FrameAnalysis]) -> None:
         sb.table("frame_analyses").insert(fallback_rows).execute()
 
 
+async def _run_analysis_job(
+    video_id: str,
+    storage_path: str,
+    suffix: str,
+    interval: float,
+) -> None:
+    job = _active_jobs[video_id]
+    raw_frames: list[FrameAnalysis] = []
+    try:
+        video_path: Path = await asyncio.to_thread(download_to_temp, storage_path, suffix)
+        try:
+            frame_paths: list[Path] = await asyncio.to_thread(
+                extract_frames, video_path, video_id, interval
+            )
+        finally:
+            video_path.unlink(missing_ok=True)
+
+        for i, p in enumerate(frame_paths):
+            frame = await asyncio.to_thread(
+                analyze_frame,
+                frame_path=p,
+                frame_index=i,
+                timestamp_seconds=i * interval,
+            )
+            raw_frames.append(frame)
+            hydrated = frame.model_copy(
+                update={"image_url": f"/analyze/{video_id}/frame/{i}.jpg"}
+            )
+            job.frames.append(hydrated)
+            job.event.set()
+            if i < len(frame_paths) - 1:
+                await asyncio.sleep(_INTER_FRAME_DELAY)
+
+        await asyncio.to_thread(_persist_frames, video_id, raw_frames)
+    except Exception as exc:
+        job.error = str(exc)
+        job.event.set()
+    finally:
+        job.done = True
+        job.event.set()
+        # Keep job in memory briefly so late SSE clients can still connect
+        await asyncio.sleep(300)
+        _active_jobs.pop(video_id, None)
+
+
 @router.get("/{video_id}/frame/{frame_index}.jpg")
 def get_frame_image(video_id: str, frame_index: int) -> FileResponse:
-    """Serve the extracted JPEG for a frame (1-based file names on disk)."""
     path = settings.frames_dir / video_id / f"frame_{frame_index + 1:05d}.jpg"
     if not path.is_file():
         raise HTTPException(
@@ -134,9 +203,69 @@ def get_frame_image(video_id: str, frame_index: int) -> FileResponse:
     return FileResponse(path, media_type="image/jpeg")
 
 
+@router.get("/{video_id}/stream")
+async def stream_analysis(video_id: str) -> StreamingResponse:
+    # If no active job, serve from cache
+    if video_id not in _active_jobs:
+        cached = _load_cached_frames(video_id)
+        if not cached:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"No active job or cached results for video_id {video_id}",
+            )
+        hydrated = _with_image_urls(video_id, cached)
+
+        async def cached_stream():
+            for frame in hydrated:
+                yield f"event: frame\ndata: {frame.model_dump_json()}\n\n"
+            yield "event: done\ndata: {}\n\n"
+
+        return StreamingResponse(
+            cached_stream(),
+            media_type="text/event-stream",
+            headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+        )
+
+    job = _active_jobs[video_id]
+
+    async def live_stream():
+        sent = 0
+        while True:
+            while sent < len(job.frames):
+                yield f"event: frame\ndata: {job.frames[sent].model_dump_json()}\n\n"
+                sent += 1
+
+            if job.error:
+                yield f"event: error\ndata: {json.dumps({'detail': job.error})}\n\n"
+                return
+
+            if job.done:
+                yield "event: done\ndata: {}\n\n"
+                return
+
+            job.event.clear()
+            # Re-check after clear to avoid missing an update that arrived between drain and clear
+            while sent < len(job.frames):
+                yield f"event: frame\ndata: {job.frames[sent].model_dump_json()}\n\n"
+                sent += 1
+            if job.done or job.error:
+                continue
+
+            try:
+                await asyncio.wait_for(job.event.wait(), timeout=120)
+            except asyncio.TimeoutError:
+                yield 'event: error\ndata: {"detail": "analysis timed out"}\n\n'
+                return
+
+    return StreamingResponse(
+        live_stream(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
 @router.get("/{video_id}", response_model=AnalyzeResponse)
 def get_analysis(video_id: str) -> AnalyzeResponse:
-    """Return cached frame analyses for a previously analyzed video."""
     sb = get_supabase()
     video_row = (
         sb.table("videos").select("video_id").eq("video_id", video_id).maybe_single().execute()
@@ -151,14 +280,8 @@ def get_analysis(video_id: str) -> AnalyzeResponse:
     return AnalyzeResponse(video_id=video_id, frame_count=len(frames), frames=frames)
 
 
-@router.post("", response_model=AnalyzeResponse)
-def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
-    """
-    Analyze an uploaded video frame-by-frame.
-
-    Returns cached results if the video has already been analyzed at the same
-    interval. Pass a different `frame_interval_seconds` to force re-analysis.
-    """
+@router.post("", response_model=AnalyzeJobResponse)
+async def analyze(req: AnalyzeRequest, background_tasks: BackgroundTasks) -> AnalyzeJobResponse:
     sb = get_supabase()
     video_row = (
         sb.table("videos")
@@ -173,42 +296,35 @@ def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
             detail=f"video_id {req.video_id} not found",
         )
 
-    interval = req.frame_interval_seconds or settings.frame_interval_seconds
-
-    # Return cached frames when the client uses the default interval
+    # Return cached results if available and no custom interval requested
     if req.frame_interval_seconds is None:
         cached = _load_cached_frames(req.video_id)
         if cached:
             hydrated = _with_image_urls(req.video_id, cached)
-            return AnalyzeResponse(
+            return AnalyzeJobResponse(
                 video_id=req.video_id,
+                status="complete",
                 frame_count=len(hydrated),
                 frames=hydrated,
             )
 
+    # Return current job state if already running
+    if req.video_id in _active_jobs:
+        job = _active_jobs[req.video_id]
+        return AnalyzeJobResponse(
+            video_id=req.video_id,
+            status="processing",
+            frame_count=len(job.frames),
+            frames=list(job.frames),
+        )
+
+    # Start new background job
+    interval = req.frame_interval_seconds or settings.frame_interval_seconds
     storage_path: str = video_row.data["storage_path"]
     filename: str = video_row.data["filename"]
     suffix = ("." + filename.rsplit(".", 1)[-1]) if "." in filename else ""
 
-    video_path = download_to_temp(storage_path, suffix)
-    try:
-        frame_paths = extract_frames(video_path, req.video_id, interval_seconds=interval)
-        analyses = [
-            analyze_frame(
-                frame_path=p,
-                frame_index=i,
-                timestamp_seconds=i * interval,
-            )
-            for i, p in enumerate(frame_paths)
-        ]
-    finally:
-        video_path.unlink(missing_ok=True)
+    _active_jobs[req.video_id] = _AnalysisJob()
+    background_tasks.add_task(_run_analysis_job, req.video_id, storage_path, suffix, interval)
 
-    _persist_frames(req.video_id, analyses)
-
-    out_frames = _with_image_urls(req.video_id, analyses)
-    return AnalyzeResponse(
-        video_id=req.video_id,
-        frame_count=len(out_frames),
-        frames=out_frames,
-    )
+    return AnalyzeJobResponse(video_id=req.video_id, status="processing")

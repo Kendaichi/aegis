@@ -120,6 +120,13 @@ class AnalyzeResponse(BaseModel):
     frames: list[FrameAnalysis] = Field(..., description="Per-frame analysis results")
 
 
+class AnalyzeJobResponse(BaseModel):
+    video_id: str = Field(..., description="ID of the video being analyzed")
+    status: Literal["processing", "complete"] = Field(..., description="Job status")
+    frame_count: int = Field(0, description="Number of frames analyzed so far")
+    frames: list[FrameAnalysis] = Field(default_factory=list, description="Frames analyzed so far")
+
+
 class ReportRequest(BaseModel):
     video_id: str = Field(..., description="ID of a previously uploaded video (from /upload)")
     location: GeoPoint | None = Field(

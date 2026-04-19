@@ -190,17 +190,40 @@
       "norm_label": "aegis fastapi application"
     },
     {
-      "label": "Settings (Pydantic BaseSettings)",
+      "label": "config.py",
       "file_type": "code",
-      "source_file": "apps/api/app/config.py",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\config.py",
+      "source_location": "L1",
+      "id": "c_users_frank_desktop_projects_aegis_apps_api_app_config_py",
+      "community": 1,
+      "norm_label": "config.py"
+    },
+    {
+      "label": "Settings",
+      "file_type": "code",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\config.py",
+      "source_location": "L12",
       "id": "config_settings",
       "community": 1,
-      "norm_label": "settings (pydantic basesettings)"
+      "norm_label": "settings"
+    },
+    {
+      "label": "BaseSettings",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "id": "basesettings",
+      "community": 1,
+      "norm_label": "basesettings"
+    },
+    {
+      "label": ".ensure_dirs()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\config.py",
+      "source_location": "L44",
+      "id": "config_settings_ensure_dirs",
+      "community": 1,
+      "norm_label": ".ensure_dirs()"
     },
     {
       "label": "get_supabase (Supabase Client Factory)",
@@ -368,7 +391,7 @@
       "author": null,
       "contributor": null,
       "id": "schemas_ChatMessage",
-      "community": 5,
+      "community": 7,
       "norm_label": "chatmessage (pydantic model)"
     },
     {
@@ -381,7 +404,7 @@
       "author": null,
       "contributor": null,
       "id": "schemas_ChatRequest",
-      "community": 5,
+      "community": 7,
       "norm_label": "chatrequest (pydantic model)"
     },
     {
@@ -394,7 +417,7 @@
       "author": null,
       "contributor": null,
       "id": "schemas_ChatResponse",
-      "community": 5,
+      "community": 7,
       "norm_label": "chatresponse (pydantic model)"
     },
     {
@@ -403,7 +426,7 @@
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\__init__.py",
       "source_location": "L1",
       "id": "c_users_frank_desktop_projects_aegis_apps_api_app_init_py",
-      "community": 15,
+      "community": 16,
       "norm_label": "__init__.py"
     },
     {
@@ -429,7 +452,7 @@
       "author": null,
       "contributor": null,
       "id": "router_chat",
-      "community": 5,
+      "community": 7,
       "norm_label": "chat router"
     },
     {
@@ -464,7 +487,7 @@
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\routers\\__init__.py",
       "source_location": "L1",
       "id": "c_users_frank_desktop_projects_aegis_apps_api_app_routers_init_py",
-      "community": 16,
+      "community": 17,
       "norm_label": "__init__.py"
     },
     {
@@ -507,17 +530,94 @@
       "norm_label": "video service (extract_frames, probe)"
     },
     {
-      "label": "VLM Service (analyze_frame, chat_completion)",
+      "label": "vlm.py",
       "file_type": "code",
-      "source_file": "apps/api/app/services/vlm.py",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "service_vlm",
-      "community": 1,
-      "norm_label": "vlm service (analyze_frame, chat_completion)"
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L1",
+      "id": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "community": 5,
+      "norm_label": "vlm.py"
+    },
+    {
+      "label": "_get_client()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L66",
+      "id": "vlm_get_client",
+      "community": 5,
+      "norm_label": "_get_client()"
+    },
+    {
+      "label": "_get_zai_client()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L73",
+      "id": "vlm_get_zai_client",
+      "community": 5,
+      "norm_label": "_get_zai_client()"
+    },
+    {
+      "label": "_frame_data_url()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L85",
+      "id": "vlm_frame_data_url",
+      "community": 5,
+      "norm_label": "_frame_data_url()"
+    },
+    {
+      "label": "_clamp01()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L91",
+      "id": "vlm_clamp01",
+      "community": 5,
+      "norm_label": "_clamp01()"
+    },
+    {
+      "label": "_parse_detections()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L95",
+      "id": "vlm_parse_detections",
+      "community": 5,
+      "norm_label": "_parse_detections()"
+    },
+    {
+      "label": "_parse_frame_json()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L130",
+      "id": "vlm_parse_frame_json",
+      "community": 5,
+      "norm_label": "_parse_frame_json()"
+    },
+    {
+      "label": "_mock_frame_analysis()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L157",
+      "id": "vlm_mock_frame_analysis",
+      "community": 5,
+      "norm_label": "_mock_frame_analysis()"
+    },
+    {
+      "label": "analyze_frame()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L202",
+      "id": "vlm_analyze_frame",
+      "community": 5,
+      "norm_label": "analyze_frame()"
+    },
+    {
+      "label": "chat_completion()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L253",
+      "id": "vlm_chat_completion",
+      "community": 5,
+      "norm_label": "chat_completion()"
     },
     {
       "label": "__init__.py",
@@ -525,7 +625,7 @@
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\__init__.py",
       "source_location": "L1",
       "id": "c_users_frank_desktop_projects_aegis_apps_api_app_services_init_py",
-      "community": 17,
+      "community": 18,
       "norm_label": "__init__.py"
     },
     {
@@ -573,7 +673,7 @@
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\desktop\\vite.config.d.ts",
       "source_location": "L1",
       "id": "c_users_frank_desktop_projects_aegis_apps_desktop_vite_config_d_ts",
-      "community": 18,
+      "community": 19,
       "norm_label": "vite.config.d.ts"
     },
     {
@@ -582,7 +682,7 @@
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\desktop\\vite.config.js",
       "source_location": "L1",
       "id": "c_users_frank_desktop_projects_aegis_apps_desktop_vite_config_js",
-      "community": 19,
+      "community": 20,
       "norm_label": "vite.config.js"
     },
     {
@@ -630,7 +730,7 @@
       "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\desktop\\src\\vite-env.d.ts",
       "source_location": "L1",
       "id": "c_users_frank_desktop_projects_aegis_apps_desktop_src_vite_env_d_ts",
-      "community": 20,
+      "community": 21,
       "norm_label": "vite-env.d.ts"
     },
     {
@@ -955,7 +1055,7 @@
       "author": null,
       "contributor": null,
       "id": "map_SeverityDot",
-      "community": 21,
+      "community": 22,
       "norm_label": "severitydot marker component"
     },
     {
@@ -1046,7 +1146,7 @@
       "author": null,
       "contributor": null,
       "id": "droneconnect_DroneConnect",
-      "community": 7,
+      "community": 8,
       "norm_label": "droneconnect rtsp feed component"
     },
     {
@@ -1098,7 +1198,7 @@
       "author": null,
       "contributor": null,
       "id": "videoplayer_VideoPlayer",
-      "community": 7,
+      "community": 8,
       "norm_label": "videoplayer component"
     },
     {
@@ -1254,7 +1354,7 @@
       "author": null,
       "contributor": null,
       "id": "compress_compressVideo",
-      "community": 7,
+      "community": 8,
       "norm_label": "compressvideo ffmpeg function"
     },
     {
@@ -1384,7 +1484,7 @@
       "author": null,
       "contributor": null,
       "id": "mockData_NotificationItem",
-      "community": 22,
+      "community": 23,
       "norm_label": "notificationitem interface"
     },
     {
@@ -1397,7 +1497,7 @@
       "author": null,
       "contributor": null,
       "id": "mockData_ProfileSummary",
-      "community": 23,
+      "community": 24,
       "norm_label": "profilesummary interface"
     },
     {
@@ -1436,7 +1536,7 @@
       "author": null,
       "contributor": null,
       "id": "mockData_MOCK_ASSESSMENTS",
-      "community": 24,
+      "community": 25,
       "norm_label": "mock assessments data"
     },
     {
@@ -1449,7 +1549,7 @@
       "author": null,
       "contributor": null,
       "id": "mockData_MOCK_NOTIFICATIONS",
-      "community": 11,
+      "community": 10,
       "norm_label": "mock notifications data"
     },
     {
@@ -1462,7 +1562,7 @@
       "author": null,
       "contributor": null,
       "id": "mockData_PROFILE_SUMMARY",
-      "community": 12,
+      "community": 11,
       "norm_label": "profile summary data"
     },
     {
@@ -1475,7 +1575,7 @@
       "author": null,
       "contributor": null,
       "id": "mockData_DASHBOARD_MAP_MARKERS",
-      "community": 9,
+      "community": 12,
       "norm_label": "dashboard map markers data"
     },
     {
@@ -1488,7 +1588,7 @@
       "author": null,
       "contributor": null,
       "id": "mockData_MAP_VIEW_MARKERS",
-      "community": 25,
+      "community": 26,
       "norm_label": "map view markers data"
     },
     {
@@ -1501,7 +1601,7 @@
       "author": null,
       "contributor": null,
       "id": "mockData_MOCK_FRAMES_BY_ASSESSMENT_ID",
-      "community": 10,
+      "community": 14,
       "norm_label": "mock frames by assessment id"
     },
     {
@@ -1527,7 +1627,7 @@
       "author": null,
       "contributor": null,
       "id": "mockData_generateFrames",
-      "community": 10,
+      "community": 14,
       "norm_label": "generate frames function"
     },
     {
@@ -1761,7 +1861,7 @@
       "author": null,
       "contributor": null,
       "id": "pages_DashboardPage",
-      "community": 9,
+      "community": 12,
       "norm_label": "dashboard page"
     },
     {
@@ -1787,7 +1887,7 @@
       "author": null,
       "contributor": null,
       "id": "pages_NotificationsPage",
-      "community": 11,
+      "community": 10,
       "norm_label": "notifications page"
     },
     {
@@ -1800,7 +1900,7 @@
       "author": null,
       "contributor": null,
       "id": "pages_ProfilePage",
-      "community": 12,
+      "community": 11,
       "norm_label": "profile page"
     },
     {
@@ -1826,7 +1926,7 @@
       "author": null,
       "contributor": null,
       "id": "tauri_buildrs",
-      "community": 8,
+      "community": 9,
       "norm_label": "tauri build script (build.rs)"
     },
     {
@@ -1839,7 +1939,7 @@
       "author": null,
       "contributor": null,
       "id": "tauri_librs",
-      "community": 8,
+      "community": 9,
       "norm_label": "tauri app entry point (lib.rs)"
     },
     {
@@ -1852,7 +1952,7 @@
       "author": null,
       "contributor": null,
       "id": "tauri_mainrs",
-      "community": 8,
+      "community": 9,
       "norm_label": "tauri main entry (main.rs)"
     },
     {
@@ -1860,7 +1960,7 @@
       "file_type": "rationale",
       "source_file": "apps\\api\\app\\schemas.py",
       "source_location": "L65",
-      "community": 26,
+      "community": 27,
       "norm_label": "localized damage region on the frame (object-detection style). coordinates are n",
       "id": "schemas_rationale_65"
     },
@@ -1896,7 +1996,7 @@
       "file_type": "rationale",
       "source_file": "apps\\api\\app\\routers\\chat.py",
       "source_location": "L68",
-      "community": 5,
+      "community": 7,
       "norm_label": "inject persisted report/analysis context into the system prompt.",
       "id": "chat_rationale_68"
     },
@@ -1905,7 +2005,7 @@
       "file_type": "rationale",
       "source_file": "apps\\api\\app\\routers\\chat.py",
       "source_location": "L128",
-      "community": 5,
+      "community": 7,
       "norm_label": "chat with the aegis disaster-assessment assistant.      pass `session_id` to c",
       "id": "chat_rationale_128"
     },
@@ -1959,7 +2059,7 @@
       "file_type": "rationale",
       "source_file": "apps\\api\\app\\services\\video.py",
       "source_location": "L11",
-      "community": 27,
+      "community": 28,
       "norm_label": "resolve an ffmpeg-family executable across local dev and container setups.",
       "id": "video_rationale_11"
     },
@@ -1968,7 +2068,7 @@
       "file_type": "rationale",
       "source_file": "apps\\api\\app\\services\\video.py",
       "source_location": "L59",
-      "community": 28,
+      "community": 29,
       "norm_label": "extract one frame every `interval_seconds` from the video.      returns the or",
       "id": "video_rationale_59"
     },
@@ -1994,7 +2094,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 15,
       "norm_label": "aegis readme documentation",
       "id": "doc_readme"
     },
@@ -2007,7 +2107,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 29,
+      "community": 30,
       "norm_label": "claude.md project instructions",
       "id": "doc_claudemd"
     },
@@ -2020,7 +2120,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 15,
       "norm_label": "vlm mode switch (mock/real/zai)",
       "id": "concept_vlmMode"
     }
@@ -2087,16 +2187,40 @@
       "target": "router_upload"
     },
     {
-      "relation": "conceptually_related_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.7,
-      "source_file": "apps/api/app/config.py",
-      "source_location": null,
-      "weight": 0.6,
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\config.py",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_config_py",
+      "_tgt": "config_settings",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_config_py",
+      "target": "config_settings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\config.py",
+      "source_location": "L12",
+      "weight": 1.0,
       "_src": "config_settings",
-      "_tgt": "requirements_txt",
+      "_tgt": "basesettings",
       "source": "config_settings",
-      "target": "requirements_txt"
+      "target": "basesettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\config.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_src": "config_settings",
+      "_tgt": "config_settings_ensure_dirs",
+      "source": "config_settings",
+      "target": "config_settings_ensure_dirs",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -2159,16 +2283,16 @@
       "target": "service_video"
     },
     {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/api/app/services/vlm.py",
-      "source_location": "line 9",
-      "weight": 1.0,
-      "_src": "service_vlm",
-      "_tgt": "config_settings",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "apps/api/app/config.py",
+      "source_location": null,
+      "weight": 0.6,
+      "_src": "config_settings",
+      "_tgt": "requirements_txt",
       "source": "config_settings",
-      "target": "service_vlm"
+      "target": "requirements_txt"
     },
     {
       "relation": "calls",
@@ -2289,18 +2413,6 @@
       "_tgt": "schemas_DamageSeverity",
       "source": "schemas_DamageSeverity",
       "target": "service_report"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/api/app/services/vlm.py",
-      "source_location": "line 10",
-      "weight": 1.0,
-      "_src": "service_vlm",
-      "_tgt": "schemas_DamageSeverity",
-      "source": "schemas_DamageSeverity",
-      "target": "service_vlm"
     },
     {
       "relation": "uses",
@@ -2555,18 +2667,6 @@
       "target": "router_analyze"
     },
     {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/api/app/services/vlm.py",
-      "source_location": "line 10",
-      "weight": 1.0,
-      "_src": "service_vlm",
-      "_tgt": "schemas_Detection",
-      "source": "schemas_Detection",
-      "target": "service_vlm"
-    },
-    {
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "apps\\api\\app\\routers\\analyze.py",
@@ -2637,18 +2737,6 @@
       "_tgt": "schemas_FrameAnalysis",
       "source": "schemas_FrameAnalysis",
       "target": "service_report"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/api/app/services/vlm.py",
-      "source_location": "line 10",
-      "weight": 1.0,
-      "_src": "service_vlm",
-      "_tgt": "schemas_FrameAnalysis",
-      "source": "schemas_FrameAnalysis",
-      "target": "service_vlm"
     },
     {
       "relation": "uses",
@@ -3095,18 +3183,6 @@
       "target": "service_video"
     },
     {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/api/app/routers/analyze.py",
-      "source_location": "line 12",
-      "weight": 1.0,
-      "_src": "router_analyze",
-      "_tgt": "service_vlm",
-      "source": "router_analyze",
-      "target": "service_vlm"
-    },
-    {
       "relation": "shares_data_with",
       "confidence": "INFERRED",
       "confidence_score": 0.9,
@@ -3117,18 +3193,6 @@
       "_tgt": "router_report",
       "source": "router_analyze",
       "target": "router_report"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/api/app/routers/chat.py",
-      "source_location": "line 8",
-      "weight": 1.0,
-      "_src": "router_chat",
-      "_tgt": "service_vlm",
-      "source": "router_chat",
-      "target": "service_vlm"
     },
     {
       "relation": "calls",
@@ -3170,18 +3234,6 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "apps/api/app/routers/report.py",
-      "source_location": "line 13",
-      "weight": 1.0,
-      "_src": "router_report",
-      "_tgt": "service_vlm",
-      "source": "router_report",
-      "target": "service_vlm"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
       "source_file": "apps/api/app/routers/upload.py",
       "source_location": "line 8",
       "weight": 1.0,
@@ -3191,28 +3243,232 @@
       "target": "service_storage"
     },
     {
-      "relation": "shares_data_with",
-      "confidence": "INFERRED",
-      "confidence_score": 0.9,
-      "source_file": "apps/api/app/services/vlm.py",
-      "source_location": null,
-      "weight": 0.9,
-      "_src": "service_report",
-      "_tgt": "service_vlm",
-      "source": "service_report",
-      "target": "service_vlm"
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L66",
+      "weight": 1.0,
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "_tgt": "vlm_get_client",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "target": "vlm_get_client",
+      "confidence_score": 1.0
     },
     {
-      "relation": "conceptually_related_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "apps/api/app/services/vlm.py",
-      "source_location": "line 205",
-      "weight": 0.8,
-      "_src": "service_vlm",
-      "_tgt": "service_vlm",
-      "source": "service_vlm",
-      "target": "service_vlm"
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "_tgt": "vlm_get_zai_client",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "target": "vlm_get_zai_client",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L85",
+      "weight": 1.0,
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "_tgt": "vlm_frame_data_url",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "target": "vlm_frame_data_url",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L91",
+      "weight": 1.0,
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "_tgt": "vlm_clamp01",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "target": "vlm_clamp01",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L95",
+      "weight": 1.0,
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "_tgt": "vlm_parse_detections",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "target": "vlm_parse_detections",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L130",
+      "weight": 1.0,
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "_tgt": "vlm_parse_frame_json",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "target": "vlm_parse_frame_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L157",
+      "weight": 1.0,
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "_tgt": "vlm_mock_frame_analysis",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "target": "vlm_mock_frame_analysis",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L202",
+      "weight": 1.0,
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "_tgt": "vlm_analyze_frame",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "target": "vlm_analyze_frame",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L253",
+      "weight": 1.0,
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "_tgt": "vlm_chat_completion",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_services_vlm_py",
+      "target": "vlm_chat_completion",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L241",
+      "weight": 1.0,
+      "_src": "vlm_analyze_frame",
+      "_tgt": "vlm_get_client",
+      "source": "vlm_get_client",
+      "target": "vlm_analyze_frame",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L272",
+      "weight": 1.0,
+      "_src": "vlm_chat_completion",
+      "_tgt": "vlm_get_client",
+      "source": "vlm_get_client",
+      "target": "vlm_chat_completion",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L216",
+      "weight": 1.0,
+      "_src": "vlm_analyze_frame",
+      "_tgt": "vlm_get_zai_client",
+      "source": "vlm_get_zai_client",
+      "target": "vlm_analyze_frame",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L266",
+      "weight": 1.0,
+      "_src": "vlm_chat_completion",
+      "_tgt": "vlm_get_zai_client",
+      "source": "vlm_get_zai_client",
+      "target": "vlm_chat_completion",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L225",
+      "weight": 1.0,
+      "_src": "vlm_analyze_frame",
+      "_tgt": "vlm_frame_data_url",
+      "source": "vlm_frame_data_url",
+      "target": "vlm_analyze_frame",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L106",
+      "weight": 1.0,
+      "_src": "vlm_parse_detections",
+      "_tgt": "vlm_clamp01",
+      "source": "vlm_clamp01",
+      "target": "vlm_parse_detections",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L172",
+      "weight": 1.0,
+      "_src": "vlm_mock_frame_analysis",
+      "_tgt": "vlm_clamp01",
+      "source": "vlm_clamp01",
+      "target": "vlm_mock_frame_analysis",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L145",
+      "weight": 1.0,
+      "_src": "vlm_parse_frame_json",
+      "_tgt": "vlm_parse_detections",
+      "source": "vlm_parse_detections",
+      "target": "vlm_parse_frame_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L233",
+      "weight": 1.0,
+      "_src": "vlm_analyze_frame",
+      "_tgt": "vlm_parse_frame_json",
+      "source": "vlm_parse_frame_json",
+      "target": "vlm_analyze_frame",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L208",
+      "weight": 1.0,
+      "_src": "vlm_analyze_frame",
+      "_tgt": "vlm_mock_frame_analysis",
+      "source": "vlm_mock_frame_analysis",
+      "target": "vlm_analyze_frame",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",

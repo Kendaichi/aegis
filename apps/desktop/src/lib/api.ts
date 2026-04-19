@@ -96,6 +96,13 @@ export interface AnalyzeResponse {
   frames: FrameAnalysis[];
 }
 
+export interface AnalyzeJobResponse {
+  video_id: string;
+  status: "processing" | "complete";
+  frame_count: number;
+  frames: FrameAnalysis[];
+}
+
 export interface Report {
   report_id: string;
   video_id: string;
@@ -212,19 +219,59 @@ const realApi = {
     return handle(res);
   },
 
-  /**
-   * Stream analysis: real backend may use SSE; placeholder yields batch frames sequentially.
-   */
   async analyzeStream(
     video_id: string,
     onFrame: StreamFrameCallback,
     location?: GeoPoint
   ): Promise<AnalyzeResponse> {
-    const res = await realApi.analyze(video_id, location);
-    for (let i = 0; i < res.frames.length; i++) {
-      onFrame(res.frames[i], { current: i + 1, total: res.frames.length });
+    // Start the background job
+    const jobRes = await fetch(`${BASE}/analyze`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ video_id, location }),
+    });
+    const job = await handle<AnalyzeJobResponse>(jobRes);
+
+    // Already cached — replay frames immediately
+    if (job.status === "complete") {
+      job.frames.forEach((frame, i) => {
+        onFrame(frame, { current: i + 1, total: job.frames.length });
+      });
+      return { video_id, frame_count: job.frames.length, frames: job.frames };
     }
-    return res;
+
+    // Subscribe to SSE stream for live frame delivery
+    return new Promise((resolve, reject) => {
+      const es = new EventSource(`${BASE}/analyze/${encodeURIComponent(video_id)}/stream`);
+      const frames: FrameAnalysis[] = [];
+
+      es.addEventListener("frame", (e: MessageEvent) => {
+        const frame = JSON.parse(e.data) as FrameAnalysis;
+        frames.push(frame);
+        onFrame(frame, { current: frames.length, total: -1 });
+      });
+
+      es.addEventListener("done", () => {
+        es.close();
+        resolve({ video_id, frame_count: frames.length, frames });
+      });
+
+      es.addEventListener("error", (e: MessageEvent) => {
+        es.close();
+        reject(new Error((e as unknown as { data?: string }).data
+          ? JSON.parse((e as unknown as { data: string }).data).detail
+          : "Analysis stream failed"));
+      });
+
+      es.onerror = () => {
+        if (es.readyState === EventSource.CLOSED) {
+          // Server closed connection cleanly (after done event was already handled)
+          return;
+        }
+        es.close();
+        reject(new Error("SSE connection lost"));
+      };
+    });
   },
 };
 
