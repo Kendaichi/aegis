@@ -1,6 +1,7 @@
 import { MessageSquareText, SendHorizontal, Sparkles, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api, type ChatMessage, type FrameAnalysis } from "../lib/api";
+import { appendChatMessages, fetchChatMessages } from "../lib/supabaseQueries";
 
 interface Props {
   reportId?: string;
@@ -32,12 +33,31 @@ export default function Chat({
   const [sessionId, setSessionId] = useState<string | undefined>(undefined);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!videoId) return;
+    let cancelled = false;
+    setLoading(true);
+    fetchChatMessages(videoId)
+      .then(({ rows, sessionId: sid }) => {
+        if (cancelled) return;
+        setMessages(rows.map((r) => ({ role: r.role, content: r.content })));
+        setSessionId(sid);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [videoId]);
 
   async function send() {
     const text = input.trim();
     if (!text || busy) return;
 
-    const next: ChatMessage[] = [...messages, { role: "user", content: text }];
+    const userMsg: ChatMessage = { role: "user", content: text };
+    const next: ChatMessage[] = [...messages, userMsg];
     setMessages(next);
     setInput("");
     setBusy(true);
@@ -49,8 +69,16 @@ export default function Chat({
         report_id: reportId,
         video_id: videoId,
       });
+      const assistantMsg = res.message;
       setSessionId(res.session_id);
-      setMessages([...next, res.message]);
+      setMessages([...next, assistantMsg]);
+
+      if (videoId) {
+        await appendChatMessages(videoId, res.session_id, [
+          { role: "user", content: text },
+          { role: assistantMsg.role as "user" | "assistant", content: assistantMsg.content },
+        ]);
+      }
     } catch (error) {
       setMessages([
         ...next,
@@ -97,7 +125,10 @@ export default function Chat({
       </div>
 
       <div className="min-h-0 flex-1 space-y-3 overflow-auto pr-1">
-        {messages.length === 0 && (
+        {loading && (
+          <p className="text-[12px] text-slate-500">Loading chat history...</p>
+        )}
+        {!loading && messages.length === 0 && (
           <div className="rounded-card border border-dashed border-aegis-border bg-aegis-surface2/50 p-4 text-[13px] text-slate-400">
             What is the biggest risk here? Which frames suggest blocked access routes? What should
             responders prioritize first?
@@ -132,13 +163,13 @@ export default function Chat({
             }
           }}
           placeholder={busy ? "Thinking..." : "Ask AEGIS..."}
-          disabled={busy}
+          disabled={busy || loading}
           className="input-shell flex-1"
         />
         <button
           type="button"
           onClick={() => void send()}
-          disabled={busy || !input.trim()}
+          disabled={busy || loading || !input.trim()}
           className="button-primary px-3"
         >
           <SendHorizontal className="h-4 w-4" />

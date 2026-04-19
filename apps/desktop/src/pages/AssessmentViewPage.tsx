@@ -1,8 +1,10 @@
 import { ArrowLeft, Calendar, Clock, MapPin } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import MapView from "../components/Map";
+import Chat from "../components/Chat";
 import { SeverityBadge, StatusBadge } from "../components/ui/Badges";
 import DetailedInsights from "../components/workspace/DetailedInsights";
+import FrameAnalysisFeed from "../components/workspace/FrameAnalysisFeed";
 import FrameImageModal from "../components/workspace/FrameImageModal";
 import { severityToLevel } from "../lib/assessments";
 import { api, type FrameAnalysis, type Report, type VideoListItem } from "../lib/api";
@@ -72,6 +74,16 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
     setSelectedFrameIndex(frame.frame_index);
     setModalFrame(frame);
   }, []);
+
+  const onClearFrameContext = useCallback(() => {
+    setSelectedFrameIndex(null);
+    setModalFrame(null);
+  }, []);
+
+  const frameForChat = useMemo(() => {
+    if (selectedFrameIndex == null) return null;
+    return frames.find((f) => f.frame_index === selectedFrameIndex) ?? null;
+  }, [frames, selectedFrameIndex]);
 
   const counts = useMemo(() => countBySeverity(frames), [frames]);
   const total = frames.length || 1;
@@ -166,7 +178,7 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
       </header>
 
       {/* Body */}
-      <div className="grid min-h-0 flex-1 grid-cols-[1fr_1fr] gap-0 overflow-hidden">
+      <div className="grid min-h-0 flex-1 grid-cols-[1fr_1fr_320px] gap-0 overflow-hidden">
         {/* Left: Report + Insights */}
         <div className="flex min-h-0 flex-col overflow-y-auto border-r border-aegis-border p-5">
           {report ? (
@@ -267,13 +279,37 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
           )}
         </div>
 
-        {/* Right: Map */}
-        <div className="relative min-h-0">
+        {/* Center: Map */}
+        <div className="relative min-h-0 border-r border-aegis-border">
           <MapView
             report={report}
             analysisFrames={frames}
             selectedFrameIndex={selectedFrameIndex}
           />
+        </div>
+
+        {/* Right: Frame Feed + Chat */}
+        <div className="flex min-h-0 flex-col overflow-hidden p-4">
+          <FrameAnalysisFeed
+            frames={frames}
+            selectedFrameIndex={selectedFrameIndex}
+            onSelectFrame={inspectFrame}
+            className="max-h-72 overflow-auto"
+          />
+          {frames.length === 0 && (
+            <p className="mt-4 text-[12px] leading-6 text-slate-500">
+              No frames available for this assessment.
+            </p>
+          )}
+          <div className="mt-4 flex min-h-0 flex-1 flex-col border-t border-aegis-border pt-4">
+            <Chat
+              key={assessmentId}
+              reportId={report?.report_id}
+              videoId={assessmentId}
+              frameContext={frameForChat}
+              onClearFrameContext={onClearFrameContext}
+            />
+          </div>
         </div>
       </div>
 

@@ -15,6 +15,17 @@ from app.schemas import DamageSeverity, Detection, FrameAnalysis
 _client: Client | None = None
 _zai_client_instance: OpenAI | None = None
 
+CHAT_SYSTEM_PROMPT = (
+    "You are AEGIS, an AI analyst for Disaster Risk Reduction and Management (DRRM). "
+    "You assist emergency responders, analysts, and coordinators by interpreting aerial footage, "
+    "damage reports, and frame analysis data. "
+    "You ONLY answer questions related to DRRM topics such as: disaster damage assessment, "
+    "hazard identification, evacuation planning, rescue prioritization, infrastructure impact, "
+    "flood/landslide/typhoon/earthquake/fire analysis, and emergency response recommendations. "
+    "If a question is not related to DRRM or disaster response, politely decline and remind the "
+    "user that you are scoped to disaster risk reduction and management queries only."
+)
+
 FRAME_PROMPT = """You are a disaster-response analyst reviewing a single frame of site footage.
 Locate visible disaster damage: draw conceptual bounding boxes around each distinct damaged region
 (buildings, road sections, debris piles, flood water, etc.). Coordinates are NORMALIZED to the
@@ -253,9 +264,16 @@ def analyze_frame(
 
 
 def chat_completion(messages: list[dict[str, str]]) -> str:
+    system_message = {"role": "system", "content": CHAT_SYSTEM_PROMPT}
+    # Prepend system prompt, replacing any existing system message at position 0.
+    if messages and messages[0].get("role") == "system":
+        scoped_messages = [system_message, *messages[1:]]
+    else:
+        scoped_messages = [system_message, *messages]
+
     if settings.vlm_mode == "mock":
         last_user = next(
-            (m["content"] for m in reversed(messages) if m.get("role") == "user"),
+            (m["content"] for m in reversed(scoped_messages) if m.get("role") == "user"),
             "",
         )
         preview = last_user.strip().splitlines()[0][:120] if last_user else "your question"
@@ -267,14 +285,14 @@ def chat_completion(messages: list[dict[str, str]]) -> str:
     if settings.vlm_mode == "zai":
         zai_response = _get_zai_client().chat.completions.create(
             model=settings.vlm_model,
-            messages=messages,  # type: ignore[arg-type]
+            messages=scoped_messages,  # type: ignore[arg-type]
         )
         return zai_response.choices[0].message.content or ""
 
     client = _get_client()
     ollama_response = client.chat(
         model=settings.vlm_model,
-        messages=messages,
+        messages=scoped_messages,
         stream=False,
     )
     return ollama_response.message.content or ""
