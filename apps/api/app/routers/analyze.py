@@ -19,7 +19,7 @@ from app.schemas import (
     Detection,
     FrameAnalysis,
 )
-from app.services.storage import download_to_temp
+from app.services.storage import download_to_temp, upload_frame_jpeg
 from app.services.video import extract_frames
 from app.services.vlm import analyze_frame
 
@@ -64,6 +64,7 @@ def _serialize_frame_analyses(
             "description": f.description,
             "detected_hazards": f.detected_hazards,
             "confidence": f.confidence,
+            "image_url": f.image_url,
             "created_at": datetime.now(timezone.utc).isoformat(),
         }
         if include_detections:
@@ -105,13 +106,16 @@ def _row_to_frame_analysis(row: dict) -> FrameAnalysis:
         description=row["description"],
         detected_hazards=row["detected_hazards"] or [],
         confidence=row["confidence"],
+        image_url=row.get("image_url"),
         detections=_detections_from_row(row),
     )
 
 
 def _with_image_urls(video_id: str, frames: list[FrameAnalysis]) -> list[FrameAnalysis]:
     return [
-        f.model_copy(
+        f
+        if f.image_url
+        else f.model_copy(
             update={"image_url": f"/analyze/{video_id}/frame/{f.frame_index}.jpg"},
         )
         for f in frames
@@ -171,9 +175,14 @@ async def _run_analysis_job(
                 frame_index=i,
                 timestamp_seconds=i * interval,
             )
+            try:
+                jpeg_bytes = p.read_bytes()
+                public_url = await asyncio.to_thread(upload_frame_jpeg, video_id, i, jpeg_bytes)
+                frame = frame.model_copy(update={"image_url": public_url})
+            except Exception:
+                frame = frame.model_copy(update={"image_url": f"/analyze/{video_id}/frame/{i}.jpg"})
             raw_frames.append(frame)
-            hydrated = frame.model_copy(update={"image_url": f"/analyze/{video_id}/frame/{i}.jpg"})
-            job.frames.append(hydrated)
+            job.frames.append(frame)
             job.event.set()
             if i < len(frame_paths) - 1:
                 await asyncio.sleep(_INTER_FRAME_DELAY)
