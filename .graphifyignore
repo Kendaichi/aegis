@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+
+# Build & dist outputs
+dist/
+dist-ssr/
+target/
+*.egg-info/
+apps/desktop/src-tauri/gen/
+
+# Graphify own output (avoid self-referencing)
+graphify-out/
+apps/graphify-out/
+.graphify_ast.json
+.graphify_detect.json
+.graphify_python
+.graphify_uncached.txt
+
+# Caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Env & secrets
+.env
+.env.local
+.env.*.local
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Locks & generated
+package-lock.json
+*.lock
+
+# Media / binary assets
+uploads/
+frames/
+*.log
+*.docx
+apps/desktop/src/assets/*.geojson
