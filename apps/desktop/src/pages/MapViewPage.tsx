@@ -1,6 +1,6 @@
 import { Layers, Maximize2 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import MapView from "../components/Map";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import MapView, { type MapFocusPoint } from "../components/Map";
 import MapContextPanel from "../components/map/MapContextPanel";
 import type {
   AssessmentStatus,
@@ -35,7 +35,11 @@ const EMPTY_SUMMARY: MapViewSummary = {
 export default function MapViewPage() {
   const [severityFilter, setSeverityFilter] = useState<MapSeverityFilter>("all");
   const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
+  /** Set only when the user picks an incident in the sidebar so the map flies there; cleared when filters change. */
+  const [incidentMapFocus, setIncidentMapFocus] = useState<MapFocusPoint | null>(null);
+  const [fitBoundsNonce, setFitBoundsNonce] = useState(0);
   const [showProvinces, setShowProvinces] = useState(true);
+  const prevFilterRef = useRef<MapSeverityFilter>(severityFilter);
 
   const [markers, setMarkers] = useState<MapViewMarker[]>([]);
   const [summary, setSummary] = useState<MapViewSummary>(EMPTY_SUMMARY);
@@ -82,6 +86,14 @@ export default function MapViewPage() {
   }, [markers, severityFilter]);
 
   useEffect(() => {
+    if (prevFilterRef.current !== severityFilter) {
+      prevFilterRef.current = severityFilter;
+      setIncidentMapFocus(null);
+      setFitBoundsNonce((n) => n + 1);
+    }
+  }, [severityFilter]);
+
+  useEffect(() => {
     if (!filteredMarkers.length) {
       setSelectedMarkerId(null);
       return;
@@ -90,6 +102,17 @@ export default function MapViewPage() {
       setSelectedMarkerId(filteredMarkers[0].id);
     }
   }, [filteredMarkers, selectedMarkerId]);
+
+  const handleSelectIncident = useCallback(
+    (markerId: string) => {
+      setSelectedMarkerId(markerId);
+      const m = filteredMarkers.find((x) => x.id === markerId);
+      if (m) {
+        setIncidentMapFocus({ lat: m.lat, lng: m.lng, label: m.label });
+      }
+    },
+    [filteredMarkers]
+  );
 
   const setFilter = useCallback((value: MapSeverityFilter) => {
     setSeverityFilter(value);
@@ -152,7 +175,13 @@ export default function MapViewPage() {
           </div>
           <div className="min-h-0 flex-1 p-3">
             <div className="h-full overflow-hidden rounded-[1.25rem] border border-aegis-border bg-aegis-surface2">
-              <MapView markers={filteredMarkers} selectedMarkerId={selectedMarkerId} showProvinces={showProvinces} />
+              <MapView
+                markers={filteredMarkers}
+                selectedMarkerId={selectedMarkerId}
+                focusPoint={incidentMapFocus}
+                fitBoundsRevision={fitBoundsNonce}
+                showProvinces={showProvinces}
+              />
             </div>
           </div>
           <div className="flex flex-wrap gap-3 border-t border-aegis-border px-4 py-3 text-[11px] text-slate-400">
@@ -179,7 +208,7 @@ export default function MapViewPage() {
           summary={summary}
           incidents={filteredMarkers}
           selectedId={selectedMarkerId}
-          onSelect={setSelectedMarkerId}
+          onSelect={handleSelectIncident}
           statusByMarkerId={statusByMarker}
         />
       </div>

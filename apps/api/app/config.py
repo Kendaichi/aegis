@@ -24,10 +24,10 @@ class Settings(BaseSettings):
     )
     ollama_host: str = "http://localhost:11434"
 
-    zai_api_key: str = ""
+    zai_api_key: str = Field(validation_alias=AliasChoices("ZAI_API_KEY", "zai_api_key"))
     zai_base_url: str = "https://api.z.ai/api/paas/v4"
 
-    vlm_mode: Literal["real", "mock", "zai"] = "mock"
+    vlm_mode: Literal["real", "mock", "zai"] = "real"
     vlm_model: str = "glm-4.6v-flash"
     upload_dir: Path = Path("./uploads")
     frames_dir: Path = Path("./frames")

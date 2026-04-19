@@ -15,6 +15,7 @@ import {
   type AssessmentStatus,
 } from "../../lib/mockData";
 import {
+  type BookmarkedArea,
   fetchActiveIncidents,
   fetchBookmarkedAreas,
   subscribeToQueueUpdates,
@@ -27,11 +28,24 @@ interface Props {
   onNavigate: (view: NavView) => void;
   onUploadClick: () => void;
   showDashboardPanel?: boolean;
+  onViewAssessment?: (videoId: string) => void;
+  onFocusArea?: (area: BookmarkedArea) => void;
 }
 
-function IncidentRow({ row }: { row: SidebarIncident }) {
+function IncidentRow({
+  row,
+  onSelect,
+}: {
+  row: SidebarIncident;
+  onSelect?: (videoId: string) => void;
+}) {
   return (
-    <div className="rounded-card border border-aegis-border bg-aegis-surface2/90 p-3 shadow-card">
+    <button
+      type="button"
+      onClick={() => onSelect?.(row.videoId)}
+      className="w-full rounded-card border border-aegis-border bg-aegis-surface2/90 p-3 text-left shadow-card transition hover:border-aegis-accent/30 hover:bg-aegis-surface2"
+      aria-label={`Open assessment ${row.id}`}
+    >
       <div className="flex items-start justify-between gap-2">
         <span className="font-mono text-[11px] text-aegis-accent">{row.id}</span>
         <SeverityBadge level={row.severity} />
@@ -41,7 +55,7 @@ function IncidentRow({ row }: { row: SidebarIncident }) {
         <span>{row.timeAgo}</span>
         <StatusMini status={row.status} />
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -108,10 +122,10 @@ function useActiveIncidents(enabled: boolean): {
 }
 
 function useBookmarkedAreas(enabled: boolean): {
-  areas: string[];
+  areas: BookmarkedArea[];
   loading: boolean;
 } {
-  const [areas, setAreas] = useState<string[]>([]);
+  const [areas, setAreas] = useState<BookmarkedArea[]>([]);
   const [loading, setLoading] = useState(enabled);
 
   useEffect(() => {
@@ -148,6 +162,8 @@ export default function SideNav({
   onNavigate,
   onUploadClick,
   showDashboardPanel = false,
+  onViewAssessment,
+  onFocusArea,
 }: Props) {
   const { incidents, loading } = useActiveIncidents(showDashboardPanel);
   const { areas: bookmarkedAreas, loading: bookmarksLoading } =
@@ -266,7 +282,7 @@ export default function SideNav({
                 </p>
               )}
               {incidents.map((row) => (
-                <IncidentRow key={row.id} row={row} />
+                <IncidentRow key={row.videoId} row={row} onSelect={onViewAssessment} />
               ))}
             </div>
           </section>
@@ -289,14 +305,18 @@ export default function SideNav({
             {bookmarkedAreas.length > 0 && (
               <ul className="space-y-2">
                 {bookmarkedAreas.map((area) => (
-                  <li
-                    key={area}
-                    className="flex items-center gap-3 rounded-2xl border border-aegis-border bg-aegis-surface2/80 px-3 py-2 text-[13px] text-slate-300"
-                  >
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-aegis-glow text-aegis-accent">
-                      <MapPin className="h-4 w-4" />
-                    </span>
-                    {area}
+                  <li key={area.name}>
+                    <button
+                      type="button"
+                      onClick={() => onFocusArea?.(area)}
+                      className="flex w-full items-center gap-3 rounded-2xl border border-aegis-border bg-aegis-surface2/80 px-3 py-2 text-left text-[13px] text-slate-300 transition hover:border-aegis-accent/30 hover:bg-aegis-surface2"
+                      aria-label={`Show ${area.name} on live map`}
+                    >
+                      <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-aegis-glow text-aegis-accent">
+                        <MapPin className="h-4 w-4" />
+                      </span>
+                      {area.name}
+                    </button>
                   </li>
                 ))}
               </ul>

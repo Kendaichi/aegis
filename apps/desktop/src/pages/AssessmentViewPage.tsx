@@ -8,6 +8,7 @@ import FrameAnalysisFeed from "../components/workspace/FrameAnalysisFeed";
 import FrameImageModal from "../components/workspace/FrameImageModal";
 import { severityToLevel } from "../lib/assessments";
 import { api, type FrameAnalysis, type Report, type VideoListItem } from "../lib/api";
+import { useCachedQuery } from "../lib/apiCache";
 import type { AssessmentStatus, SeverityLevel } from "../lib/mockData";
 
 interface Props {
@@ -47,9 +48,19 @@ interface AssessmentHeader {
 }
 
 function buildHeader(video: VideoListItem, report: Report | null): AssessmentHeader {
-  const location = report?.location
-    ? `${report.location.lat.toFixed(4)}, ${report.location.lng.toFixed(4)}`
-    : "Location pending";
+  const fromReport = report?.location ?? null;
+  const fromVideo =
+    video.lat != null && video.lng != null ? { lat: video.lat, lng: video.lng } : null;
+  const coords = fromReport ?? fromVideo;
+
+  let location: string;
+  if (coords) {
+    const label = video.location_name?.trim();
+    location = label || `${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)}`;
+  } else {
+    location = "Location pending";
+  }
+
   return {
     id: video.video_id,
     title: filenameToTitle(video.filename),
@@ -62,13 +73,41 @@ function buildHeader(video: VideoListItem, report: Report | null): AssessmentHea
 }
 
 export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
-  const [header, setHeader] = useState<AssessmentHeader | null>(null);
-  const [report, setReport] = useState<Report | null>(null);
-  const [frames, setFrames] = useState<FrameAnalysis[]>([]);
+  const videosQ = useCachedQuery("videos:list", () => api.listVideos());
+  const reportsQ = useCachedQuery(`reports:video:${assessmentId}`, () =>
+    api.listReports(assessmentId)
+  );
+  const framesQ = useCachedQuery(`frames:${assessmentId}`, () =>
+    api.getFrames(assessmentId).catch(() => ({
+      video_id: assessmentId,
+      frame_count: 0,
+      frames: [] as FrameAnalysis[],
+    }))
+  );
+
+  const video = useMemo(
+    () => videosQ.data?.videos.find((v) => v.video_id === assessmentId) ?? null,
+    [videosQ.data, assessmentId]
+  );
+  const report = useMemo(() => reportsQ.data?.[0] ?? null, [reportsQ.data]);
+  const frames = useMemo(() => framesQ.data?.frames ?? [], [framesQ.data]);
+  const header = useMemo(
+    () => (video ? buildHeader(video, report) : null),
+    [video, report]
+  );
+
   const [selectedFrameIndex, setSelectedFrameIndex] = useState<number | null>(null);
   const [modalFrame, setModalFrame] = useState<FrameAnalysis | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+
+  /** Full-page loader only when the shared videos list is not available yet (cache miss + in-flight). */
+  const loading = !videosQ.data && videosQ.loading;
+
+  const notFound = Boolean(videosQ.data && !video && !videosQ.loading);
+  const error =
+    videosQ.error?.message ??
+    reportsQ.error?.message ??
+    framesQ.error?.message ??
+    (notFound ? "Assessment not found." : null);
 
   const inspectFrame = useCallback((frame: FrameAnalysis) => {
     setSelectedFrameIndex(frame.frame_index);
@@ -88,38 +127,26 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
   const counts = useMemo(() => countBySeverity(frames), [frames]);
   const total = frames.length || 1;
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const [videosRes, reports, framesRes] = await Promise.all([
-          api.listVideos(),
-          api.listReports(assessmentId),
-          api.getFrames(assessmentId).catch(() => ({ frames: [] as FrameAnalysis[] })),
-        ]);
-        if (cancelled) return;
+  const assessmentLocation = useMemo(() => {
+    if (!video) return null;
+    return (
+      report?.location ??
+      (video.lat != null && video.lng != null ? { lat: video.lat, lng: video.lng } : null)
+    );
+  }, [report?.location, video]);
 
-        const video = videosRes.videos.find((v) => v.video_id === assessmentId);
-        if (!video) {
-          setError("Assessment not found.");
-          return;
-        }
-        const latestReport = reports[0] ?? null;
-        setReport(latestReport);
-        setFrames(framesRes.frames);
-        setHeader(buildHeader(video, latestReport));
-      } catch (e) {
-        if (cancelled) return;
-        setError(e instanceof Error ? e.message : "Failed to load assessment");
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
+  const mapFocusPoint = useMemo(() => {
+    if (!video || report?.location || !assessmentLocation) return null;
+    return {
+      lat: assessmentLocation.lat,
+      lng: assessmentLocation.lng,
+      label: video.location_name?.trim() || header?.title,
     };
+  }, [assessmentLocation, header?.title, report?.location, video]);
+
+  useEffect(() => {
+    setSelectedFrameIndex(null);
+    setModalFrame(null);
   }, [assessmentId]);
 
   if (loading) {
@@ -133,7 +160,7 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
   if (error || !header) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-4">
-        <p className="text-slate-400">{error ?? "Assessment not found."}</p>
+        <p className="text-slate-400">{error ?? "Failed to load assessment."}</p>
         <button type="button" onClick={onBack} className="button-secondary">
           <ArrowLeft className="h-4 w-4" /> Back to Assessments
         </button>
@@ -285,6 +312,7 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
             report={report}
             analysisFrames={frames}
             selectedFrameIndex={selectedFrameIndex}
+            focusPoint={mapFocusPoint}
           />
         </div>
 

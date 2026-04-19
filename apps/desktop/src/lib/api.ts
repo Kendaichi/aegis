@@ -45,6 +45,13 @@ export interface VideoListItem {
   size_bytes: number;
   content_type: string | null;
   created_at: string;
+  title?: string | null;
+  location_name?: string | null;
+  incident_type?: string | null;
+  lat?: number | null;
+  lng?: number | null;
+  status?: string | null;
+  url?: string | null;
 }
 
 export interface VideoListResponse {

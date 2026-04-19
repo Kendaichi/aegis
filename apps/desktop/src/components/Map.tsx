@@ -70,6 +70,8 @@ interface Props {
   selectedFrameIndex?: number | null;
   /** Pre-upload / form-selected location pin (hidden when report, markers, or frame pins are active). */
   focusPoint?: MapFocusPoint | null;
+  /** Re-fit marker bounds when this changes (e.g. after clearing a temporary map focus). */
+  fitBoundsRevision?: number;
   /** Show Caraga province boundary overlays. */
   showProvinces?: boolean;
 }
@@ -90,6 +92,7 @@ export default function MapView({
   analysisFrames,
   selectedFrameIndex,
   focusPoint = null,
+  fitBoundsRevision = 0,
   showProvinces = true,
 }: Props) {
   const multiPoints = useMemo(
@@ -107,12 +110,10 @@ export default function MapView({
   const showMulti = Boolean(markers && markers.length > 0);
   const showFrames = Boolean(analysisFrames && analysisFrames.length > 0 && framePoints.length > 0);
 
-  const focusActive = Boolean(
-    focusPoint &&
-      !showMulti &&
-      !showFrames &&
-      !report?.location
-  );
+  /** Pan/zoom to bookmark or form focus even when cluster markers are shown. */
+  const focusActive = Boolean(focusPoint && !report?.location);
+  /** Only draw the extra pin when it would not duplicate multi/frame/report markers. */
+  const showFocusPin = focusActive && !showMulti && !showFrames;
 
   const center: [number, number] = report?.location
     ? [report.location.lng, report.location.lat]
@@ -120,14 +121,16 @@ export default function MapView({
       ? framePoints[0]
       : focusActive && focusPoint
         ? [focusPoint.lng, focusPoint.lat]
-        : [125.5, 8.5];
+        : multiPoints[0]
+          ? multiPoints[0]
+          : [125.5, 8.5];
   const zoom =
-    markers?.length || framePoints.length
-      ? 8
-      : report?.location
-        ? 14
-        : focusActive
-          ? 13
+    focusActive && focusPoint
+      ? 13
+      : markers?.length || framePoints.length
+        ? 8
+        : report?.location
+          ? 14
           : 7;
 
   return (
@@ -139,7 +142,9 @@ export default function MapView({
       )}
       {showMulti && markers && (
         <>
-          <FitBounds points={multiPoints} />
+          {!focusActive && (
+            <FitBounds points={multiPoints} revision={fitBoundsRevision} />
+          )}
           {markers.map((m) => (
             <Marker
               key={m.id}
@@ -181,7 +186,7 @@ export default function MapView({
           <SeverityDot color={severityColor(severityLevelFromReport(report.overall_severity))} />
         </Marker>
       )}
-      {focusActive && focusPoint && (
+      {showFocusPin && focusPoint && (
         <Marker
           lngLat={[focusPoint.lng, focusPoint.lat]}
           popupHtml={`<strong>${escapeHtml(focusPoint.label || "Selected location")}</strong>`}

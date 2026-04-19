@@ -36,7 +36,17 @@ export default function App() {
         </div>
       )}
       <AppShell>
-        {({ activeView, workspaceOpen, openWorkspace, closeWorkspace, viewingAssessmentId, openAssessmentView, closeAssessmentView }) => {
+        {({
+          activeView,
+          workspaceOpen,
+          openWorkspace,
+          closeWorkspace,
+          viewingAssessmentId,
+          openAssessmentView,
+          closeAssessmentView,
+          dashboardMapFocus,
+          clearDashboardMapFocus,
+        }) => {
           if (workspaceOpen) {
             return <AssessmentsWorkspacePage onBack={closeWorkspace} />;
           }
@@ -52,7 +62,13 @@ export default function App() {
 
           switch (activeView) {
             case "dashboard":
-              return <DashboardPage />;
+              return (
+                <DashboardPage
+                  mapFocus={dashboardMapFocus}
+                  onMapFocusConsumed={clearDashboardMapFocus}
+                  onViewAssessment={openAssessmentView}
+                />
+              );
             case "assessments":
               return <AssessmentsPage onNewAssessment={openWorkspace} onViewAssessment={openAssessmentView} />;
             case "map":

@@ -38,10 +38,17 @@ function formatSize(bytes: number): string {
   return `${bytes} B`;
 }
 
-function locationLabel(report: Report | undefined): string {
-  if (!report?.location) return "Location pending";
-  const { lat, lng } = report.location;
-  return `${lat.toFixed(3)}, ${lng.toFixed(3)}`;
+function locationLabel(report: Report | undefined, video: VideoListItem): string {
+  if (report?.location) {
+    const { lat, lng } = report.location;
+    const name = video.location_name?.trim();
+    return name || `${lat.toFixed(3)}, ${lng.toFixed(3)}`;
+  }
+  if (video.lat != null && video.lng != null) {
+    const name = video.location_name?.trim();
+    return name || `${video.lat.toFixed(3)}, ${video.lng.toFixed(3)}`;
+  }
+  return "Location pending";
 }
 
 export function deriveAssessments(
@@ -61,9 +68,10 @@ export function deriveAssessments(
     const status: AssessmentStatus = report ? "complete" : "pending";
     return {
       id: video.video_id,
+      videoId: video.video_id,
       title: video.filename || `Assessment ${shortId(video.video_id)}`,
       subtitle: `${formatSize(video.size_bytes)} • ${video.content_type ?? "video"}`,
-      location: locationLabel(report),
+      location: locationLabel(report, video),
       type: report ? "Assessment" : "Unanalyzed",
       severity: severityToLevel(report?.overall_severity),
       status,
@@ -74,11 +82,15 @@ export function deriveAssessments(
 
 export function reportToListItem(report: Report, pageCount = 0): ReportListItem {
   const sevLevel = severityToLevel(report.overall_severity);
+  const location =
+    report.location != null
+      ? `${report.location.lat.toFixed(3)}, ${report.location.lng.toFixed(3)}`
+      : "Location pending";
   return {
     id: report.report_id,
     assessmentId: report.video_id,
     title: `Assessment ${shortId(report.video_id)}`,
-    location: locationLabel(report),
+    location,
     type: "Assessment",
     severity: sevLevel,
     status: "complete",
