@@ -74,9 +74,7 @@ class Detection(BaseModel):
         ...,
         description="Bounding box as normalized x1, y1, x2, y2 in [0, 1] (origin top-left)",
     )
-    confidence: float = Field(
-        ..., ge=0.0, le=1.0, description="Confidence for this box (0.0–1.0)"
-    )
+    confidence: float = Field(..., ge=0.0, le=1.0, description="Confidence for this box (0.0–1.0)")
 
 
 class FrameAnalysis(BaseModel):

@@ -16,11 +16,10 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    supabase_url: str = "https://ovgimeasyrwnjlmrqssu.supabase.co"
-    supabase_key: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92Z2ltZWFzeXJ3bmpsbXJxc3N1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjI3MDk1OSwiZXhwIjoyMDkxODQ2OTU5fQ.vXSL-_oVop8io74FSowMJoeBhyYNY3Upc8mbjLrlUAc"
+    supabase_url: str = Field(validation_alias=AliasChoices("SUPABASE_URL", "supabase_url"))
+    supabase_key: str = Field(validation_alias=AliasChoices("SUPABASE_KEY", "supabase_key"))
     supabase_bucket: str = "videos"
     database_url: str = Field(
-        default="postgresql://postgres:ELuXVCJDvjtdfskk@db.ovgimeasyrwnjlmrqssu.supabase.co:5432/postgres",
         validation_alias=AliasChoices("DATABASE_URL", "SUPABASE_CONNECTION_STRING"),
     )
     ollama_host: str = "http://localhost:11434"
