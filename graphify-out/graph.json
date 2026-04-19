@@ -2786,7 +2786,7 @@
       "weight": 0.8,
       "_src": "schemas_damageseverity",
       "_tgt": "analyze_analysisjob",
-      "confidence_score": 0.5,  
+      "confidence_score": 0.5,
       "source": "schemas_damageseverity",
       "target": "analyze_analysisjob"
     },
