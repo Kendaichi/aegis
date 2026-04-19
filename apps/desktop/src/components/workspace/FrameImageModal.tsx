@@ -21,6 +21,7 @@ interface Props {
 export default function FrameImageModal({ frame, videoFile, onClose }: Props) {
   const [captureUrl, setCaptureUrl] = useState<string | null>(null);
   const [captureError, setCaptureError] = useState(false);
+  const [remoteImageError, setRemoteImageError] = useState(false);
   const [imgNaturalSize, setImgNaturalSize] = useState<{ w: number; h: number } | null>(null);
 
   const clearCapture = useCallback(() => {
@@ -32,13 +33,19 @@ export default function FrameImageModal({ frame, videoFile, onClose }: Props) {
     setImgNaturalSize(null);
   }, []);
 
+  // Reset remote image error whenever the frame changes
+  useEffect(() => {
+    setRemoteImageError(false);
+  }, [frame]);
+
   useEffect(() => {
     if (!frame) {
       clearCapture();
       return;
     }
 
-    if (frame.image_url) {
+    // Use remote image if available and not yet failed
+    if (frame.image_url && !remoteImageError) {
       clearCapture();
       return;
     }
@@ -126,7 +133,7 @@ export default function FrameImageModal({ frame, videoFile, onClose }: Props) {
       cleanupVideo();
       clearCapture();
     };
-  }, [frame, videoFile, clearCapture]);
+  }, [frame, videoFile, clearCapture, remoteImageError]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -138,7 +145,7 @@ export default function FrameImageModal({ frame, videoFile, onClose }: Props) {
 
   if (!frame) return null;
 
-  const hasRemoteImage = Boolean(frame.image_url);
+  const hasRemoteImage = Boolean(frame.image_url) && !remoteImageError;
   const displaySrc = hasRemoteImage ? frameImageUrl(frame.image_url!) : captureUrl;
 
   const detections = frame.detections ?? [];
@@ -186,6 +193,7 @@ export default function FrameImageModal({ frame, videoFile, onClose }: Props) {
                   const el = e.currentTarget;
                   setImgNaturalSize({ w: el.naturalWidth, h: el.naturalHeight });
                 }}
+                onError={() => setRemoteImageError(true)}
               />
               <div className="pointer-events-none absolute inset-0">
                 {detections.map((d, i) => {

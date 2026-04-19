@@ -1,12 +1,12 @@
 # Graph Report - C:\Users\Frank\Desktop\PROJECTS\aegis  (2026-04-19)
 
 ## Corpus Check
-- 66 files · ~27,732 words
+- 66 files · ~28,276 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 148 nodes · 214 edges · 30 communities detected
-- Extraction: 66% EXTRACTED · 34% INFERRED · 0% AMBIGUOUS · INFERRED: 72 edges (avg confidence: 0.64)
+- 178 nodes · 269 edges · 37 communities detected
+- Extraction: 65% EXTRACTED · 35% INFERRED · 0% AMBIGUOUS · INFERRED: 94 edges (avg confidence: 0.65)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -40,30 +40,37 @@
 - [[_COMMUNITY_Community 27|Community 27]]
 - [[_COMMUNITY_Community 28|Community 28]]
 - [[_COMMUNITY_Community 29|Community 29]]
+- [[_COMMUNITY_Community 30|Community 30]]
+- [[_COMMUNITY_Community 31|Community 31]]
+- [[_COMMUNITY_Community 32|Community 32]]
+- [[_COMMUNITY_Community 33|Community 33]]
+- [[_COMMUNITY_Community 34|Community 34]]
+- [[_COMMUNITY_Community 35|Community 35]]
+- [[_COMMUNITY_Community 36|Community 36]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `Analyze Router` - 12 edges
-2. `Report Router` - 12 edges
-3. `VLM Service (analyze_frame, chat_completion)` - 10 edges
-4. `Map MapLibre GL Component` - 10 edges
-5. `DamageSeverity (Enum)` - 9 edges
-6. `FrameAnalysis (Pydantic Model)` - 9 edges
-7. `AnalyzeRequest (Pydantic Model)` - 9 edges
-8. `Settings (Pydantic BaseSettings)` - 8 edges
-9. `GeoPoint (Pydantic Model)` - 7 edges
-10. `Detection (Pydantic Model)` - 7 edges
+1. `DamageSeverity` - 12 edges
+2. `Detection` - 10 edges
+3. `FrameAnalysis` - 10 edges
+4. `AnalyzeRequest` - 10 edges
+5. `Report Router` - 10 edges
+6. `Map MapLibre GL Component` - 10 edges
+7. `Settings` - 9 edges
+8. `_AnalysisJob` - 8 edges
+9. `AnalyzeResponse` - 7 edges
+10. `Report` - 7 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Settings (Pydantic BaseSettings)` --conceptually_related_to--> `API Python Requirements`  [INFERRED]
-  apps/api/app/config.py → apps/api/requirements.txt
-- `DamageSeverity (Enum)` --uses--> `Serve the extracted JPEG for a frame (1-based file names on disk).`  [INFERRED]
-  apps/api/app/schemas.py → apps\api\app\routers\analyze.py
-- `DamageSeverity (Enum)` --uses--> `Return cached frame analyses for a previously analyzed video.`  [INFERRED]
-  apps/api/app/schemas.py → apps\api\app\routers\analyze.py
-- `DamageSeverity (Enum)` --uses--> `Analyze an uploaded video frame-by-frame.      Returns cached results if the v`  [INFERRED]
-  apps/api/app/schemas.py → apps\api\app\routers\analyze.py
-- `GeoPoint (Pydantic Model)` --uses--> `Generate and persist a disaster assessment report from a video.      Reuses ca`  [INFERRED]
-  apps/api/app/schemas.py → apps\api\app\routers\report.py
+- `Settings` --conceptually_related_to--> `API Python Requirements`  [INFERRED]
+  C:\Users\Frank\Desktop\PROJECTS\aegis\apps\api\app\config.py → apps/api/requirements.txt
+- `_AnalysisJob` --uses--> `AnalyzeRequest`  [INFERRED]
+  C:\Users\Frank\Desktop\PROJECTS\aegis\apps\api\app\routers\analyze.py → C:\Users\Frank\Desktop\PROJECTS\aegis\apps\api\app\schemas.py
+- `AnalyzeRequest` --uses--> `Serve the extracted JPEG for a frame (1-based file names on disk).`  [INFERRED]
+  C:\Users\Frank\Desktop\PROJECTS\aegis\apps\api\app\schemas.py → apps\api\app\routers\analyze.py
+- `AnalyzeRequest` --uses--> `Return cached frame analyses for a previously analyzed video.`  [INFERRED]
+  C:\Users\Frank\Desktop\PROJECTS\aegis\apps\api\app\schemas.py → apps\api\app\routers\analyze.py
+- `AnalyzeRequest` --uses--> `Analyze an uploaded video frame-by-frame.      Returns cached results if the v`  [INFERRED]
+  C:\Users\Frank\Desktop\PROJECTS\aegis\apps\api\app\schemas.py → apps\api\app\routers\analyze.py
 
 ## Hyperedges (group relationships)
 - **Video Analysis Pipeline (Upload â†’ Extract â†’ VLM â†’ Persist)** — router_upload, service_storage, service_video, service_vlm, router_analyze [INFERRED 0.90]
@@ -82,84 +89,84 @@
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.09
-Nodes (30): Assessment Lifecycle (pendingâ†’analyzingâ†’complete), Supabase Realtime Queue Subscription, FitBounds Component, Map MapLibre GL Component, Marker Component, useMap Context Hook, Mock Frame Analysis Data, Build Mock Report Function (+22 more)
+Cohesion: 0.08
+Nodes (33): deriveAssessments Builder Function, reportToListItem Converter Function, severityToLevel Converter Function, Assessment Lifecycle (pendingâ†’analyzingâ†’complete), Supabase Realtime Queue Subscription, FitBounds Component, Map MapLibre GL Component, Marker Component (+25 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.26
-Nodes (24): Serve the extracted JPEG for a frame (1-based file names on disk)., Return cached frame analyses for a previously analyzed video., Analyze an uploaded video frame-by-frame.      Returns cached results if the v, Settings (Pydantic BaseSettings), get_supabase (Supabase Client Factory), AEGIS FastAPI Application, List all reports, optionally filtered by video_id., Generate and persist a disaster assessment report from a video.      Reuses ca (+16 more)
+Cohesion: 0.15
+Nodes (29): BaseModel, BaseSettings, Chat with the AEGIS disaster-assessment assistant.      Pass `session_id` to c, Inject persisted report/analysis context into the system prompt., Settings, get_supabase (Supabase Client Factory), Enum, AEGIS FastAPI Application (+21 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.12
-Nodes (24): AlertItem Interface, AlertProvider Context Component, useAlert Hook, DamageSeverity API Type, Detection Bounding Box Type, FrameAnalysis API Type, Report API Type, frameImageUrl Helper Function (+16 more)
+Cohesion: 0.22
+Nodes (22): _AnalysisJob, _detections_from_row(), Serve the extracted JPEG for a frame (1-based file names on disk)., Return cached frame analyses for a previously analyzed video., Analyze an uploaded video frame-by-frame.      Returns cached results if the v, _row_to_frame_analysis(), AnalyzeResponse, DamageSeverity (+14 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.15
-Nodes (14): AEGIS Design System (Tailwind Tokens), App Root Component, App Shell Layout, Chat Component, API Client Library, Video Compression Utility, Main Entry Point, Side Navigation (+6 more)
+Cohesion: 0.29
+Nodes (10): analyze(), get_analysis(), _is_missing_column_error(), _load_cached_frames(), _persist_frames(), _run_analysis_job(), _serialize_frame_analyses(), stream_analysis() (+2 more)
 
 ### Community 4 - "Community 4"
 Cohesion: 0.33
 Nodes (11): Mock Data / Type Definitions, Supabase Query Helpers, Live Activity Dashboard Widget, Map View Component, Map Context Panel, Recent Assessments Dashboard Widget, Severity Distribution Dashboard Widget, Stats Cards Dashboard Widget (+3 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.73
-Nodes (6): Chat with the AEGIS disaster-assessment assistant.      Pass `session_id` to c, Inject persisted report/analysis context into the system prompt., Chat Router, ChatMessage (Pydantic Model), ChatRequest (Pydantic Model), ChatResponse (Pydantic Model)
+Cohesion: 0.22
+Nodes (9): AEGIS Design System (Tailwind Tokens), App Root Component, App Shell Layout, Main Entry Point, Side Navigation, Top Navigation, PostCSS Config, Tailwind Config (+1 more)
 
 ### Community 6 - "Community 6"
-Cohesion: 0.6
-Nodes (6): Upload Router, UploadResponse (Pydantic Model), VideoListItem (Pydantic Model), VideoListResponse (Pydantic Model), Upload a disaster footage video.      Accepts any `video/*` content type. Opti, List all uploaded videos.      Returns every video record from the database wi
+Cohesion: 0.25
+Nodes (8): AlertProvider Context Component, useAlert Hook, SeverityBadge UI Component, StatusBadge UI Component, FrameAnalysisFeed Component, ReportsList Component, SideNav Component, TopNav Component
 
 ### Community 7 - "Community 7"
-Cohesion: 0.67
-Nodes (3): compressVideo FFmpeg Function, DroneConnect RTSP Feed Component, VideoPlayer Component
+Cohesion: 0.5
+Nodes (2): cleanupVideo(), onSeeked()
 
 ### Community 8 - "Community 8"
 Cohesion: 0.67
-Nodes (3): Tauri Build Script (build.rs), Tauri App Entry Point (lib.rs), Tauri Main Entry (main.rs)
+Nodes (3): compressVideo FFmpeg Function, DroneConnect RTSP Feed Component, VideoPlayer Component
 
 ### Community 9 - "Community 9"
-Cohesion: 1.0
-Nodes (2): Dashboard Map Markers Data, Dashboard Page
+Cohesion: 0.67
+Nodes (0): 
 
 ### Community 10 - "Community 10"
-Cohesion: 1.0
-Nodes (2): Mock Frames By Assessment ID, Generate Frames Function
+Cohesion: 0.67
+Nodes (3): Video Compression Utility, Report View Component, Video Upload Component
 
 ### Community 11 - "Community 11"
-Cohesion: 1.0
-Nodes (2): Mock Notifications Data, Notifications Page
+Cohesion: 0.67
+Nodes (3): Tauri Build Script (build.rs), Tauri App Entry Point (lib.rs), Tauri Main Entry (main.rs)
 
 ### Community 12 - "Community 12"
 Cohesion: 1.0
-Nodes (2): Profile Summary Data, Profile Page
+Nodes (2): DetailedInsights Frame Table Component, OverallAssessment Component
 
 ### Community 13 - "Community 13"
 Cohesion: 1.0
-Nodes (2): Mock Report By Assessment ID, Reports Page
+Nodes (2): downloadReportPdf Export Function, ReportPreviewCard Component
 
 ### Community 14 - "Community 14"
 Cohesion: 1.0
-Nodes (2): VLM Mode Switch (mock/real/zai), AEGIS README Documentation
+Nodes (2): Mock Notifications Data, Notifications Page
 
 ### Community 15 - "Community 15"
 Cohesion: 1.0
-Nodes (0): 
+Nodes (2): Profile Summary Data, Profile Page
 
 ### Community 16 - "Community 16"
 Cohesion: 1.0
-Nodes (0): 
+Nodes (2): Dashboard Map Markers Data, Dashboard Page
 
 ### Community 17 - "Community 17"
 Cohesion: 1.0
-Nodes (0): 
+Nodes (2): Mock Report By Assessment ID, Reports Page
 
 ### Community 18 - "Community 18"
 Cohesion: 1.0
-Nodes (0): 
+Nodes (2): Mock Frames By Assessment ID, Generate Frames Function
 
 ### Community 19 - "Community 19"
 Cohesion: 1.0
-Nodes (0): 
+Nodes (2): VLM Mode Switch (mock/real/zai), AEGIS README Documentation
 
 ### Community 20 - "Community 20"
 Cohesion: 1.0
@@ -167,37 +174,65 @@ Nodes (0):
 
 ### Community 21 - "Community 21"
 Cohesion: 1.0
-Nodes (1): SeverityDot Marker Component
+Nodes (0): 
 
 ### Community 22 - "Community 22"
 Cohesion: 1.0
-Nodes (1): NotificationItem Interface
+Nodes (0): 
 
 ### Community 23 - "Community 23"
 Cohesion: 1.0
-Nodes (1): ProfileSummary Interface
+Nodes (0): 
 
 ### Community 24 - "Community 24"
 Cohesion: 1.0
-Nodes (1): Mock Assessments Data
+Nodes (0): 
 
 ### Community 25 - "Community 25"
 Cohesion: 1.0
-Nodes (1): Map View Markers Data
+Nodes (0): 
 
 ### Community 26 - "Community 26"
 Cohesion: 1.0
-Nodes (1): Localized damage region on the frame (object-detection style). Coordinates are n
+Nodes (1): Chat Component
 
 ### Community 27 - "Community 27"
 Cohesion: 1.0
-Nodes (1): Resolve an ffmpeg-family executable across local dev and container setups.
+Nodes (1): SeverityDot Marker Component
 
 ### Community 28 - "Community 28"
 Cohesion: 1.0
-Nodes (1): Extract one frame every `interval_seconds` from the video.      Returns the or
+Nodes (1): AlertItem Interface
 
 ### Community 29 - "Community 29"
+Cohesion: 1.0
+Nodes (1): downloadReportJson Export Function
+
+### Community 30 - "Community 30"
+Cohesion: 1.0
+Nodes (1): NotificationItem Interface
+
+### Community 31 - "Community 31"
+Cohesion: 1.0
+Nodes (1): ProfileSummary Interface
+
+### Community 32 - "Community 32"
+Cohesion: 1.0
+Nodes (1): Mock Assessments Data
+
+### Community 33 - "Community 33"
+Cohesion: 1.0
+Nodes (1): Map View Markers Data
+
+### Community 34 - "Community 34"
+Cohesion: 1.0
+Nodes (1): Resolve an ffmpeg-family executable across local dev and container setups.
+
+### Community 35 - "Community 35"
+Cohesion: 1.0
+Nodes (1): Extract one frame every `interval_seconds` from the video.      Returns the or
+
+### Community 36 - "Community 36"
 Cohesion: 1.0
 Nodes (1): CLAUDE.md Project Instructions
 
@@ -206,49 +241,57 @@ Nodes (1): CLAUDE.md Project Instructions
   apps/desktop/src/pages/AssessmentsWorkspacePage.tsx · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **48 isolated node(s):** `PostCSS Config`, `Vite Config (TS)`, `Main Entry Point`, `Chat Component`, `Side Navigation` (+43 more)
+- **54 isolated node(s):** `Localized damage region on the frame (object-detection style). Coordinates are n`, `PostCSS Config`, `Vite Config (TS)`, `Main Entry Point`, `Chat Component` (+49 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **Thin community `Community 9`** (2 nodes): `Dashboard Map Markers Data`, `Dashboard Page`
+- **Thin community `Community 12`** (2 nodes): `DetailedInsights Frame Table Component`, `OverallAssessment Component`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 10`** (2 nodes): `Mock Frames By Assessment ID`, `Generate Frames Function`
+- **Thin community `Community 13`** (2 nodes): `downloadReportPdf Export Function`, `ReportPreviewCard Component`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 11`** (2 nodes): `Mock Notifications Data`, `Notifications Page`
+- **Thin community `Community 14`** (2 nodes): `Mock Notifications Data`, `Notifications Page`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 12`** (2 nodes): `Profile Summary Data`, `Profile Page`
+- **Thin community `Community 15`** (2 nodes): `Profile Summary Data`, `Profile Page`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 13`** (2 nodes): `Mock Report By Assessment ID`, `Reports Page`
+- **Thin community `Community 16`** (2 nodes): `Dashboard Map Markers Data`, `Dashboard Page`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 14`** (2 nodes): `VLM Mode Switch (mock/real/zai)`, `AEGIS README Documentation`
+- **Thin community `Community 17`** (2 nodes): `Mock Report By Assessment ID`, `Reports Page`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 15`** (1 nodes): `__init__.py`
+- **Thin community `Community 18`** (2 nodes): `Mock Frames By Assessment ID`, `Generate Frames Function`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 16`** (1 nodes): `__init__.py`
+- **Thin community `Community 19`** (2 nodes): `VLM Mode Switch (mock/real/zai)`, `AEGIS README Documentation`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 17`** (1 nodes): `__init__.py`
+- **Thin community `Community 20`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 18`** (1 nodes): `vite.config.d.ts`
+- **Thin community `Community 21`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 19`** (1 nodes): `vite.config.js`
+- **Thin community `Community 22`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 20`** (1 nodes): `vite-env.d.ts`
+- **Thin community `Community 23`** (1 nodes): `vite.config.d.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 21`** (1 nodes): `SeverityDot Marker Component`
+- **Thin community `Community 24`** (1 nodes): `vite.config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 22`** (1 nodes): `NotificationItem Interface`
+- **Thin community `Community 25`** (1 nodes): `vite-env.d.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 23`** (1 nodes): `ProfileSummary Interface`
+- **Thin community `Community 26`** (1 nodes): `Chat Component`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 24`** (1 nodes): `Mock Assessments Data`
+- **Thin community `Community 27`** (1 nodes): `SeverityDot Marker Component`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 25`** (1 nodes): `Map View Markers Data`
+- **Thin community `Community 28`** (1 nodes): `AlertItem Interface`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 26`** (1 nodes): `Localized damage region on the frame (object-detection style). Coordinates are n`
+- **Thin community `Community 29`** (1 nodes): `downloadReportJson Export Function`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 27`** (1 nodes): `Resolve an ffmpeg-family executable across local dev and container setups.`
+- **Thin community `Community 30`** (1 nodes): `NotificationItem Interface`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 28`** (1 nodes): `Extract one frame every `interval_seconds` from the video.      Returns the or`
+- **Thin community `Community 31`** (1 nodes): `ProfileSummary Interface`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 29`** (1 nodes): `CLAUDE.md Project Instructions`
+- **Thin community `Community 32`** (1 nodes): `Mock Assessments Data`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 33`** (1 nodes): `Map View Markers Data`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 34`** (1 nodes): `Resolve an ffmpeg-family executable across local dev and container setups.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 35`** (1 nodes): `Extract one frame every `interval_seconds` from the video.      Returns the or`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 36`** (1 nodes): `CLAUDE.md Project Instructions`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
@@ -256,15 +299,15 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **What is the exact relationship between `Supabase Realtime Queue Subscription` and `Assessments Workspace Page`?**
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
-- **Why does `Map MapLibre GL Component` connect `Community 0` to `Community 2`?**
-  _High betweenness centrality (0.088) - this node is a cross-community bridge._
-- **Why does `deriveAssessments Builder Function` connect `Community 2` to `Community 0`?**
-  _High betweenness centrality (0.065) - this node is a cross-community bridge._
-- **Are the 2 inferred relationships involving `VLM Service (analyze_frame, chat_completion)` (e.g. with `VLM Service (analyze_frame, chat_completion)` and `Report Service (aggregate_severity, summarize)`) actually correct?**
-  _`VLM Service (analyze_frame, chat_completion)` has 2 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 9 inferred relationships involving `Map MapLibre GL Component` (e.g. with `ProvinceLayers GeoJSON Component` and `deriveAssessments Builder Function`) actually correct?**
-  _`Map MapLibre GL Component` has 9 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 3 inferred relationships involving `DamageSeverity (Enum)` (e.g. with `Serve the extracted JPEG for a frame (1-based file names on disk).` and `Return cached frame analyses for a previously analyzed video.`) actually correct?**
-  _`DamageSeverity (Enum)` has 3 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `PostCSS Config`, `Vite Config (TS)`, `Main Entry Point` to the rest of the system?**
-  _48 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Why does `Report Router` connect `Community 1` to `Community 2`?**
+  _High betweenness centrality (0.027) - this node is a cross-community bridge._
+- **Why does `DamageSeverity` connect `Community 2` to `Community 1`?**
+  _High betweenness centrality (0.021) - this node is a cross-community bridge._
+- **Are the 8 inferred relationships involving `DamageSeverity` (e.g. with `_AnalysisJob` and `_detections_from_row()`) actually correct?**
+  _`DamageSeverity` has 8 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 7 inferred relationships involving `Detection` (e.g. with `_AnalysisJob` and `_detections_from_row()`) actually correct?**
+  _`Detection` has 7 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 7 inferred relationships involving `FrameAnalysis` (e.g. with `_AnalysisJob` and `_row_to_frame_analysis()`) actually correct?**
+  _`FrameAnalysis` has 7 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 7 inferred relationships involving `AnalyzeRequest` (e.g. with `_AnalysisJob` and `Serve the extracted JPEG for a frame (1-based file names on disk).`) actually correct?**
+  _`AnalyzeRequest` has 7 INFERRED edges - model-reasoned connections that need verification._
