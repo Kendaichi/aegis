@@ -29,6 +29,7 @@ class Settings(BaseSettings):
 
     vlm_mode: Literal["real", "mock", "zai"] = "mock"
     vlm_model: str = "glm-4.6v-flash"
+    chat_model: str = "glm-4-flash"
     upload_dir: Path = Path("./uploads")
     frames_dir: Path = Path("./frames")
     frame_interval_seconds: float = 10.0
