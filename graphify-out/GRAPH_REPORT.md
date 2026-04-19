@@ -1,7 +1,7 @@
 # Graph Report - C:\Users\Frank\Desktop\PROJECTS\aegis  (2026-04-19)
 
 ## Corpus Check
-- 66 files · ~28,276 words
+- 66 files · ~28,274 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -63,8 +63,8 @@
 ## Surprising Connections (you probably didn't know these)
 - `Settings` --conceptually_related_to--> `API Python Requirements`  [INFERRED]
   C:\Users\Frank\Desktop\PROJECTS\aegis\apps\api\app\config.py → apps/api/requirements.txt
-- `_AnalysisJob` --uses--> `AnalyzeRequest`  [INFERRED]
-  C:\Users\Frank\Desktop\PROJECTS\aegis\apps\api\app\routers\analyze.py → C:\Users\Frank\Desktop\PROJECTS\aegis\apps\api\app\schemas.py
+- `AnalyzeRequest` --uses--> `_AnalysisJob`  [INFERRED]
+  C:\Users\Frank\Desktop\PROJECTS\aegis\apps\api\app\schemas.py → C:\Users\Frank\Desktop\PROJECTS\aegis\apps\api\app\routers\analyze.py
 - `AnalyzeRequest` --uses--> `Serve the extracted JPEG for a frame (1-based file names on disk).`  [INFERRED]
   C:\Users\Frank\Desktop\PROJECTS\aegis\apps\api\app\schemas.py → apps\api\app\routers\analyze.py
 - `AnalyzeRequest` --uses--> `Return cached frame analyses for a previously analyzed video.`  [INFERRED]

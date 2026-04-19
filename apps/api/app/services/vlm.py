@@ -25,17 +25,19 @@ Respond with STRICT JSON matching this schema:
   "severity": "none|minor|moderate|severe|destroyed",
   "description": "one to two sentence description of visible damage",
   "detected_hazards": ["list", "of", "hazards"],
-  "confidence": 0.0,
+  "confidence": 0.85,
   "detections": [
     {
       "label": "short region label e.g. collapsed roof",
       "severity": "none|minor|moderate|severe|destroyed",
       "bbox": [x1, y1, x2, y2],
-      "confidence": 0.0
+      "confidence": 0.72
     }
   ]
 }
-Rules for bbox: x1 < x2, y1 < y2, all values in [0, 1]. Use 1–5 boxes when damage is visible; use an empty array if none.
+Rules:
+- confidence fields: your actual certainty estimate as a float from 0.0 (uncertain) to 1.0 (certain). Do NOT copy the example values — replace them with your real estimate.
+- bbox: x1 < x2, y1 < y2, all values in [0, 1]. Use 1–5 boxes when damage is visible; use an empty array if none.
 Only output the JSON object. No prose, no markdown fences."""
 
 _MOCK_SEVERITIES: list[DamageSeverity] = [
