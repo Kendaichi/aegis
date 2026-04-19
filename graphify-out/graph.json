@@ -2784,11 +2784,11 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
       "source_location": "L14",
       "weight": 0.8,
-      "_src": "analyze_analysisjob",
-      "_tgt": "schemas_damageseverity",
+      "_src": "schemas_damageseverity",
+      "_tgt": "analyze_analysisjob",
+      "confidence_score": 0.5,  
       "source": "schemas_damageseverity",
-      "target": "analyze_analysisjob",
-      "confidence_score": 0.5
+      "target": "analyze_analysisjob"
     },
     {
       "relation": "calls",
@@ -2917,8 +2917,8 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
       "source_location": "L183",
       "weight": 1.0,
-      "_src": "analyze_run_analysis_job",
-      "_tgt": "str",
+      "_src": "str",
+      "_tgt": "analyze_run_analysis_job",
       "source": "str",
       "target": "analyze_run_analysis_job"
     },
@@ -3312,11 +3312,11 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
       "source_location": "L14",
       "weight": 0.8,
-      "_src": "analyze_analysisjob",
-      "_tgt": "schemas_detection",
+      "_src": "schemas_detection",
+      "_tgt": "analyze_analysisjob",
+      "confidence_score": 0.5,
       "source": "schemas_detection",
-      "target": "analyze_analysisjob",
-      "confidence_score": 0.5
+      "target": "analyze_analysisjob"
     },
     {
       "relation": "calls",
@@ -3396,11 +3396,11 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
       "source_location": "L14",
       "weight": 0.8,
-      "_src": "analyze_analysisjob",
-      "_tgt": "schemas_frameanalysis",
+      "_src": "schemas_frameanalysis",
+      "_tgt": "analyze_analysisjob",
+      "confidence_score": 0.5,
       "source": "schemas_frameanalysis",
-      "target": "analyze_analysisjob",
-      "confidence_score": 0.5
+      "target": "analyze_analysisjob"
     },
     {
       "relation": "calls",
@@ -3480,11 +3480,11 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
       "source_location": "L14",
       "weight": 0.8,
-      "_src": "analyze_analysisjob",
-      "_tgt": "schemas_analyzerequest",
+      "_src": "schemas_analyzerequest",
+      "_tgt": "analyze_analysisjob",
+      "confidence_score": 0.5,
       "source": "schemas_analyzerequest",
-      "target": "analyze_analysisjob",
-      "confidence_score": 0.5
+      "target": "analyze_analysisjob"
     },
     {
       "relation": "uses",
@@ -3564,11 +3564,11 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
       "source_location": "L14",
       "weight": 0.8,
-      "_src": "analyze_analysisjob",
-      "_tgt": "schemas_analyzeresponse",
+      "_src": "schemas_analyzeresponse",
+      "_tgt": "analyze_analysisjob",
+      "confidence_score": 0.5,
       "source": "schemas_analyzeresponse",
-      "target": "analyze_analysisjob",
-      "confidence_score": 0.5
+      "target": "analyze_analysisjob"
     },
     {
       "relation": "calls",
@@ -3636,11 +3636,11 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
       "source_location": "L14",
       "weight": 0.8,
-      "_src": "analyze_analysisjob",
-      "_tgt": "schemas_analyzejobresponse",
+      "_src": "schemas_analyzejobresponse",
+      "_tgt": "analyze_analysisjob",
+      "confidence_score": 0.5,
       "source": "schemas_analyzejobresponse",
-      "target": "analyze_analysisjob",
-      "confidence_score": 0.5
+      "target": "analyze_analysisjob"
     },
     {
       "relation": "calls",
@@ -3649,8 +3649,8 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
       "source_location": "L302",
       "weight": 1.0,
-      "_src": "analyze_analyze",
-      "_tgt": "schemas_analyzejobresponse",
+      "_src": "schemas_analyzejobresponse",
+      "_tgt": "analyze_analyze",
       "source": "schemas_analyzejobresponse",
       "target": "analyze_analyze"
     },
@@ -5497,8 +5497,8 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\supabaseQueries.ts",
       "source_location": "L382",
       "weight": 1.0,
-      "_src": "supabasequeries_appendchatmessages",
-      "_tgt": "map_map",
+      "_src": "map_map",
+      "_tgt": "supabasequeries_appendchatmessages",
       "source": "map_map",
       "target": "supabasequeries_appendchatmessages"
     },
