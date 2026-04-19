@@ -30,7 +30,7 @@ function countBySeverity(frames: FrameAnalysis[]) {
 interface Props {
   report: Report;
   frames: FrameAnalysis[];
-  onSelectFrame?: (frameIndex: number) => void;
+  onSelectFrame?: (frame: FrameAnalysis) => void;
   className?: string;
 }
 

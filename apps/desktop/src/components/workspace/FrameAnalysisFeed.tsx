@@ -21,7 +21,7 @@ function damageToSeverityLevel(severity: FrameAnalysis["severity"]): SeverityLev
 interface Props {
   frames: FrameAnalysis[];
   selectedFrameIndex: number | null;
-  onSelectFrame: (frameIndex: number) => void;
+  onSelectFrame: (frame: FrameAnalysis) => void;
   className?: string;
 }
 
@@ -58,7 +58,7 @@ export default function FrameAnalysisFeed({
             <button
               key={frame.frame_index}
               type="button"
-              onClick={() => onSelectFrame(frame.frame_index)}
+              onClick={() => onSelectFrame(frame)}
               className={`w-full rounded-card border p-3 text-left shadow-card transition ${
                 selected
                   ? "border-aegis-accent/40 bg-aegis-glow ring-1 ring-aegis-accent/30"

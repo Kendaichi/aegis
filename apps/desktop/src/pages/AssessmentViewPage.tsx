@@ -1,8 +1,9 @@
 import { ArrowLeft, Calendar, Clock, MapPin } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import MapView from "../components/Map";
 import { SeverityBadge, StatusBadge } from "../components/ui/Badges";
 import DetailedInsights from "../components/workspace/DetailedInsights";
+import FrameImageModal from "../components/workspace/FrameImageModal";
 import { severityToLevel } from "../lib/assessments";
 import { api, type FrameAnalysis, type Report, type VideoListItem } from "../lib/api";
 import type { AssessmentStatus, SeverityLevel } from "../lib/mockData";
@@ -63,8 +64,14 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
   const [report, setReport] = useState<Report | null>(null);
   const [frames, setFrames] = useState<FrameAnalysis[]>([]);
   const [selectedFrameIndex, setSelectedFrameIndex] = useState<number | null>(null);
+  const [modalFrame, setModalFrame] = useState<FrameAnalysis | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const inspectFrame = useCallback((frame: FrameAnalysis) => {
+    setSelectedFrameIndex(frame.frame_index);
+    setModalFrame(frame);
+  }, []);
 
   const counts = useMemo(() => countBySeverity(frames), [frames]);
   const total = frames.length || 1;
@@ -243,7 +250,7 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
                   <h3 className="section-title mb-3">Frame Analysis</h3>
                   <DetailedInsights
                     frames={frames}
-                    onSelectRow={setSelectedFrameIndex}
+                    onSelectRow={inspectFrame}
                     className="max-h-80"
                   />
                 </section>
@@ -269,6 +276,8 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
           />
         </div>
       </div>
+
+      <FrameImageModal frame={modalFrame} onClose={() => setModalFrame(null)} />
     </div>
   );
 }

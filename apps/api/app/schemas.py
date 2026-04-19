@@ -61,6 +61,24 @@ class VideoListResponse(BaseModel):
     total: int = Field(..., description="Total number of uploaded videos")
 
 
+class Detection(BaseModel):
+    """Localized damage region on the frame (object-detection style). Coordinates are normalized."""
+
+    label: str = Field(
+        ...,
+        max_length=240,
+        description="Short label for the region (e.g. 'collapsed roof', 'flood water')",
+    )
+    severity: DamageSeverity = Field(..., description="Severity attributed to this region")
+    bbox: tuple[float, float, float, float] = Field(
+        ...,
+        description="Bounding box as normalized x1, y1, x2, y2 in [0, 1] (origin top-left)",
+    )
+    confidence: float = Field(
+        ..., ge=0.0, le=1.0, description="Confidence for this box (0.0–1.0)"
+    )
+
+
 class FrameAnalysis(BaseModel):
     frame_index: int = Field(..., description="Zero-based index of the frame within the video")
     timestamp_seconds: float = Field(
@@ -77,6 +95,14 @@ class FrameAnalysis(BaseModel):
     )
     confidence: float = Field(
         ..., ge=0.0, le=1.0, description="Model confidence score for this assessment (0.0–1.0)"
+    )
+    image_url: str | None = Field(
+        None,
+        description="URL path to the extracted JPEG for this frame (set by the API when serving)",
+    )
+    detections: list[Detection] = Field(
+        default_factory=list,
+        description="Localized damage regions with normalized bounding boxes",
     )
 
 

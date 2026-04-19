@@ -8,19 +8,32 @@ from ollama import Client
 from openai import OpenAI
 
 from app.config import settings
-from app.schemas import DamageSeverity, FrameAnalysis
+from app.schemas import DamageSeverity, Detection, FrameAnalysis
 
 _client: Client | None = None
 _zai_client_instance: OpenAI | None = None
 
 FRAME_PROMPT = """You are a disaster-response analyst reviewing a single frame of site footage.
+Locate visible disaster damage: draw conceptual bounding boxes around each distinct damaged region
+(buildings, road sections, debris piles, flood water, etc.). Coordinates are NORMALIZED to the
+image: origin top-left, x and y from 0.0 to 1.0.
+
 Respond with STRICT JSON matching this schema:
 {
   "severity": "none|minor|moderate|severe|destroyed",
   "description": "one to two sentence description of visible damage",
   "detected_hazards": ["list", "of", "hazards"],
-  "confidence": 0.0
+  "confidence": 0.0,
+  "detections": [
+    {
+      "label": "short region label e.g. collapsed roof",
+      "severity": "none|minor|moderate|severe|destroyed",
+      "bbox": [x1, y1, x2, y2],
+      "confidence": 0.0
+    }
+  ]
 }
+Rules for bbox: x1 < x2, y1 < y2, all values in [0, 1]. Use 1–5 boxes when damage is visible; use an empty array if none.
 Only output the JSON object. No prose, no markdown fences."""
 
 _MOCK_SEVERITIES: list[DamageSeverity] = [
@@ -73,6 +86,45 @@ def _frame_data_url(frame_path: Path) -> str:
     return f"data:{mime};base64,{b64}"
 
 
+def _clamp01(value: float) -> float:
+    return max(0.0, min(1.0, value))
+
+
+def _parse_detections(raw: object) -> list[Detection]:
+    if not isinstance(raw, list):
+        return []
+    out: list[Detection] = []
+    for item in raw:
+        if not isinstance(item, dict):
+            continue
+        bbox_raw = item.get("bbox")
+        if not isinstance(bbox_raw, (list, tuple)) or len(bbox_raw) != 4:
+            continue
+        try:
+            x1 = _clamp01(float(bbox_raw[0]))
+            y1 = _clamp01(float(bbox_raw[1]))
+            x2 = _clamp01(float(bbox_raw[2]))
+            y2 = _clamp01(float(bbox_raw[3]))
+            if x2 <= x1 or y2 <= y1:
+                continue
+            sev = DamageSeverity(str(item.get("severity", "none")))
+            conf = float(item.get("confidence", 0.5))
+            conf = max(0.0, min(1.0, conf))
+            raw_label = str(item.get("label", "damage")).strip() or "damage"
+            label = raw_label[:240]
+            out.append(
+                Detection(
+                    label=label,
+                    severity=sev,
+                    bbox=(x1, y1, x2, y2),
+                    confidence=conf,
+                )
+            )
+        except (ValueError, TypeError):
+            continue
+    return out
+
+
 def _parse_frame_json(
     raw: str,
     frame_index: int,
@@ -86,7 +138,9 @@ def _parse_frame_json(
             "description": raw[:400] or "Model returned non-JSON output.",
             "detected_hazards": [],
             "confidence": 0.0,
+            "detections": [],
         }
+    detections = _parse_detections(data.get("detections", []))
     return FrameAnalysis(
         frame_index=frame_index,
         timestamp_seconds=timestamp_seconds,
@@ -94,6 +148,7 @@ def _parse_frame_json(
         description=str(data.get("description", "")),
         detected_hazards=list(data.get("detected_hazards", []) or []),
         confidence=float(data.get("confidence", 0.0)),
+        detections=detections,
     )
 
 
@@ -104,13 +159,41 @@ def _mock_frame_analysis(
 ) -> FrameAnalysis:
     seed = int(hashlib.md5(frame_path.name.encode()).hexdigest(), 16) + frame_index
     bucket = seed % len(_MOCK_SEVERITIES)
+    sev = _MOCK_SEVERITIES[bucket]
+    # Two overlapping-style boxes with slight jitter so overlays are visible in the UI.
+    jitter = (seed % 7) * 0.01
+    mock_detections = [
+        Detection(
+            label="Primary damage / hazard region",
+            severity=sev,
+            bbox=(
+                _clamp01(0.18 + jitter),
+                _clamp01(0.22 + jitter),
+                _clamp01(0.62 + jitter),
+                _clamp01(0.78 + jitter),
+            ),
+            confidence=min(0.95, 0.55 + bucket * 0.08),
+        ),
+        Detection(
+            label="Secondary risk zone",
+            severity=_MOCK_SEVERITIES[max(0, bucket - 1)],
+            bbox=(
+                _clamp01(0.55 - jitter),
+                _clamp01(0.12),
+                _clamp01(0.92),
+                _clamp01(0.45 + jitter),
+            ),
+            confidence=0.62,
+        ),
+    ]
     return FrameAnalysis(
         frame_index=frame_index,
         timestamp_seconds=timestamp_seconds,
-        severity=_MOCK_SEVERITIES[bucket],
+        severity=sev,
         description=_MOCK_DESCRIPTIONS[bucket],
         detected_hazards=list(_MOCK_HAZARDS[bucket]),
         confidence=0.5 + (bucket * 0.1),
+        detections=mock_detections,
     )
 
 

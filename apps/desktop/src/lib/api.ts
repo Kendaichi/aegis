@@ -1,6 +1,7 @@
 import { mockApi } from "./mockApi";
 
-const BASE = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+export const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+const BASE = API_BASE_URL;
 
 export type DamageSeverity =
   | "none"
@@ -51,6 +52,14 @@ export interface VideoListResponse {
   total: number;
 }
 
+/** Localized damage region; bbox is normalized x1,y1,x2,y2 in [0,1], origin top-left. */
+export interface Detection {
+  label: string;
+  severity: DamageSeverity;
+  bbox: [number, number, number, number];
+  confidence: number;
+}
+
 export interface FrameAnalysis {
   frame_index: number;
   timestamp_seconds: number;
@@ -60,6 +69,19 @@ export interface FrameAnalysis {
   confidence: number;
   /** Per-frame GPS when available (streaming / real analysis). /*/
   location?: GeoPoint;
+  /** API-relative or absolute URL for the extracted frame JPEG. */
+  image_url?: string | null;
+  /** AI-localized regions (bounding boxes) for this frame. */
+  detections?: Detection[];
+}
+
+/** Resolve a frame image URL for <img src={...}> (prepends API base when path is relative). */
+export function frameImageUrl(image_url: string): string {
+  if (!image_url) return "";
+  if (image_url.startsWith("http://") || image_url.startsWith("https://")) return image_url;
+  const root = BASE.replace(/\/$/, "");
+  const path = image_url.startsWith("/") ? image_url : `/${image_url}`;
+  return `${root}${path}`;
 }
 
 /** Called for each frame as analysis streams in (mock or SSE/WebSocket later). */
@@ -98,6 +120,8 @@ export interface ChatResponse {
 export interface HealthResponse {
   status: string;
   model: string;
+  /** Backend VLM mode: mock | real (Ollama) | zai */
+  vlm_mode?: string;
 }
 
 async function handle<T>(res: Response): Promise<T> {
