@@ -114,6 +114,7 @@ function videoToRow(v: VideoRow, report?: ReportRow): AssessmentRow {
       : "Unknown location");
   return {
     id: displayId(v),
+    videoId: v.video_id,
     title: v.title || filenameToTitle(v.filename),
     subtitle: v.size_bytes ? `${(v.size_bytes / (1024 * 1024)).toFixed(1)} MB` : "",
     location,
@@ -147,6 +148,7 @@ export async function fetchActiveIncidents(limit = 3): Promise<SidebarIncident[]
     const report = reportByVideo.get(v.video_id);
     return {
       id: displayId(v),
+      videoId: v.video_id,
       location:
         v.location_name ?? v.title ?? filenameToTitle(v.filename) ?? "Unknown location",
       timeAgo: timeAgo(v.created_at),
@@ -283,24 +285,53 @@ export async function fetchDashboardStats(): Promise<DashboardStats> {
   };
 }
 
-export async function fetchBookmarkedAreas(limit = 5): Promise<string[]> {
+export interface BookmarkedArea {
+  name: string;
+  lat: number;
+  lng: number;
+}
+
+export async function fetchBookmarkedAreas(limit = 5): Promise<BookmarkedArea[]> {
   const { data, error } = await supabase
     .from("videos")
-    .select("location_name")
+    .select("location_name, lat, lng, created_at")
     .not("location_name", "is", null);
   if (error) throw error;
 
-  const counts = new Map<string, number>();
-  for (const row of (data ?? []) as Array<{ location_name: string | null }>) {
+  type Row = {
+    location_name: string | null;
+    lat: number | null;
+    lng: number | null;
+    created_at: string;
+  };
+
+  const byName = new Map<
+    string,
+    { count: number; lat: number; lng: number; latestTs: number }
+  >();
+
+  for (const row of (data ?? []) as Row[]) {
     const name = row.location_name?.trim();
-    if (!name) continue;
-    counts.set(name, (counts.get(name) ?? 0) + 1);
+    if (!name || row.lat == null || row.lng == null) continue;
+    const ts = new Date(row.created_at).getTime();
+    const prev = byName.get(name);
+    if (!prev) {
+      byName.set(name, { count: 1, lat: row.lat, lng: row.lng, latestTs: ts });
+    } else {
+      prev.count += 1;
+      if (ts > prev.latestTs) {
+        prev.latestTs = ts;
+        prev.lat = row.lat;
+        prev.lng = row.lng;
+      }
+    }
   }
 
-  return [...counts.entries()]
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  return [...byName.entries()]
+    .map(([name, v]) => ({ name, lat: v.lat, lng: v.lng, count: v.count }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
     .slice(0, limit)
-    .map(([name]) => name);
+    .map(({ name, lat, lng }) => ({ name, lat, lng }));
 }
 
 export async function fetchActivityFeed(limit = 8): Promise<ActivityItem[]> {

@@ -3,6 +3,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import MapView from "../components/Map";
 import Chat from "../components/Chat";
 import { api, type FrameAnalysis, type Report, type UploadMetadata } from "../lib/api";
+import { invalidate } from "../lib/apiCache";
 import { AlertProvider, useAlert } from "../components/workspace/AlertToast";
 import VideoPlayer from "../components/workspace/VideoPlayer";
 import FrameAnalysisFeed from "../components/workspace/FrameAnalysisFeed";
@@ -157,6 +158,7 @@ function WorkspaceMain({
       setUploadProgress(100);
       setUploadProcessing(false);
       setVideoId(res.video_id);
+      invalidate("videos:list");
       setPhase("streaming");
     } catch (error) {
       setError(error instanceof Error ? error.message : String(error));
@@ -195,6 +197,9 @@ function WorkspaceMain({
       setAnalyzeProgress(100);
       const nextReport = await api.report(videoId);
       setReport(nextReport);
+      invalidate("reports:list");
+      invalidate(`reports:video:${videoId}`);
+      invalidate(`frames:${videoId}`);
       setPhase("complete");
       setLeftView("assessment");
     } catch (error) {

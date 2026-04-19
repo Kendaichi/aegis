@@ -6,9 +6,10 @@ import { SeverityBadge, StatusBadge } from "../ui/Badges";
 
 interface Props {
   className?: string;
+  onViewAssessment?: (videoId: string) => void;
 }
 
-export default function RecentAssessments({ className = "" }: Props) {
+export default function RecentAssessments({ className = "", onViewAssessment }: Props) {
   const [rows, setRows] = useState<AssessmentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -70,7 +71,11 @@ export default function RecentAssessments({ className = "" }: Props) {
           </thead>
           <tbody>
             {rows.map((r) => (
-              <tr key={r.id} className="table-row-interactive">
+              <tr
+                key={r.videoId}
+                className="table-row-interactive cursor-pointer"
+                onClick={() => onViewAssessment?.(r.videoId)}
+              >
                 <td className="px-4 py-3 font-mono text-aegis-accent">{r.id}</td>
                 <td className="px-4 py-3">
                   <div className="font-medium text-slate-100">{r.title}</div>

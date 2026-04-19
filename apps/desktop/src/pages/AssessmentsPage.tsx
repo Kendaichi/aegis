@@ -1,9 +1,10 @@
 import { ChevronRight, Loader2, Plus, Search } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { SeverityBadge, StatusBadge } from "../components/ui/Badges";
 import { api } from "../lib/api";
+import { useCachedQuery } from "../lib/apiCache";
 import { deriveAssessments } from "../lib/assessments";
-import type { AssessmentRow, AssessmentStatus } from "../lib/mockData";
+import type { AssessmentStatus } from "../lib/mockData";
 
 const FILTERS: Array<AssessmentStatus | "all"> = ["all", "complete", "analyzing", "pending"];
 
@@ -15,30 +16,18 @@ interface Props {
 export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: Props) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("all");
-  const [rows, setRows] = useState<AssessmentRow[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const videosQ = useCachedQuery("videos:list", () => api.listVideos());
+  const reportsQ = useCachedQuery("reports:list", () => api.listReports());
 
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-    Promise.all([api.listVideos(), api.listReports()])
-      .then(([videos, reports]) => {
-        if (cancelled) return;
-        setRows(deriveAssessments(videos.videos, reports));
-      })
-      .catch((err) => {
-        if (cancelled) return;
-        setError(err instanceof Error ? err.message : String(err));
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const rows = useMemo(
+    () =>
+      videosQ.data ? deriveAssessments(videosQ.data.videos, reportsQ.data ?? []) : [],
+    [videosQ.data, reportsQ.data]
+  );
+
+  const loading = !videosQ.data && videosQ.loading;
+  const error =
+    videosQ.error?.message ?? reportsQ.error?.message ?? null;
 
   const filtered = useMemo(() => {
     let list = rows;

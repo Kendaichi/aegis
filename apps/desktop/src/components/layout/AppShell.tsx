@@ -1,9 +1,12 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
 import SideNav from "../navigation/SideNav";
 import TopNav from "../navigation/TopNav";
 
 export type NavView = "dashboard" | "assessments" | "map" | "reports" | "settings";
 export type AppView = NavView | "notifications" | "profile";
+
+/** Passed to the dashboard map to fly to a bookmarked area (Live Monitoring). */
+export type DashboardMapFocus = { lat: number; lng: number; label?: string } | null;
 
 interface AppShellRenderProps {
   activeView: AppView;
@@ -14,6 +17,8 @@ interface AppShellRenderProps {
   viewingAssessmentId: string | null;
   openAssessmentView: (id: string) => void;
   closeAssessmentView: () => void;
+  dashboardMapFocus: DashboardMapFocus;
+  clearDashboardMapFocus: () => void;
 }
 
 interface Props {
@@ -24,12 +29,21 @@ export default function AppShell({ children }: Props) {
   const [activeView, setActiveView] = useState<AppView>("dashboard");
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
   const [viewingAssessmentId, setViewingAssessmentId] = useState<string | null>(null);
+  const [dashboardMapFocus, setDashboardMapFocus] = useState<DashboardMapFocus>(null);
 
   function navigate(view: AppView) {
     setWorkspaceOpen(false);
     setViewingAssessmentId(null);
+    setDashboardMapFocus(null);
     setActiveView(view);
   }
+
+  function openAssessmentView(id: string) {
+    setWorkspaceOpen(false);
+    setViewingAssessmentId(id);
+  }
+
+  const clearDashboardMapFocus = useCallback(() => setDashboardMapFocus(null), []);
 
   const topNavMeta = useMemo(() => {
     if (workspaceOpen) {
@@ -97,6 +111,13 @@ export default function AppShell({ children }: Props) {
         onNavigate={navigate}
         onUploadClick={() => setWorkspaceOpen(true)}
         showDashboardPanel={!workspaceOpen && activeView === "dashboard"}
+        onViewAssessment={openAssessmentView}
+        onFocusArea={(a) => {
+          setWorkspaceOpen(false);
+          setViewingAssessmentId(null);
+          setActiveView("dashboard");
+          setDashboardMapFocus({ lat: a.lat, lng: a.lng, label: a.name });
+        }}
       />
       <div className="relative min-w-0 flex-1 overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.10),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(15,23,42,0.9),transparent_40%)]" />
@@ -115,8 +136,10 @@ export default function AppShell({ children }: Props) {
               closeWorkspace: () => setWorkspaceOpen(false),
               navigate,
               viewingAssessmentId,
-              openAssessmentView: (id: string) => setViewingAssessmentId(id),
+              openAssessmentView,
               closeAssessmentView: () => setViewingAssessmentId(null),
+              dashboardMapFocus,
+              clearDashboardMapFocus,
             })}
           </main>
         </div>

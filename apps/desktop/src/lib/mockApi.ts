@@ -218,6 +218,11 @@ export const mockApi = {
       size_bytes: file.size || 123456,
       content_type: file.type || "video/mp4",
       created_at: nowIso(),
+      title: metadata.title ?? file.name ?? "mock-video",
+      location_name: metadata.location_name ?? null,
+      incident_type: metadata.incident_type ?? null,
+      lat: metadata.lat ?? null,
+      lng: metadata.lng ?? null,
     };
     videoStore.unshift(item);
     return {

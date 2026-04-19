@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime, timezone
+from typing import Any
 
 from fastapi import APIRouter, HTTPException, status
 
@@ -15,6 +16,44 @@ from app.services.vlm import analyze_frame
 router = APIRouter(prefix="/report", tags=["report"])
 
 
+def _geo_from_lat_lng_row(row: dict[str, Any]) -> GeoPoint | None:
+    """Build GeoPoint when both coordinates are present (allows 0.0)."""
+    lat = row.get("lat")
+    lng = row.get("lng")
+    if lat is None or lng is None:
+        return None
+    return GeoPoint(lat=float(lat), lng=float(lng))
+
+
+def _video_locations_by_id(sb: Any, video_ids: list[str]) -> dict[str, GeoPoint]:
+    """Batch-fetch lat/lng for videos; skips ids with missing coords."""
+    if not video_ids:
+        return {}
+    result = sb.table("videos").select("video_id, lat, lng").in_("video_id", video_ids).execute()
+    out: dict[str, GeoPoint] = {}
+    for row in result.data or []:
+        pt = _geo_from_lat_lng_row(row)
+        if pt is not None:
+            out[str(row["video_id"])] = pt
+    return out
+
+
+def _report_location_or_video_fallback(
+    sb: Any, row: dict[str, Any], video_locations: dict[str, GeoPoint] | None = None
+) -> GeoPoint | None:
+    """Use report lat/lng, or fall back to the parent video row."""
+    direct = _geo_from_lat_lng_row(row)
+    if direct is not None:
+        return direct
+    vid = str(row["video_id"])
+    if video_locations is not None:
+        return video_locations.get(vid)
+    vr = sb.table("videos").select("lat, lng").eq("video_id", vid).maybe_single().execute()
+    if not vr.data:
+        return None
+    return _geo_from_lat_lng_row(vr.data)
+
+
 @router.post("", response_model=Report, status_code=status.HTTP_201_CREATED)
 def generate_report(req: ReportRequest) -> Report:
     """
@@ -26,7 +65,7 @@ def generate_report(req: ReportRequest) -> Report:
     sb = get_supabase()
     video_row = (
         sb.table("videos")
-        .select("storage_path, filename")
+        .select("storage_path, filename, lat, lng")
         .eq("video_id", req.video_id)
         .maybe_single()
         .execute()
@@ -57,6 +96,8 @@ def generate_report(req: ReportRequest) -> Report:
     report_id = uuid.uuid4().hex
     now = datetime.now(timezone.utc)
 
+    resolved_location = req.location or _geo_from_lat_lng_row(video_row.data)
+
     sb.table("reports").insert(
         {
             "report_id": report_id,
@@ -66,8 +107,8 @@ def generate_report(req: ReportRequest) -> Report:
             "key_findings": findings,
             "recommendations": recs,
             "incident_type": req.incident_type,
-            "lat": req.location.lat if req.location else None,
-            "lng": req.location.lng if req.location else None,
+            "lat": resolved_location.lat if resolved_location else None,
+            "lng": resolved_location.lng if resolved_location else None,
             "created_at": now.isoformat(),
         }
     ).execute()
@@ -79,7 +120,7 @@ def generate_report(req: ReportRequest) -> Report:
         overall_severity=aggregate_severity(analyses),
         key_findings=findings,
         recommendations=recs,
-        location=req.location,
+        location=resolved_location,
         created_at=now,
     )
 
@@ -95,9 +136,7 @@ def get_report(report_id: str) -> Report:
             detail=f"report_id {report_id} not found",
         )
     row = result.data
-    location = (
-        GeoPoint(lat=row["lat"], lng=row["lng"]) if row.get("lat") and row.get("lng") else None
-    )
+    location = _report_location_or_video_fallback(sb, row)
     return Report(
         report_id=row["report_id"],
         video_id=row["video_id"],
@@ -119,11 +158,13 @@ def list_reports(video_id: str | None = None) -> list[Report]:
         query = query.eq("video_id", video_id)
     result = query.execute()
 
+    rows = result.data or []
+    need_fallback = [str(r["video_id"]) for r in rows if _geo_from_lat_lng_row(r) is None]
+    video_locations = _video_locations_by_id(sb, list(dict.fromkeys(need_fallback)))
+
     reports = []
-    for row in result.data or []:
-        location = (
-            GeoPoint(lat=row["lat"], lng=row["lng"]) if row.get("lat") and row.get("lng") else None
-        )
+    for row in rows:
+        location = _report_location_or_video_fallback(sb, row, video_locations)
         reports.append(
             Report(
                 report_id=row["report_id"],

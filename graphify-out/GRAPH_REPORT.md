@@ -1,12 +1,12 @@
-# Graph Report - C:\Users\Frank\Desktop\PROJECTS\aegis  (2026-04-19)
+# Graph Report - C:\Users\carlo\Desktop\aegis  (2026-04-20)
 
 ## Corpus Check
-- 69 files · ~30,726 words
+- 71 files · ~32,395 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 231 nodes · 367 edges · 48 communities detected
-- Extraction: 62% EXTRACTED · 38% INFERRED · 0% AMBIGUOUS · INFERRED: 138 edges (avg confidence: 0.69)
+- 276 nodes · 449 edges · 56 communities detected
+- Extraction: 63% EXTRACTED · 37% INFERRED · 0% AMBIGUOUS · INFERRED: 168 edges (avg confidence: 0.67)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -58,127 +58,135 @@
 - [[_COMMUNITY_Community 45|Community 45]]
 - [[_COMMUNITY_Community 46|Community 46]]
 - [[_COMMUNITY_Community 47|Community 47]]
+- [[_COMMUNITY_Community 48|Community 48]]
+- [[_COMMUNITY_Community 49|Community 49]]
+- [[_COMMUNITY_Community 50|Community 50]]
+- [[_COMMUNITY_Community 51|Community 51]]
+- [[_COMMUNITY_Community 52|Community 52]]
+- [[_COMMUNITY_Community 53|Community 53]]
+- [[_COMMUNITY_Community 54|Community 54]]
+- [[_COMMUNITY_Community 55|Community 55]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `get_supabase (Supabase Client Factory)` - 18 edges
-2. `DamageSeverity` - 14 edges
-3. `Map()` - 14 edges
-4. `Detection` - 12 edges
-5. `FrameAnalysis` - 12 edges
-6. `chat()` - 11 edges
-7. `analyze_frame()` - 10 edges
-8. `AnalyzeRequest` - 9 edges
-9. `Report` - 9 edges
-10. `analyze()` - 9 edges
+1. `get_supabase()` - 19 edges
+2. `Map()` - 15 edges
+3. `AnalyzeRequest` - 14 edges
+4. `Report` - 14 edges
+5. `DamageSeverity` - 13 edges
+6. `GeoPoint` - 13 edges
+7. `Detection` - 12 edges
+8. `FrameAnalysis` - 11 edges
+9. `chat()` - 11 edges
+10. `generate_report()` - 11 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Map()` --calls--> `withMockVisuals()`  [INFERRED]
   C:\Users\carlo\Desktop\aegis\apps\desktop\src\components\ui\map.tsx → C:\Users\carlo\Desktop\aegis\apps\desktop\src\lib\mockApi.ts
-- `get_supabase (Supabase Client Factory)` --calls--> `_load_cached_frames()`  [INFERRED]
-  apps/api/app/db.py → C:\Users\Frank\Desktop\PROJECTS\aegis\apps\api\app\routers\analyze.py
-- `get_supabase (Supabase Client Factory)` --calls--> `_persist_frames()`  [INFERRED]
-  apps/api/app/db.py → C:\Users\Frank\Desktop\PROJECTS\aegis\apps\api\app\routers\analyze.py
-- `get_supabase (Supabase Client Factory)` --calls--> `get_analysis()`  [INFERRED]
-  apps/api/app/db.py → C:\Users\Frank\Desktop\PROJECTS\aegis\apps\api\app\routers\analyze.py
-- `get_supabase (Supabase Client Factory)` --calls--> `analyze()`  [INFERRED]
-  apps/api/app/db.py → C:\Users\Frank\Desktop\PROJECTS\aegis\apps\api\app\routers\analyze.py
+- `get_supabase()` --calls--> `_load_cached_frames()`  [INFERRED]
+  C:\Users\carlo\Desktop\aegis\apps\api\app\db.py → C:\Users\carlo\Desktop\aegis\apps\api\app\routers\analyze.py
+- `get_supabase()` --calls--> `_persist_frames()`  [INFERRED]
+  C:\Users\carlo\Desktop\aegis\apps\api\app\db.py → C:\Users\carlo\Desktop\aegis\apps\api\app\routers\analyze.py
+- `get_supabase()` --calls--> `get_analysis()`  [INFERRED]
+  C:\Users\carlo\Desktop\aegis\apps\api\app\db.py → C:\Users\carlo\Desktop\aegis\apps\api\app\routers\analyze.py
+- `get_supabase()` --calls--> `analyze()`  [INFERRED]
+  C:\Users\carlo\Desktop\aegis\apps\api\app\db.py → C:\Users\carlo\Desktop\aegis\apps\api\app\routers\analyze.py
 
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.1
-Nodes (26): deriveAssessments Builder Function, reportToListItem Converter Function, severityToLevel Converter Function, AssessmentsPage(), buildFrameSystemMessage(), send(), load(), Map() (+18 more)
+Cohesion: 0.12
+Nodes (24): main(), One-shot: copy lat/lng from videos into reports where report lat/lng are NULL., _build_context_messages(), buildFrameSystemMessage(), chat(), _create_session(), _load_session_history(), _persist_messages() (+16 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.17
-Nodes (27): _detections_from_row(), Serve the extracted JPEG for a frame (1-based file names on disk)., Return cached frame analyses for a previously analyzed video., Analyze an uploaded video frame-by-frame.      Returns cached results if the vid, _row_to_frame_analysis(), BaseModel, Chat with the AEGIS disaster-assessment assistant.      Pass `session_id` to c, Inject persisted report/analysis context into the system prompt. (+19 more)
+Cohesion: 0.13
+Nodes (21): load(), Map(), MapViewPage(), load(), ReportView(), appendChatMessages(), buildReportByVideo(), displayId() (+13 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.15
-Nodes (19): BaseSettings, _build_context_messages(), chat(), _create_session(), _load_session_history(), _persist_messages(), Settings, get_supabase (Supabase Client Factory) (+11 more)
+Cohesion: 0.18
+Nodes (26): _detections_from_row(), Serve the extracted JPEG for a frame (1-based file names on disk)., Return cached frame analyses for a previously analyzed video., Analyze an uploaded video frame-by-frame.      Returns cached results if the vid, _row_to_frame_analysis(), _run_analysis_job(), Enum, sleep() (+18 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.22
-Nodes (9): runAnalysis(), generate_report(), get_report(), list_reports(), List all reports, optionally filtered by video_id., Generate and persist a disaster assessment report from a video.      Reuses ca, Fetch a previously generated report by its ID., GeoPoint (+1 more)
+Cohesion: 0.3
+Nodes (19): BaseModel, _geo_from_lat_lng_row(), get_report(), list_reports(), List all reports, optionally filtered by video_id., Fetch a previously generated report by its ID., List all reports, optionally filtered by video_id., Generate and persist a disaster assessment report from a video.      Reuses ca (+11 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.33
-Nodes (10): _AnalysisJob, analyze(), get_analysis(), _is_missing_column_error(), _load_cached_frames(), _persist_frames(), _serialize_frame_analyses(), stream_analysis() (+2 more)
+Cohesion: 0.22
+Nodes (15): _AnalysisJob, analyze(), get_analysis(), _is_missing_column_error(), _load_cached_frames(), _persist_frames(), _serialize_frame_analyses(), stream_analysis() (+7 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.25
-Nodes (5): _run_analysis_job(), buildMockReport(), nowIso(), sleep(), withMockVisuals()
+Cohesion: 0.14
+Nodes (9): invalidate(), notifyKey(), setCached(), subscribe(), useCachedQuery(), AssessmentsPage(), handleFile(), runAnalysis() (+1 more)
 
 ### Community 6 - "Community 6"
-Cohesion: 0.5
-Nodes (7): analyze_frame(), chat_completion(), _clamp01(), _frame_data_url(), _get_client(), _get_zai_client(), _mock_frame_analysis()
+Cohesion: 0.25
+Nodes (4): cleanupVideo(), onSeeked(), load(), load()
 
 ### Community 7 - "Community 7"
+Cohesion: 0.39
+Nodes (5): deriveAssessments(), formatDate(), reportToListItem(), severityToLevel(), shortId()
+
+### Community 8 - "Community 8"
 Cohesion: 0.38
 Nodes (4): FitBounds(), Marker(), useMap(), ProvinceLayers()
 
-### Community 8 - "Community 8"
-Cohesion: 0.33
-Nodes (3): cleanupVideo(), onSeeked(), load()
-
 ### Community 9 - "Community 9"
 Cohesion: 0.33
-Nodes (6): AEGIS Design System (Tailwind Tokens), App Root Component, Main Entry Point, PostCSS Config, Tailwind Config, Vite Config (TS)
+Nodes (3): buildMockReport(), nowIso(), withMockVisuals()
 
 ### Community 10 - "Community 10"
 Cohesion: 0.33
 Nodes (0): 
 
 ### Community 11 - "Community 11"
-Cohesion: 0.4
+Cohesion: 0.33
 Nodes (0): 
 
 ### Community 12 - "Community 12"
-Cohesion: 0.5
-Nodes (2): SeverityBadge(), FrameAnalysisFeed Component
+Cohesion: 0.4
+Nodes (3): BaseSettings, Settings, Video Service (extract_frames, probe)
 
 ### Community 13 - "Community 13"
-Cohesion: 0.67
-Nodes (2): severityMeta(), ToastRow()
+Cohesion: 0.7
+Nodes (4): buildFileStem(), downloadReportJson(), downloadReportPdf(), triggerDownload()
 
 ### Community 14 - "Community 14"
 Cohesion: 0.5
 Nodes (0): 
 
 ### Community 15 - "Community 15"
+Cohesion: 0.67
+Nodes (2): severityMeta(), ToastRow()
+
+### Community 16 - "Community 16"
+Cohesion: 0.5
+Nodes (0): 
+
+### Community 17 - "Community 17"
 Cohesion: 0.83
 Nodes (3): mapItem(), searchAddresses(), shortLabelFromItem()
 
-### Community 16 - "Community 16"
+### Community 18 - "Community 18"
 Cohesion: 0.67
 Nodes (2): buildHeader(), filenameToTitle()
 
-### Community 17 - "Community 17"
-Cohesion: 0.67
-Nodes (0): 
-
-### Community 18 - "Community 18"
-Cohesion: 0.67
-Nodes (0): 
-
 ### Community 19 - "Community 19"
-Cohesion: 0.67
-Nodes (0): 
+Cohesion: 0.5
+Nodes (2): run(), main()
 
 ### Community 20 - "Community 20"
 Cohesion: 0.67
-Nodes (3): Tauri Build Script (build.rs), Tauri App Entry Point (lib.rs), Tauri Main Entry (main.rs)
+Nodes (0): 
 
 ### Community 21 - "Community 21"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 22 - "Community 22"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 23 - "Community 23"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 24 - "Community 24"
@@ -191,7 +199,7 @@ Nodes (0):
 
 ### Community 26 - "Community 26"
 Cohesion: 1.0
-Nodes (2): DetailedInsights Frame Table Component, OverallAssessment Component
+Nodes (0): 
 
 ### Community 27 - "Community 27"
 Cohesion: 1.0
@@ -199,7 +207,7 @@ Nodes (0):
 
 ### Community 28 - "Community 28"
 Cohesion: 1.0
-Nodes (2): DroneConnect RTSP Feed Component, VideoPlayer Component
+Nodes (0): 
 
 ### Community 29 - "Community 29"
 Cohesion: 1.0
@@ -235,11 +243,11 @@ Nodes (0):
 
 ### Community 37 - "Community 37"
 Cohesion: 1.0
-Nodes (1): Report View Component
+Nodes (0): 
 
 ### Community 38 - "Community 38"
 Cohesion: 1.0
-Nodes (1): Stats Cards Dashboard Widget
+Nodes (0): 
 
 ### Community 39 - "Community 39"
 Cohesion: 1.0
@@ -251,104 +259,146 @@ Nodes (0):
 
 ### Community 41 - "Community 41"
 Cohesion: 1.0
-Nodes (1): downloadReportPdf Export Function
+Nodes (0): 
 
 ### Community 42 - "Community 42"
 Cohesion: 1.0
-Nodes (1): downloadReportJson Export Function
+Nodes (0): 
 
 ### Community 43 - "Community 43"
 Cohesion: 1.0
-Nodes (1): Supabase Client Instance
+Nodes (0): 
 
 ### Community 44 - "Community 44"
 Cohesion: 1.0
-Nodes (1): Notifications Page
+Nodes (0): 
 
 ### Community 45 - "Community 45"
 Cohesion: 1.0
-Nodes (1): Profile Page
+Nodes (0): 
 
 ### Community 46 - "Community 46"
 Cohesion: 1.0
-Nodes (1): Resolve an ffmpeg-family executable across local dev and container setups.
+Nodes (0): 
 
 ### Community 47 - "Community 47"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 48 - "Community 48"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 49 - "Community 49"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 50 - "Community 50"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 51 - "Community 51"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 52 - "Community 52"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 53 - "Community 53"
+Cohesion: 1.0
+Nodes (1): AEGIS Design System (Tailwind Tokens)
+
+### Community 54 - "Community 54"
+Cohesion: 1.0
+Nodes (1): Resolve an ffmpeg-family executable across local dev and container setups.
+
+### Community 55 - "Community 55"
 Cohesion: 1.0
 Nodes (1): Extract one frame every `interval_seconds` from the video.      Returns the or
 
 ## Knowledge Gaps
-- **22 isolated node(s):** `Localized damage region on the frame (object-detection style). Coordinates are n`, `Video Service (extract_frames, probe)`, `PostCSS Config`, `Vite Config (TS)`, `Main Entry Point` (+17 more)
+- **6 isolated node(s):** `Localized damage region on the frame (object-detection style). Coordinates are n`, `One-shot: copy lat/lng from videos into reports where report lat/lng are NULL.`, `Video Service (extract_frames, probe)`, `AEGIS Design System (Tailwind Tokens)`, `Resolve an ffmpeg-family executable across local dev and container setups.` (+1 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **Thin community `Community 21`** (2 nodes): `main.py`, `health()`
+- **Thin community `Community 24`** (2 nodes): `main.py`, `health()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 22`** (2 nodes): `VideoUpload.tsx`, `VideoUpload()`
+- **Thin community `Community 25`** (2 nodes): `App()`, `App.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 23`** (2 nodes): `AppShell()`, `AppShell.tsx`
+- **Thin community `Community 26`** (2 nodes): `VideoUpload.tsx`, `VideoUpload()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 24`** (2 nodes): `MapContextPanel.tsx`, `MapContextPanel()`
+- **Thin community `Community 27`** (2 nodes): `AppShell()`, `AppShell.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 25`** (2 nodes): `TopNav.tsx`, `handlePointerDown()`
+- **Thin community `Community 28`** (2 nodes): `MapContextPanel.tsx`, `MapContextPanel()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 26`** (2 nodes): `DetailedInsights Frame Table Component`, `OverallAssessment Component`
+- **Thin community `Community 29`** (2 nodes): `TopNav.tsx`, `handlePointerDown()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 27`** (2 nodes): `ProgressBar.tsx`, `clampPercent()`
+- **Thin community `Community 30`** (2 nodes): `DroneConnect.tsx`, `handleConnect()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 28`** (2 nodes): `DroneConnect RTSP Feed Component`, `VideoPlayer Component`
+- **Thin community `Community 31`** (2 nodes): `FrameAnalysisFeed.tsx`, `damageToSeverityLevel()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 29`** (2 nodes): `compress.ts`, `compressVideo()`
+- **Thin community `Community 32`** (2 nodes): `OverallAssessment.tsx`, `countBySeverity()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 30`** (2 nodes): `DashboardPage.tsx`, `DashboardPage()`
+- **Thin community `Community 33`** (2 nodes): `ProgressBar.tsx`, `clampPercent()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 31`** (1 nodes): `__init__.py`
+- **Thin community `Community 34`** (2 nodes): `compress.ts`, `compressVideo()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 32`** (1 nodes): `__init__.py`
+- **Thin community `Community 35`** (2 nodes): `DashboardPage.tsx`, `DashboardPage()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 33`** (1 nodes): `__init__.py`
+- **Thin community `Community 36`** (2 nodes): `ProfilePage.tsx`, `ProfilePage()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 34`** (1 nodes): `vite.config.d.ts`
+- **Thin community `Community 37`** (2 nodes): `main()`, `build.rs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 35`** (1 nodes): `vite.config.js`
+- **Thin community `Community 38`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 36`** (1 nodes): `vite-env.d.ts`
+- **Thin community `Community 39`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 37`** (1 nodes): `Report View Component`
+- **Thin community `Community 40`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 38`** (1 nodes): `Stats Cards Dashboard Widget`
+- **Thin community `Community 41`** (1 nodes): `postcss.config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 39`** (1 nodes): `ReportPreviewCard.tsx`
+- **Thin community `Community 42`** (1 nodes): `tailwind.config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 40`** (1 nodes): `ReportsList.tsx`
+- **Thin community `Community 43`** (1 nodes): `vite.config.d.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 41`** (1 nodes): `downloadReportPdf Export Function`
+- **Thin community `Community 44`** (1 nodes): `vite.config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 42`** (1 nodes): `downloadReportJson Export Function`
+- **Thin community `Community 45`** (1 nodes): `vite.config.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 43`** (1 nodes): `Supabase Client Instance`
+- **Thin community `Community 46`** (1 nodes): `main.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 44`** (1 nodes): `Notifications Page`
+- **Thin community `Community 47`** (1 nodes): `vite-env.d.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 45`** (1 nodes): `Profile Page`
+- **Thin community `Community 48`** (1 nodes): `ReportPreviewCard.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 46`** (1 nodes): `Resolve an ffmpeg-family executable across local dev and container setups.`
+- **Thin community `Community 49`** (1 nodes): `ReportsList.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 47`** (1 nodes): `Extract one frame every `interval_seconds` from the video.      Returns the or`
+- **Thin community `Community 50`** (1 nodes): `DetailedInsights.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 51`** (1 nodes): `supabase.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 52`** (1 nodes): `NotificationsPage.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 53`** (1 nodes): `AEGIS Design System (Tailwind Tokens)`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 54`** (1 nodes): `Resolve an ffmpeg-family executable across local dev and container setups.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 55`** (1 nodes): `Extract one frame every `interval_seconds` from the video.      Returns the or`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `chat()` connect `Community 2` to `Community 0`, `Community 1`, `Community 6`?**
-  _High betweenness centrality (0.169) - this node is a cross-community bridge._
-- **Why does `send()` connect `Community 0` to `Community 2`?**
-  _High betweenness centrality (0.161) - this node is a cross-community bridge._
-- **Are the 17 inferred relationships involving `get_supabase (Supabase Client Factory)` (e.g. with `_load_cached_frames()` and `_persist_frames()`) actually correct?**
-  _`get_supabase (Supabase Client Factory)` has 17 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 10 inferred relationships involving `DamageSeverity` (e.g. with `_AnalysisJob` and `Best-effort extraction of the first complete {...} block from raw text.`) actually correct?**
-  _`DamageSeverity` has 10 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 13 inferred relationships involving `Map()` (e.g. with `shortLabelFromItem()` and `withMockVisuals()`) actually correct?**
-  _`Map()` has 13 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 9 inferred relationships involving `Detection` (e.g. with `_AnalysisJob` and `Best-effort extraction of the first complete {...} block from raw text.`) actually correct?**
-  _`Detection` has 9 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `Localized damage region on the frame (object-detection style). Coordinates are n`, `Video Service (extract_frames, probe)`, `PostCSS Config` to the rest of the system?**
-  _22 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Why does `Map()` connect `Community 1` to `Community 5`, `Community 7`, `Community 8`, `Community 9`, `Community 17`?**
+  _High betweenness centrality (0.156) - this node is a cross-community bridge._
+- **Why does `chat()` connect `Community 0` to `Community 2`?**
+  _High betweenness centrality (0.137) - this node is a cross-community bridge._
+- **Why does `send()` connect `Community 0` to `Community 1`?**
+  _High betweenness centrality (0.132) - this node is a cross-community bridge._
+- **Are the 18 inferred relationships involving `get_supabase()` (e.g. with `_load_cached_frames()` and `_persist_frames()`) actually correct?**
+  _`get_supabase()` has 18 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 14 inferred relationships involving `Map()` (e.g. with `ReportView()` and `deriveAssessments()`) actually correct?**
+  _`Map()` has 14 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 12 inferred relationships involving `AnalyzeRequest` (e.g. with `_AnalysisJob` and `Generate and persist a disaster assessment report from a video.      Reuses ca`) actually correct?**
+  _`AnalyzeRequest` has 12 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 12 inferred relationships involving `Report` (e.g. with `Generate and persist a disaster assessment report from a video.      Reuses ca` and `Batch-fetch lat/lng for videos; skips ids with missing coords.`) actually correct?**
+  _`Report` has 12 INFERRED edges - model-reasoned connections that need verification._

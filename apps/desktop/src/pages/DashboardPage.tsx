@@ -1,21 +1,44 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronRight, Maximize2 } from "lucide-react";
 import MapView from "../components/Map";
+import type { DashboardMapFocus } from "../components/layout/AppShell";
 import StatsCards from "../components/dashboard/StatsCards";
 import SeverityDistribution from "../components/dashboard/SeverityDistribution";
 import RecentAssessments from "../components/dashboard/RecentAssessments";
 import LiveActivity from "../components/dashboard/LiveActivity";
 import { DASHBOARD_MAP_MARKERS } from "../lib/mockData";
 
-export default function DashboardPage() {
+interface Props {
+  mapFocus?: DashboardMapFocus;
+  onMapFocusConsumed?: () => void;
+  onViewAssessment?: (videoId: string) => void;
+}
+
+export default function DashboardPage({
+  mapFocus = null,
+  onMapFocusConsumed,
+  onViewAssessment,
+}: Props) {
   const mapSectionRef = useRef<HTMLElement>(null);
   const [mapFocused, setMapFocused] = useState(false);
+  const [fitBoundsNonce, setFitBoundsNonce] = useState(0);
 
   useEffect(() => {
     if (!mapFocused) return;
     const timeoutId = window.setTimeout(() => setMapFocused(false), 1800);
     return () => window.clearTimeout(timeoutId);
   }, [mapFocused]);
+
+  useEffect(() => {
+    if (!mapFocus) return;
+    mapSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setMapFocused(true);
+    const timeoutId = window.setTimeout(() => {
+      onMapFocusConsumed?.();
+      setFitBoundsNonce((n) => n + 1);
+    }, 1800);
+    return () => window.clearTimeout(timeoutId);
+  }, [mapFocus, onMapFocusConsumed]);
 
   function handleFocusMap() {
     mapSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -80,7 +103,11 @@ export default function DashboardPage() {
             </div>
             <div className="min-h-0 flex-1 p-3">
               <div className="h-full overflow-hidden rounded-[1.25rem] border border-aegis-border bg-aegis-surface2">
-                <MapView markers={DASHBOARD_MAP_MARKERS} />
+                <MapView
+                  markers={DASHBOARD_MAP_MARKERS}
+                  focusPoint={mapFocus}
+                  fitBoundsRevision={fitBoundsNonce}
+                />
               </div>
             </div>
             <div className="flex flex-wrap gap-3 border-t border-aegis-border px-4 py-3 text-[11px] text-slate-400">
@@ -103,7 +130,7 @@ export default function DashboardPage() {
             </div>
           </section>
 
-          <RecentAssessments className="shrink-0" />
+          <RecentAssessments className="shrink-0" onViewAssessment={onViewAssessment} />
         </div>
 
         <div className="flex min-h-0 flex-col gap-4 xl:col-span-4">

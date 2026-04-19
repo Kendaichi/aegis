@@ -10,7 +10,10 @@ export type AssessmentStatus = "complete" | "analyzing" | "pending";
 export type SeverityLevel = 2 | 3 | 4 | 5;
 
 export interface AssessmentRow {
+  /** Display id (e.g. assessment_code or short video id). */
   id: string;
+  /** Full `video_id` for routing to assessment details. */
+  videoId: string;
   title: string;
   subtitle: string;
   location: string;
@@ -105,6 +108,7 @@ export interface ReportListItem {
 
 export interface SidebarIncident {
   id: string;
+  videoId: string;
   location: string;
   timeAgo: string;
   severity: SeverityLevel;
@@ -122,6 +126,7 @@ export const DASHBOARD_STATS: DashboardStats = {
 export const MOCK_ASSESSMENTS: AssessmentRow[] = [
   {
     id: "AE-2024-047",
+    videoId: "AE-2024-047",
     title: "Butuan City Flooding",
     subtitle: "127 frames • 14 zones",
     location: "Butuan City, Agusan del Norte",
@@ -132,6 +137,7 @@ export const MOCK_ASSESSMENTS: AssessmentRow[] = [
   },
   {
     id: "AE-2024-046",
+    videoId: "AE-2024-046",
     title: "Las Nieves Landslide",
     subtitle: "84 frames • 6 zones",
     location: "Las Nieves, Agusan del Norte",
@@ -142,6 +148,7 @@ export const MOCK_ASSESSMENTS: AssessmentRow[] = [
   },
   {
     id: "AE-2024-044",
+    videoId: "AE-2024-044",
     title: "Bislig Flash Flood",
     subtitle: "56 frames • 4 zones",
     location: "Bislig, Surigao del Sur",
@@ -152,6 +159,7 @@ export const MOCK_ASSESSMENTS: AssessmentRow[] = [
   },
   {
     id: "AE-2024-043",
+    videoId: "AE-2024-043",
     title: "Bayugan Flooding",
     subtitle: "91 frames • 9 zones",
     location: "Bayugan, Agusan del Sur",
@@ -162,6 +170,7 @@ export const MOCK_ASSESSMENTS: AssessmentRow[] = [
   },
   {
     id: "AE-2024-042",
+    videoId: "AE-2024-042",
     title: "Dinagat Coastal Surge",
     subtitle: "72 frames • 5 zones",
     location: "Dinagat Islands",
@@ -172,6 +181,7 @@ export const MOCK_ASSESSMENTS: AssessmentRow[] = [
   },
   {
     id: "AE-2024-041",
+    videoId: "AE-2024-041",
     title: "Tandag Earthquake",
     subtitle: "140 frames • 11 zones",
     location: "Tandag, Surigao del Sur",
@@ -274,6 +284,7 @@ export const DASHBOARD_MAP_MARKERS: MapMarkerPoint[] = [
 export const SIDEBAR_INCIDENTS: SidebarIncident[] = [
   {
     id: "AE-2024-847",
+    videoId: "AE-2024-847",
     location: "Butuan City — Agusan del Norte",
     timeAgo: "14 min ago",
     severity: 4,
@@ -281,6 +292,7 @@ export const SIDEBAR_INCIDENTS: SidebarIncident[] = [
   },
   {
     id: "AE-2024-845",
+    videoId: "AE-2024-845",
     location: "Las Nieves — Agusan del Norte",
     timeAgo: "1 hr ago",
     severity: 3,
@@ -288,6 +300,7 @@ export const SIDEBAR_INCIDENTS: SidebarIncident[] = [
   },
   {
     id: "AE-2024-840",
+    videoId: "AE-2024-840",
     location: "Bislig — Surigao del Sur",
     timeAgo: "3 hr ago",
     severity: 5,

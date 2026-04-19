@@ -66,8 +66,7 @@ export function Map({ center, zoom, className, children }: MapProps) {
 
   useEffect(() => {
     if (!map) return;
-    map.setCenter(center);
-    map.setZoom(zoom);
+    map.flyTo({ center, zoom, duration: 700, essential: true });
   }, [map, center[0], center[1], zoom]);
 
   return (
@@ -83,9 +82,11 @@ export function Map({ center, zoom, className, children }: MapProps) {
 interface FitBoundsProps {
   /** [lng, lat] pairs */
   points: [number, number][];
+  /** Bump to re-run fitBounds after e.g. temporary fly-to focus is cleared. */
+  revision?: number;
 }
 
-export function FitBounds({ points }: FitBoundsProps) {
+export function FitBounds({ points, revision = 0 }: FitBoundsProps) {
   const map = useMap();
 
   useEffect(() => {
@@ -93,7 +94,7 @@ export function FitBounds({ points }: FitBoundsProps) {
     const bounds = new maplibregl.LngLatBounds();
     points.forEach(([lng, lat]) => bounds.extend([lng, lat]));
     map.fitBounds(bounds, { padding: 40, maxZoom: 9, duration: 0 });
-  }, [map, points]);
+  }, [map, points, revision]);
 
   return null;
 }
