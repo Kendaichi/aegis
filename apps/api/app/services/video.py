@@ -67,10 +67,7 @@ def extract_frames(
     pattern = str(out_dir / "frame_%05d.jpg")
     fps = 1.0 / max(interval, 0.1)
 
-    _run_ffmpeg(
-        ffmpeg.input(str(video_path))
-        .output(pattern, vf=f"fps={fps}", **{"qscale:v": 2})
-    )
+    _run_ffmpeg(ffmpeg.input(str(video_path)).output(pattern, vf=f"fps={fps}", **{"qscale:v": 2}))
 
     return sorted(out_dir.glob("frame_*.jpg"))
 
