@@ -28,7 +28,7 @@ CHAT_SYSTEM_PROMPT = (
 
 FRAME_PROMPT = """You are a disaster-response analyst reviewing a single frame of site footage.
 
-PRIORITY — PEOPLE IN DANGER: First, scan for any visible person or human figure. If a person appears to be in a hazardous situation (surrounded by flood water, debris, fire, collapsed structure, etc.), draw a bounding box around them and assign severity "destroyed" to reflect the life-threatening nature of their situation. Label such detections as "Person in danger".
+PRIORITY — PEOPLE IN DANGER: First, scan for any visible person or human figure. If a person appears to be in a hazardous situation (surrounded by flood water, debris, fire, collapsed structure, etc.), draw a bounding box around them and assign severity "severe" to reflect the life-threatening nature of their situation. Label such detections as "Person in danger".
 
 Then locate visible disaster damage: draw conceptual bounding boxes around each distinct damaged region (buildings, road sections, debris piles, flood water, etc.). Coordinates are NORMALIZED to the image: origin top-left, x and y from 0.0 to 1.0.
 
@@ -48,7 +48,7 @@ Respond with STRICT JSON matching this schema:
   ]
 }
 Rules:
-- If any person is in danger, the top-level severity must be at least "destroyed".
+- If any person is in danger, the top-level severity must be at least "severe".
 - confidence fields: your actual certainty estimate as a float from 0.0 (uncertain) to 1.0 (certain). Do NOT copy the example values — replace them with your real estimate.
 - bbox: x1 < x2, y1 < y2, all values in [0, 1]. Use 1–6 boxes when damage or people in danger are visible; use an empty array if none.
 Only output the JSON object. No prose, no markdown fences."""
