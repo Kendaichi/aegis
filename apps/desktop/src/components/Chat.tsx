@@ -9,6 +9,19 @@ interface Props {
   onClearFrameContext?: () => void;
 }
 
+function buildFrameSystemMessage(frame: FrameAnalysis): ChatMessage {
+  const hazards = frame.detected_hazards.length
+    ? ` Hazards: ${frame.detected_hazards.join(", ")}.`
+    : "";
+  return {
+    role: "system",
+    content:
+      `User is asking about frame #${frame.frame_index} ` +
+      `(severity=${frame.severity}, t=${frame.timestamp_seconds}s, ` +
+      `confidence=${frame.confidence.toFixed(2)}): ${frame.description}${hazards}`,
+  };
+}
+
 export default function Chat({
   reportId,
   videoId,
@@ -16,6 +29,7 @@ export default function Chat({
   onClearFrameContext,
 }: Props) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [sessionId, setSessionId] = useState<string | undefined>(undefined);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -29,11 +43,13 @@ export default function Chat({
     setBusy(true);
 
     try {
-      const res = await api.chat(next, {
+      const systemPrefix: ChatMessage[] = frameContext ? [buildFrameSystemMessage(frameContext)] : [];
+      const res = await api.chat([...systemPrefix, ...next], {
+        session_id: sessionId,
         report_id: reportId,
         video_id: videoId,
-        frame_context: frameContext ?? undefined,
       });
+      setSessionId(res.session_id);
       setMessages([...next, res.message]);
     } catch (error) {
       setMessages([

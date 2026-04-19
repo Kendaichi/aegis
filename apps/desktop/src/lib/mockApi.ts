@@ -1,12 +1,15 @@
 import type {
   AnalyzeResponse,
   ChatMessage,
+  ChatResponse,
   FrameAnalysis,
   GeoPoint,
+  HealthResponse,
   Report,
   StreamFrameCallback,
   UploadMetadata,
   UploadResponse,
+  VideoListItem,
   VideoListResponse,
 } from "./api";
 
@@ -136,7 +139,7 @@ const MOCK_ANALYZE: AnalyzeResponse = {
 
 function buildMockReport(videoId: string, location?: GeoPoint): Report {
   return {
-    report_id: `r_${Date.now().toString(36)}`,
+    report_id: `r_${videoId}`,
     video_id: videoId,
     summary:
       "Significant localized flooding and structural impacts detected. Prioritize access restoration and high-risk households.",
@@ -156,37 +159,46 @@ function buildMockReport(videoId: string, location?: GeoPoint): Report {
   };
 }
 
+// In-memory stores seeded with a couple of archive entries.
+const SEED_VIDEO_IDS = ["seed_aurora_2024", "seed_butuan_2024", "seed_zambo_2024"];
+const videoStore: VideoListItem[] = SEED_VIDEO_IDS.map((id, i) => ({
+  video_id: id,
+  filename: `${id}.mp4`,
+  size_bytes: 1024 * 1024 * (12 + i * 3),
+  content_type: "video/mp4",
+  created_at: new Date(Date.now() - (i + 1) * 86_400_000).toISOString(),
+}));
+const reportStore: Report[] = SEED_VIDEO_IDS.map((id) => buildMockReport(id));
+
 export const mockApi = {
   async upload(file: File, metadata: UploadMetadata = {}): Promise<UploadResponse> {
     await sleep(500);
-    return {
+    const item: VideoListItem = {
       video_id: makeVideoId(),
       filename: file.name || "mock-video.mp4",
       size_bytes: file.size || 123456,
       content_type: file.type || "video/mp4",
+      created_at: nowIso(),
+    };
+    videoStore.unshift(item);
+    return {
+      video_id: item.video_id,
+      filename: item.filename,
+      size_bytes: item.size_bytes,
+      content_type: item.content_type,
       title: metadata.title ?? file.name ?? "mock-video",
       location_name: metadata.location_name ?? null,
       incident_type: metadata.incident_type ?? null,
       lat: metadata.lat ?? null,
       lng: metadata.lng ?? null,
       status: "pending",
-      created_at: nowIso(),
+      created_at: item.created_at,
     };
   },
 
   async listVideos(): Promise<VideoListResponse> {
-    await sleep(300);
-    return { videos: [], total: 0 };
-  },
-
-  async listReports(_video_id?: string): Promise<Report[]> {
-    await sleep(300);
-    return [];
-  },
-
-  async getReport(report_id: string): Promise<Report> {
-    await sleep(300);
-    return buildMockReport(report_id);
+    await sleep(250);
+    return { videos: [...videoStore], total: videoStore.length };
   },
 
   async getFrames(video_id: string): Promise<AnalyzeResponse> {
@@ -200,6 +212,15 @@ export const mockApi = {
 
   async analyze(video_id: string, _location?: GeoPoint): Promise<AnalyzeResponse> {
     await sleep(800);
+    return {
+      ...MOCK_ANALYZE,
+      video_id,
+      frames: MOCK_ANALYZE.frames.map((f) => ({ ...f })),
+    };
+  },
+
+  async getAnalysis(video_id: string): Promise<AnalyzeResponse> {
+    await sleep(300);
     return {
       ...MOCK_ANALYZE,
       video_id,
@@ -229,25 +250,39 @@ export const mockApi = {
 
   async report(video_id: string, location?: GeoPoint): Promise<Report> {
     await sleep(1000);
-    return buildMockReport(video_id, location);
+    const report = buildMockReport(video_id, location);
+    reportStore.unshift(report);
+    return report;
+  },
+
+  async listReports(video_id?: string): Promise<Report[]> {
+    await sleep(250);
+    const list = video_id ? reportStore.filter((r) => r.video_id === video_id) : reportStore;
+    return list.map((r) => ({ ...r }));
+  },
+
+  async getReport(report_id: string): Promise<Report> {
+    await sleep(200);
+    const match = reportStore.find((r) => r.report_id === report_id);
+    if (!match) throw new Error(`404 Not Found: report ${report_id}`);
+    return { ...match };
   },
 
   async chat(
     messages: ChatMessage[],
     opts: {
+      session_id?: string;
       report_id?: string;
       video_id?: string;
-      frame_context?: FrameAnalysis;
     } = {}
-  ): Promise<{ message: ChatMessage }> {
+  ): Promise<ChatResponse> {
     await sleep(450);
     const lastUser = [...messages].reverse().find((m) => m.role === "user");
+    const systemHint = [...messages].reverse().find((m) => m.role === "system");
     const question = lastUser?.content ?? "your question";
-    const fc = opts.frame_context;
-    const frameNote = fc
-      ? ` Frame #${fc.frame_index} (${fc.severity}): "${fc.description.slice(0, 120)}${fc.description.length > 120 ? "…" : ""}"`
-      : "";
+    const frameNote = systemHint ? ` (Context: ${systemHint.content.slice(0, 160)})` : "";
     return {
+      session_id: opts.session_id ?? `sess_${Date.now().toString(36)}`,
       message: {
         role: "assistant",
         content:
@@ -256,5 +291,10 @@ export const mockApi = {
           `Context: report_id=${opts.report_id ?? "n/a"}, video_id=${opts.video_id ?? "n/a"}.`,
       },
     };
+  },
+
+  async health(): Promise<HealthResponse> {
+    await sleep(100);
+    return { status: "ok", model: "mock" };
   },
 };

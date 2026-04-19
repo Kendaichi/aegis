@@ -1,8 +1,9 @@
-import { ArrowLeft, MapPin, Calendar, Clock } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowLeft, Calendar, Clock, MapPin } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import MapView from "../components/Map";
 import { SeverityBadge, StatusBadge } from "../components/ui/Badges";
 import DetailedInsights from "../components/workspace/DetailedInsights";
+import { severityToLevel } from "../lib/assessments";
 import { api, type FrameAnalysis, type Report, type VideoListItem } from "../lib/api";
 import type { AssessmentStatus, SeverityLevel } from "../lib/mockData";
 
@@ -27,21 +28,6 @@ function countBySeverity(frames: FrameAnalysis[]) {
   return counts;
 }
 
-function severityToLevel(sev: Report["overall_severity"] | undefined): SeverityLevel {
-  switch (sev) {
-    case "destroyed":
-      return 5;
-    case "severe":
-      return 4;
-    case "moderate":
-      return 3;
-    case "minor":
-    case "none":
-    default:
-      return 2;
-  }
-}
-
 function filenameToTitle(filename: string): string {
   const withoutExt = filename.replace(/\.[^.]+$/, "");
   return withoutExt.replace(/[_-]+/g, " ").trim() || filename;
@@ -58,21 +44,17 @@ interface AssessmentHeader {
 }
 
 function buildHeader(video: VideoListItem, report: Report | null): AssessmentHeader {
-  const location =
-    video.location_name ??
-    (video.lat != null && video.lng != null
-      ? `${video.lat.toFixed(4)}, ${video.lng.toFixed(4)}`
-      : report?.location
-        ? `${report.location.lat.toFixed(4)}, ${report.location.lng.toFixed(4)}`
-        : "Unknown location");
+  const location = report?.location
+    ? `${report.location.lat.toFixed(4)}, ${report.location.lng.toFixed(4)}`
+    : "Location pending";
   return {
     id: video.video_id,
-    title: video.title || filenameToTitle(video.filename),
-    subtitle: video.incident_type ?? video.content_type ?? "",
+    title: filenameToTitle(video.filename),
+    subtitle: video.content_type ?? "",
     location,
     date: new Date(video.created_at).toISOString().slice(0, 10),
     severity: severityToLevel(report?.overall_severity),
-    status: report ? "complete" : (video.status as AssessmentStatus),
+    status: report ? "complete" : "pending",
   };
 }
 
@@ -83,6 +65,9 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
   const [selectedFrameIndex, setSelectedFrameIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const counts = useMemo(() => countBySeverity(frames), [frames]);
+  const total = frames.length || 1;
 
   useEffect(() => {
     let cancelled = false;
@@ -136,9 +121,6 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
       </div>
     );
   }
-
-  const counts = countBySeverity(frames);
-  const total = frames.length || 1;
 
   return (
     <div className="flex h-full flex-col overflow-hidden">

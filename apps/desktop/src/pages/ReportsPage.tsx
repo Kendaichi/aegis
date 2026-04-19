@@ -1,20 +1,56 @@
-import { Download, Search, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Download, Loader2, Search, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import ReportPreviewCard from "../components/reports/ReportPreviewCard";
 import ReportsList from "../components/reports/ReportsList";
-import { MOCK_REPORT_BY_ASSESSMENT_ID, MOCK_REPORT_LIST } from "../lib/mockData";
+import { api, type Report } from "../lib/api";
+import { reportToListItem } from "../lib/assessments";
+import type { ReportListItem } from "../lib/mockData";
 
-const TYPE_FILTERS = ["all", "Flooding", "Landslide", "Typhoon Damage", "Earthquake"] as const;
+const TYPE_FILTERS = ["all", "severe", "moderate", "minor"] as const;
+type TypeFilter = (typeof TYPE_FILTERS)[number];
 
 export default function ReportsPage() {
   const [query, setQuery] = useState("");
-  const [typeFilter, setTypeFilter] = useState<(typeof TYPE_FILTERS)[number]>("all");
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
+  const [reports, setReports] = useState<Report[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedAssessmentId, setSelectedAssessmentId] = useState<string | null>(null);
+  const [previewReport, setPreviewReport] = useState<Report | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    api
+      .listReports()
+      .then((list) => {
+        if (cancelled) return;
+        setReports(list);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        setError(err instanceof Error ? err.message : String(err));
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const rows: ReportListItem[] = useMemo(() => reports.map((r) => reportToListItem(r)), [reports]);
 
   const filteredRows = useMemo(() => {
-    let list = MOCK_REPORT_LIST;
+    let list = rows;
     if (typeFilter !== "all") {
-      list = list.filter((row) => row.type === typeFilter);
+      const severityFilter = typeFilter;
+      list = list.filter((row) => {
+        const match = reports.find((r) => r.report_id === row.id);
+        return match?.overall_severity === severityFilter;
+      });
     }
 
     const normalizedQuery = query.trim().toLowerCase();
@@ -24,27 +60,40 @@ export default function ReportsPage() {
           row.title.toLowerCase().includes(normalizedQuery) ||
           row.location.toLowerCase().includes(normalizedQuery) ||
           row.assessmentId.toLowerCase().includes(normalizedQuery) ||
-          row.type.toLowerCase().includes(normalizedQuery)
+          row.id.toLowerCase().includes(normalizedQuery)
       );
     }
 
     return list;
-  }, [query, typeFilter]);
-
-  const previewReport =
-    selectedAssessmentId && MOCK_REPORT_BY_ASSESSMENT_ID[selectedAssessmentId]
-      ? MOCK_REPORT_BY_ASSESSMENT_ID[selectedAssessmentId]
-      : null;
-
-  const isOpen = selectedAssessmentId !== null;
+  }, [query, reports, rows, typeFilter]);
 
   function handleSelect(assessmentId: string) {
-    setSelectedAssessmentId((prev) => (prev === assessmentId ? null : assessmentId));
+    if (selectedAssessmentId === assessmentId) {
+      setSelectedAssessmentId(null);
+      setPreviewReport(null);
+      return;
+    }
+    setSelectedAssessmentId(assessmentId);
+    const row = rows.find((r) => r.assessmentId === assessmentId);
+    if (!row) return;
+
+    const cached = reports.find((r) => r.report_id === row.id);
+    if (cached) setPreviewReport(cached);
+
+    setPreviewLoading(true);
+    api
+      .getReport(row.id)
+      .then((fresh) => setPreviewReport(fresh))
+      .catch((err) => setError(err instanceof Error ? err.message : String(err)))
+      .finally(() => setPreviewLoading(false));
   }
 
   function handleClose() {
     setSelectedAssessmentId(null);
+    setPreviewReport(null);
   }
+
+  const isOpen = selectedAssessmentId !== null;
 
   return (
     <div className="flex h-full flex-col gap-4 overflow-hidden p-6">
@@ -54,8 +103,9 @@ export default function ReportsPage() {
           <p className="section-title">Report Archive</p>
           <h1 className="mt-2 text-lg font-semibold text-white">Generated assessment reports</h1>
           <p className="mt-1 text-[13px] text-slate-400">
-            Browse, preview, and export field-ready report drafts from completed or in-progress
-            assessments.
+            {loading
+              ? "Loading reports..."
+              : `${reports.length} reports synced from the AEGIS backend.`}
           </p>
         </div>
         <button type="button" className="button-secondary">
@@ -70,7 +120,7 @@ export default function ReportsPage() {
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
           <input
             type="search"
-            placeholder="Search reports by title, location, type, or ID..."
+            placeholder="Search reports by title, location, or ID..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="input-shell pl-10"
@@ -90,22 +140,33 @@ export default function ReportsPage() {
         </div>
       </div>
 
+      {error && (
+        <div className="card border border-red-500/30 bg-red-500/5 p-4 text-[13px] text-red-200">
+          {error}
+        </div>
+      )}
+
       {/* Content: horizontal split */}
       <div className="flex min-h-0 flex-1 gap-4 overflow-hidden">
-        {/* Reports list — shrinks to 1/4 when preview is open */}
         <div
           className="min-h-0 min-w-0 overflow-hidden transition-all duration-300 ease-in-out"
           style={{ flex: isOpen ? "0 0 25%" : "1 1 100%" }}
         >
-          <ReportsList
-            items={filteredRows}
-            selectedAssessmentId={selectedAssessmentId ?? ""}
-            onSelect={handleSelect}
-            compact={isOpen}
-          />
+          {loading ? (
+            <div className="card flex h-full items-center justify-center gap-2 p-10 text-sm text-slate-500">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Syncing reports...
+            </div>
+          ) : (
+            <ReportsList
+              items={filteredRows}
+              selectedAssessmentId={selectedAssessmentId ?? ""}
+              onSelect={handleSelect}
+              compact={isOpen}
+            />
+          )}
         </div>
 
-        {/* Preview panel — slides in from the right */}
         <div
           className="min-h-0 min-w-0 overflow-hidden transition-all duration-300 ease-in-out"
           style={{
@@ -116,7 +177,9 @@ export default function ReportsPage() {
           {isOpen && (
             <div className="flex h-full flex-col">
               <div className="mb-2 flex items-center justify-between">
-                <p className="section-title">Preview</p>
+                <p className="section-title">
+                  Preview {previewLoading && <Loader2 className="ml-2 inline h-3 w-3 animate-spin" />}
+                </p>
                 <button
                   type="button"
                   onClick={handleClose}

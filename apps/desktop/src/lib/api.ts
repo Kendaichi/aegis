@@ -38,8 +38,12 @@ export interface UploadResponse {
   created_at: string;
 }
 
-export interface VideoListItem extends UploadResponse {
-  url: string | null;
+export interface VideoListItem {
+  video_id: string;
+  filename: string;
+  size_bytes: number;
+  content_type: string | null;
+  created_at: string;
 }
 
 export interface VideoListResponse {
@@ -54,7 +58,7 @@ export interface FrameAnalysis {
   description: string;
   detected_hazards: string[];
   confidence: number;
-  /** Per-frame GPS when available (streaming / real analysis). */
+  /** Per-frame GPS when available (streaming / real analysis). /*/
   location?: GeoPoint;
 }
 
@@ -84,6 +88,16 @@ export interface Report {
 export interface ChatMessage {
   role: "user" | "assistant" | "system";
   content: string;
+}
+
+export interface ChatResponse {
+  session_id: string;
+  message: ChatMessage;
+}
+
+export interface HealthResponse {
+  status: string;
+  model: string;
 }
 
 async function handle<T>(res: Response): Promise<T> {
@@ -139,6 +153,11 @@ const realApi = {
     return handle(res);
   },
 
+  async getAnalysis(video_id: string): Promise<AnalyzeResponse> {
+    const res = await fetch(`${BASE}/analyze/${encodeURIComponent(video_id)}`);
+    return handle(res);
+  },
+
   async report(video_id: string, location?: GeoPoint): Promise<Report> {
     const res = await fetch(`${BASE}/report`, {
       method: "POST",
@@ -151,16 +170,21 @@ const realApi = {
   async chat(
     messages: ChatMessage[],
     opts: {
+      session_id?: string;
       report_id?: string;
       video_id?: string;
-      frame_context?: FrameAnalysis;
     } = {}
-  ): Promise<{ message: ChatMessage }> {
+  ): Promise<ChatResponse> {
     const res = await fetch(`${BASE}/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ messages, ...opts }),
     });
+    return handle(res);
+  },
+
+  async health(): Promise<HealthResponse> {
+    const res = await fetch(`${BASE}/health`);
     return handle(res);
   },
 
