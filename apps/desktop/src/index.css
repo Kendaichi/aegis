@@ -110,3 +110,16 @@ body {
 .maplibregl-map {
   background: #111a2e;
 }
+
+@keyframes aegis-progress-indeterminate {
+  0% {
+    transform: translateX(-60%);
+  }
+  100% {
+    transform: translateX(260%);
+  }
+}
+
+.progress-indeterminate {
+  animation: aegis-progress-indeterminate 1.2s ease-in-out infinite;
+}

@@ -35,6 +35,9 @@ type AlertContextValue = {
 
 const AlertContext = createContext<AlertContextValue | null>(null);
 
+const MAX_VISIBLE = 3;
+const EXIT_ANIM_MS = 220;
+
 export function useAlert(): AlertContextValue {
   const ctx = useContext(AlertContext);
   if (!ctx) {
@@ -61,30 +64,53 @@ function severityMeta(severity: DamageSeverity) {
 
 function ToastRow({
   alert,
+  exiting,
   onDismiss,
   onJump,
 }: {
   alert: AlertItem;
+  exiting: boolean;
   onDismiss: () => void;
   onJump: () => void;
 }) {
   const barRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
   const meta = severityMeta(alert.severity);
 
   useEffect(() => {
+    const raf = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || exiting) return;
+    const t = window.setTimeout(onDismiss, alert.durationMs);
+    return () => clearTimeout(t);
+  }, [mounted, exiting, alert.durationMs, onDismiss]);
+
+  useEffect(() => {
+    if (!mounted || exiting) return;
     const element = barRef.current;
     if (!element) return;
     element.style.width = "100%";
-    element.style.transition = `width ${alert.durationMs}ms linear`;
+    element.style.transition = "none";
     requestAnimationFrame(() => {
+      element.style.transition = `width ${alert.durationMs}ms linear`;
       element.style.width = "0%";
     });
-  }, [alert.durationMs, alert.id]);
+  }, [mounted, exiting, alert.durationMs, alert.id]);
+
+  const visible = mounted && !exiting;
 
   return (
     <div
       role="alert"
-      className="pointer-events-auto relative overflow-hidden rounded-card border border-aegis-border bg-aegis-surface shadow-card"
+      className={`pointer-events-auto relative overflow-hidden rounded-card border border-aegis-border bg-aegis-surface shadow-card transform-gpu transition-all duration-200 ease-out ${
+        visible
+          ? "translate-x-0 scale-100 opacity-100"
+          : "translate-x-6 scale-[0.96] opacity-0"
+      }`}
+      style={{ transitionDuration: `${visible ? 200 : EXIT_ANIM_MS}ms` }}
     >
       <div className={`absolute inset-y-0 left-0 w-1 ${meta.bar}`} />
       <div className="pl-4">
@@ -135,9 +161,27 @@ export function AlertProvider({
   onJumpToFrame?: (frame: FrameAnalysis) => void;
 }) {
   const [alerts, setAlerts] = useState<AlertItem[]>([]);
+  const [exitingIds, setExitingIds] = useState<Set<string>>(() => new Set());
+  const exitScheduled = useRef<Set<string>>(new Set());
 
   const dismiss = useCallback((id: string) => {
-    setAlerts((prev) => prev.filter((alert) => alert.id !== id));
+    if (exitScheduled.current.has(id)) return;
+    exitScheduled.current.add(id);
+    setExitingIds((prev) => {
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
+    window.setTimeout(() => {
+      setAlerts((prev) => prev.filter((alert) => alert.id !== id));
+      setExitingIds((prev) => {
+        if (!prev.has(id)) return prev;
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+      exitScheduled.current.delete(id);
+    }, EXIT_ANIM_MS);
   }, []);
 
   const showAlert = useCallback((input: ShowAlertInput) => {
@@ -156,12 +200,6 @@ export function AlertProvider({
     ]);
   }, []);
 
-  useEffect(() => {
-    if (alerts.length === 0) return;
-    const timers = alerts.map((alert) => window.setTimeout(() => dismiss(alert.id), alert.durationMs));
-    return () => timers.forEach(clearTimeout);
-  }, [alerts, dismiss]);
-
   const value = useMemo(
     () => ({
       showAlert,
@@ -170,23 +208,32 @@ export function AlertProvider({
     [showAlert, dismiss]
   );
 
+  const visible = alerts.slice(0, MAX_VISIBLE);
+  const queuedCount = Math.max(0, alerts.length - visible.length);
+
   return (
     <AlertContext.Provider value={value}>
       {children}
       <div
-        className="pointer-events-none fixed right-6 top-20 z-[100] flex max-h-[min(70vh,520px)] w-[min(100vw-2rem,24rem)] flex-col gap-3 overflow-y-auto pr-1"
+        className="pointer-events-none fixed right-6 top-20 z-[100] flex max-h-[min(70vh,520px)] w-[min(100vw-2rem,24rem)] flex-col gap-3 pr-1"
         aria-live="polite"
       >
-        {alerts.map((alert) => (
+        {visible.map((alert) => (
           <ToastRow
             key={alert.id}
             alert={alert}
+            exiting={exitingIds.has(alert.id)}
             onDismiss={() => dismiss(alert.id)}
             onJump={() => {
               if (alert.frame && onJumpToFrame) onJumpToFrame(alert.frame);
             }}
           />
         ))}
+        {queuedCount > 0 && (
+          <div className="pointer-events-auto self-end rounded-full border border-aegis-border bg-aegis-surface/90 px-3 py-1 text-[11px] font-medium text-slate-400 shadow-card backdrop-blur">
+            +{queuedCount} more alert{queuedCount === 1 ? "" : "s"} queued
+          </div>
+        )}
       </div>
     </AlertContext.Provider>
   );
