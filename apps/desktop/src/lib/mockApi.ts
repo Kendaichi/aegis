@@ -197,8 +197,21 @@ const videoStore: VideoListItem[] = SEED_VIDEO_IDS.map((id, i) => ({
 const reportStore: Report[] = SEED_VIDEO_IDS.map((id) => buildMockReport(id));
 
 export const mockApi = {
-  async upload(file: File, metadata: UploadMetadata = {}): Promise<UploadResponse> {
-    await sleep(500);
+  async upload(
+    file: File,
+    metadata: UploadMetadata = {},
+    onProgress?: (pct: number) => void
+  ): Promise<UploadResponse> {
+    if (onProgress) {
+      const ticks = [0, 35, 75, 100];
+      const betweenMs = [180, 220, 160];
+      for (let i = 0; i < ticks.length; i++) {
+        onProgress(ticks[i]);
+        if (i < betweenMs.length) await sleep(betweenMs[i]);
+      }
+    } else {
+      await sleep(500);
+    }
     const item: VideoListItem = {
       video_id: makeVideoId(),
       filename: file.name || "mock-video.mp4",

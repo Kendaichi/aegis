@@ -139,8 +139,50 @@ async function handle<T>(res: Response): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+function uploadWithProgress(
+  url: string,
+  body: FormData,
+  onProgress?: (pct: number) => void
+): Promise<UploadResponse> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", url);
+    xhr.upload.onprogress = (event) => {
+      if (!onProgress) return;
+      if (event.lengthComputable && event.total > 0) {
+        onProgress(Math.round((event.loaded / event.total) * 100));
+      }
+    };
+    xhr.onerror = () => reject(new Error("Upload failed: network error"));
+    xhr.onabort = () => reject(new Error("Upload aborted"));
+    xhr.onload = () => {
+      let data: UploadResponse;
+      try {
+        data = JSON.parse(xhr.responseText) as UploadResponse;
+      } catch {
+        reject(
+          new Error(
+            `${xhr.status} ${xhr.statusText}: ${xhr.responseText || "Invalid JSON response"}`
+          )
+        );
+        return;
+      }
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(data);
+      } else {
+        reject(new Error(`${xhr.status} ${xhr.statusText}: ${xhr.responseText}`));
+      }
+    };
+    xhr.send(body);
+  });
+}
+
 const realApi = {
-  async upload(file: File, metadata: UploadMetadata = {}): Promise<UploadResponse> {
+  async upload(
+    file: File,
+    metadata: UploadMetadata = {},
+    onProgress?: (pct: number) => void
+  ): Promise<UploadResponse> {
     const body = new FormData();
     body.append("file", file);
     if (metadata.title) body.append("title", metadata.title);
@@ -148,8 +190,7 @@ const realApi = {
     if (metadata.incident_type) body.append("incident_type", metadata.incident_type);
     if (metadata.lat !== undefined) body.append("lat", String(metadata.lat));
     if (metadata.lng !== undefined) body.append("lng", String(metadata.lng));
-    const res = await fetch(`${BASE}/upload`, { method: "POST", body });
-    return handle(res);
+    return uploadWithProgress(`${BASE}/upload`, body, onProgress);
   },
 
   async listVideos(): Promise<VideoListResponse> {

@@ -10,8 +10,8 @@ services:
       SUPABASE_URL: ${SUPABASE_URL:-}
       SUPABASE_KEY: ${SUPABASE_KEY:-}
       OLLAMA_HOST: http://ollama:11434
-      VLM_MODE: ${VLM_MODE:-mock}
-      VLM_MODEL: ${VLM_MODEL:-gemma3:4b}
+      VLM_MODE: ${VLM_MODE:-zai}
+      VLM_MODEL: ${VLM_MODEL:-glm-4v}
       ZAI_API_KEY: ${ZAI_API_KEY:-}
       ZAI_BASE_URL: ${ZAI_BASE_URL:-https://api.z.ai/api/paas/v4}
       FRAME_INTERVAL_SECONDS: ${FRAME_INTERVAL_SECONDS:-2}

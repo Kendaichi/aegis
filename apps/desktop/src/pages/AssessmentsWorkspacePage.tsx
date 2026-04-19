@@ -9,6 +9,19 @@ import FrameAnalysisFeed from "../components/workspace/FrameAnalysisFeed";
 import DroneConnect from "../components/workspace/DroneConnect";
 import OverallAssessment from "../components/workspace/OverallAssessment";
 import FrameImageModal from "../components/workspace/FrameImageModal";
+import ProgressBar from "../components/workspace/ProgressBar";
+import LocationAutocomplete from "../components/workspace/LocationAutocomplete";
+
+function formatFileSize(bytes: number): string {
+  if (!Number.isFinite(bytes) || bytes < 0) return "—";
+  if (bytes < 1024) return `${bytes} B`;
+  const kb = bytes / 1024;
+  if (kb < 1024) return `${kb < 10 ? kb.toFixed(1) : Math.round(kb)} KB`;
+  const mb = kb / 1024;
+  if (mb < 1024) return `${mb < 10 ? mb.toFixed(1) : Math.round(mb)} MB`;
+  const gb = mb / 1024;
+  return `${gb.toFixed(1)} GB`;
+}
 
 interface Props {
   onBack: () => void;
@@ -79,7 +92,12 @@ function WorkspaceMain({
   const [leftView, setLeftView] = useState<"video" | "assessment">("assessment");
   const [metaTitle, setMetaTitle] = useState("");
   const [metaLocation, setMetaLocation] = useState("");
+  const [metaCoords, setMetaCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [metaIncidentType, setMetaIncidentType] = useState("");
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadProcessing, setUploadProcessing] = useState(false);
+  const [analyzeProgress, setAnalyzeProgress] = useState(0);
+  const [analyzeFrameTotal, setAnalyzeFrameTotal] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const frameForChat = useMemo(() => {
@@ -91,8 +109,9 @@ function WorkspaceMain({
     () =>
       metaTitle.trim().length > 0 &&
       metaLocation.trim().length > 0 &&
-      metaIncidentType.trim().length > 0,
-    [metaTitle, metaLocation, metaIncidentType]
+      metaIncidentType.trim().length > 0 &&
+      metaCoords != null,
+    [metaTitle, metaLocation, metaIncidentType, metaCoords]
   );
 
   const resetSession = useCallback(() => {
@@ -106,7 +125,12 @@ function WorkspaceMain({
     setLeftView("assessment");
     setMetaTitle("");
     setMetaLocation("");
+    setMetaCoords(null);
     setMetaIncidentType("");
+    setUploadProgress(0);
+    setUploadProcessing(false);
+    setAnalyzeProgress(0);
+    setAnalyzeFrameTotal(0);
   }, [onSelectFrame]);
 
   async function handleFile(file: File) {
@@ -114,6 +138,8 @@ function WorkspaceMain({
     setBusy(true);
     setError(null);
     setPhase("uploading");
+    setUploadProgress(0);
+    setUploadProcessing(false);
     setVideoFile(file);
     setFrames([]);
     setReport(null);
@@ -122,13 +148,20 @@ function WorkspaceMain({
         title: metaTitle.trim(),
         location_name: metaLocation.trim(),
         incident_type: metaIncidentType.trim(),
+        ...(metaCoords ? { lat: metaCoords.lat, lng: metaCoords.lng } : {}),
       };
-      const res = await api.upload(file, metadata);
+      const res = await api.upload(file, metadata, (pct) => {
+        setUploadProgress(pct);
+        if (pct >= 100) setUploadProcessing(true);
+      });
+      setUploadProgress(100);
+      setUploadProcessing(false);
       setVideoId(res.video_id);
       setPhase("streaming");
     } catch (error) {
       setError(error instanceof Error ? error.message : String(error));
       setVideoFile(null);
+      setUploadProcessing(false);
       setPhase("idle");
     } finally {
       setBusy(false);
@@ -140,10 +173,16 @@ function WorkspaceMain({
     setBusy(true);
     setError(null);
     setPhase("analyzing");
+    setAnalyzeProgress(0);
+    setAnalyzeFrameTotal(0);
     setFrames([]);
     try {
-      await api.analyzeStream(videoId, (frame) => {
+      await api.analyzeStream(videoId, (frame, progress) => {
         setFrames((prev) => [...prev, frame]);
+        if (progress.total > 0) {
+          setAnalyzeFrameTotal(progress.total);
+          setAnalyzeProgress(Math.round((progress.current / progress.total) * 100));
+        }
         if (frame.severity === "severe" || frame.severity === "destroyed") {
           showAlert({
             frameIndex: frame.frame_index,
@@ -153,6 +192,7 @@ function WorkspaceMain({
           });
         }
       });
+      setAnalyzeProgress(100);
       const nextReport = await api.report(videoId);
       setReport(nextReport);
       setPhase("complete");
@@ -189,11 +229,13 @@ function WorkspaceMain({
           </p>
         </div>
         <div className="ml-auto flex items-center gap-2">
-          <span
-            className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] ${phasePillClass(phase)}`}
-          >
-            {phaseLabel(phase)}
-          </span>
+          {phase !== "uploading" && phase !== "analyzing" && (
+            <span
+              className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] ${phasePillClass(phase)}`}
+            >
+              {phaseLabel(phase)}
+            </span>
+          )}
           {(phase === "streaming" || phase === "complete" || phase === "analyzing") && (
             <button type="button" onClick={resetSession} className="button-secondary px-3 py-2 text-xs">
               <RotateCcw className="h-3.5 w-3.5" />
@@ -245,13 +287,14 @@ function WorkspaceMain({
                     <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
                       Location
                     </span>
-                    <input
-                      type="text"
+                    <LocationAutocomplete
                       value={metaLocation}
-                      onChange={(e) => setMetaLocation(e.target.value)}
-                      placeholder="Butuan City, Agusan del Norte"
+                      onChange={setMetaLocation}
+                      onSelectLocation={(r) =>
+                        setMetaCoords(r ? { lat: r.lat, lng: r.lng } : null)
+                      }
                       disabled={busy}
-                      className="input-shell mt-1.5"
+                      placeholder="Search a place in the Philippines…"
                     />
                   </label>
                   <label className="block">
@@ -277,7 +320,8 @@ function WorkspaceMain({
 
                 {!metadataReady && (
                   <p className="mt-3 text-[12px] text-amber-400/90">
-                    All fields required to enable upload.
+                    Title, incident type, and a location chosen from search are required to enable
+                    upload.
                   </p>
                 )}
 
@@ -300,7 +344,7 @@ function WorkspaceMain({
                   title={
                     metadataReady
                       ? undefined
-                      : "Fill in title, location, and incident type first."
+                      : "Fill in title, pick a location from search results, and select incident type."
                   }
                   onClick={() => fileInputRef.current?.click()}
                   className="button-primary mt-4 w-full"
@@ -314,6 +358,19 @@ function WorkspaceMain({
 
           {(phase === "uploading" || phase === "streaming") && (
             <div className="card p-4">
+              {phase === "uploading" && videoFile && (
+                <ProgressBar
+                  label={uploadProcessing ? "Processing video on server" : "Uploading video"}
+                  percent={uploadProgress}
+                  indeterminate={uploadProcessing}
+                  detail={
+                    uploadProcessing
+                      ? "Saving and registering the file. This usually takes a few seconds."
+                      : `${videoFile.name} · ${formatFileSize(videoFile.size)}`
+                  }
+                  className="mb-3"
+                />
+              )}
               <VideoPlayer
                 file={videoFile}
                 liveMode={phase === "streaming"}
@@ -336,6 +393,16 @@ function WorkspaceMain({
 
           {phase === "analyzing" && (
             <div className="card p-4">
+              <ProgressBar
+                label="Analyzing frames"
+                percent={analyzeProgress}
+                detail={
+                  analyzeFrameTotal > 0
+                    ? `${frames.length} / ${analyzeFrameTotal} frames`
+                    : undefined
+                }
+                className="mb-3"
+              />
               <VideoPlayer file={videoFile} liveMode autoPlay className="shrink-0" />
               <p className="mt-4 text-[12px] leading-6 text-slate-400">
                 Frames stream in as analysis runs. This can take a few minutes while the VLM works
@@ -403,6 +470,11 @@ function WorkspaceMain({
                 report={phase === "complete" ? report : null}
                 analysisFrames={mapFrames}
                 selectedFrameIndex={selectedFrameIndex}
+                focusPoint={
+                  metaCoords
+                    ? { ...metaCoords, label: metaLocation.trim() || undefined }
+                    : null
+                }
               />
             </div>
           </div>

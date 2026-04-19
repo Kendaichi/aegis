@@ -3,10 +3,9 @@ services:
     name: aegis-api
     runtime: docker
     dockerContext: ./apps/api
-    dockerBuildCache: true
     envVars:
       - key: VLM_MODE
-        value: mock
+        value: zai
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_KEY

@@ -52,6 +52,12 @@ function severityLevelFromFrame(sev: FrameAnalysis["severity"]): number {
   }
 }
 
+export interface MapFocusPoint {
+  lat: number;
+  lng: number;
+  label?: string;
+}
+
 interface Props {
   report?: Report | null;
   /** Multi-point dashboard view; when non-empty, used instead of single report marker. */
@@ -62,8 +68,19 @@ interface Props {
   analysisFrames?: FrameAnalysis[];
   /** Highlights frame marker when syncing with feed / table / alerts. */
   selectedFrameIndex?: number | null;
+  /** Pre-upload / form-selected location pin (hidden when report, markers, or frame pins are active). */
+  focusPoint?: MapFocusPoint | null;
   /** Show Caraga province boundary overlays. */
   showProvinces?: boolean;
+}
+
+function SelectedLocationPin() {
+  return (
+    <div
+      className="h-4 w-4 rounded-full border-[3px] border-aegis-accent bg-transparent shadow-glow ring-2 ring-aegis-accent/35 ring-offset-2 ring-offset-[#0f172a]"
+      aria-hidden
+    />
+  );
 }
 
 export default function MapView({
@@ -72,6 +89,7 @@ export default function MapView({
   selectedMarkerId,
   analysisFrames,
   selectedFrameIndex,
+  focusPoint = null,
   showProvinces = true,
 }: Props) {
   const multiPoints = useMemo(
@@ -86,20 +104,31 @@ export default function MapView({
       .map((f) => [f.location!.lng, f.location!.lat] as [number, number]);
   }, [analysisFrames]);
 
+  const showMulti = Boolean(markers && markers.length > 0);
+  const showFrames = Boolean(analysisFrames && analysisFrames.length > 0 && framePoints.length > 0);
+
+  const focusActive = Boolean(
+    focusPoint &&
+      !showMulti &&
+      !showFrames &&
+      !report?.location
+  );
+
   const center: [number, number] = report?.location
     ? [report.location.lng, report.location.lat]
     : framePoints[0]
       ? framePoints[0]
-      : [125.5, 8.5];
+      : focusActive && focusPoint
+        ? [focusPoint.lng, focusPoint.lat]
+        : [125.5, 8.5];
   const zoom =
     markers?.length || framePoints.length
       ? 8
       : report?.location
         ? 14
-        : 7;
-
-  const showMulti = Boolean(markers && markers.length > 0);
-  const showFrames = Boolean(analysisFrames && analysisFrames.length > 0 && framePoints.length > 0);
+        : focusActive
+          ? 13
+          : 7;
 
   return (
     <Map center={center} zoom={zoom} className="h-full min-h-0">
@@ -150,6 +179,14 @@ export default function MapView({
           popupHtml={`<strong>Severity:</strong> ${escapeHtml(String(report.overall_severity))}<br/>${escapeHtml(report.summary)}`}
         >
           <SeverityDot color={severityColor(severityLevelFromReport(report.overall_severity))} />
+        </Marker>
+      )}
+      {focusActive && focusPoint && (
+        <Marker
+          lngLat={[focusPoint.lng, focusPoint.lat]}
+          popupHtml={`<strong>${escapeHtml(focusPoint.label || "Selected location")}</strong>`}
+        >
+          <SelectedLocationPin />
         </Marker>
       )}
     </Map>
