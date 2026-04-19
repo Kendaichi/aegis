@@ -24,19 +24,19 @@
     {
       "label": "config.py",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\config.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\config.py",
       "source_location": "L1",
-      "id": "c_users_carlo_desktop_aegis_apps_api_app_config_py",
-      "community": 14,
+      "id": "c_users_frank_desktop_projects_aegis_apps_api_app_config_py",
+      "community": 11,
       "norm_label": "config.py"
     },
     {
       "label": "Settings",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\config.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\config.py",
       "source_location": "L12",
       "id": "config_settings",
-      "community": 14,
+      "community": 11,
       "norm_label": "settings"
     },
     {
@@ -45,16 +45,16 @@
       "source_file": "",
       "source_location": "",
       "id": "basesettings",
-      "community": 14,
+      "community": 11,
       "norm_label": "basesettings"
     },
     {
       "label": ".ensure_dirs()",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\config.py",
-      "source_location": "L45",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\config.py",
+      "source_location": "L44",
       "id": "config_settings_ensure_dirs",
-      "community": 14,
+      "community": 11,
       "norm_label": ".ensure_dirs()"
     },
     {
@@ -63,7 +63,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\db.py",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_api_app_db_py",
-      "community": 1,
+      "community": 2,
       "norm_label": "db.py"
     },
     {
@@ -72,25 +72,25 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\db.py",
       "source_location": "L9",
       "id": "db_get_supabase",
-      "community": 1,
+      "community": 2,
       "norm_label": "get_supabase()"
     },
     {
       "label": "schemas.py",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L1",
-      "id": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
-      "community": 2,
+      "id": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
+      "community": 1,
       "norm_label": "schemas.py"
     },
     {
       "label": "DamageSeverity",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L8",
       "id": "schemas_damageseverity",
-      "community": 3,
+      "community": 1,
       "norm_label": "damageseverity"
     },
     {
@@ -99,7 +99,7 @@
       "source_file": "",
       "source_location": "",
       "id": "str",
-      "community": 3,
+      "community": 1,
       "norm_label": "str"
     },
     {
@@ -108,16 +108,16 @@
       "source_file": "",
       "source_location": "",
       "id": "enum",
-      "community": 3,
+      "community": 1,
       "norm_label": "enum"
     },
     {
       "label": "GeoPoint",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L16",
       "id": "schemas_geopoint",
-      "community": 2,
+      "community": 3,
       "norm_label": "geopoint"
     },
     {
@@ -126,13 +126,13 @@
       "source_file": "",
       "source_location": "",
       "id": "basemodel",
-      "community": 2,
+      "community": 1,
       "norm_label": "basemodel"
     },
     {
       "label": "UploadResponse",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L26",
       "id": "schemas_uploadresponse",
       "community": 2,
@@ -141,7 +141,7 @@
     {
       "label": "VideoListItem",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L42",
       "id": "schemas_videolistitem",
       "community": 2,
@@ -150,7 +150,7 @@
     {
       "label": "VideoListResponse",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L59",
       "id": "schemas_videolistresponse",
       "community": 2,
@@ -159,62 +159,71 @@
     {
       "label": "Detection",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L64",
       "id": "schemas_detection",
-      "community": 3,
+      "community": 1,
       "norm_label": "detection"
     },
     {
       "label": "FrameAnalysis",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L82",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L80",
       "id": "schemas_frameanalysis",
-      "community": 3,
+      "community": 1,
       "norm_label": "frameanalysis"
     },
     {
       "label": "AnalyzeRequest",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L109",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L107",
       "id": "schemas_analyzerequest",
-      "community": 2,
+      "community": 1,
       "norm_label": "analyzerequest"
     },
     {
       "label": "AnalyzeResponse",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L119",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L117",
       "id": "schemas_analyzeresponse",
-      "community": 3,
+      "community": 1,
       "norm_label": "analyzeresponse"
+    },
+    {
+      "label": "AnalyzeJobResponse",
+      "file_type": "code",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L123",
+      "id": "schemas_analyzejobresponse",
+      "community": 1,
+      "norm_label": "analyzejobresponse"
     },
     {
       "label": "ReportRequest",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L125",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L130",
       "id": "schemas_reportrequest",
-      "community": 2,
+      "community": 3,
       "norm_label": "reportrequest"
     },
     {
       "label": "Report",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L136",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L141",
       "id": "schemas_report",
-      "community": 2,
+      "community": 3,
       "norm_label": "report"
     },
     {
       "label": "ChatMessage",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L153",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L158",
       "id": "schemas_chatmessage",
       "community": 2,
       "norm_label": "chatmessage"
@@ -222,17 +231,17 @@
     {
       "label": "ChatRequest",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L160",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L165",
       "id": "schemas_chatrequest",
-      "community": 2,
+      "community": 1,
       "norm_label": "chatrequest"
     },
     {
       "label": "ChatResponse",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L175",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L180",
       "id": "schemas_chatresponse",
       "community": 2,
       "norm_label": "chatresponse"
@@ -242,7 +251,7 @@
       "file_type": "rationale",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L65",
-      "community": 3,
+      "community": 1,
       "norm_label": "localized damage region on the frame (object-detection style). coordinates are n",
       "id": "schemas_rationale_65"
     },
@@ -261,125 +270,125 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
-      "community": 1,
+      "community": 4,
       "norm_label": "analyze.py"
+    },
+    {
+      "label": "_AnalysisJob",
+      "file_type": "code",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L32",
+      "id": "analyze_analysisjob",
+      "community": 1,
+      "norm_label": "_analysisjob"
     },
     {
       "label": "_is_missing_column_error()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L17",
+      "source_location": "L42",
       "id": "analyze_is_missing_column_error",
-      "community": 1,
+      "community": 4,
       "norm_label": "_is_missing_column_error()"
     },
     {
       "label": "_serialize_frame_analyses()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L26",
+      "source_location": "L51",
       "id": "analyze_serialize_frame_analyses",
-      "community": 1,
+      "community": 4,
       "norm_label": "_serialize_frame_analyses()"
     },
     {
       "label": "_detections_from_row()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L50",
+      "source_location": "L75",
       "id": "analyze_detections_from_row",
-      "community": 3,
+      "community": 1,
       "norm_label": "_detections_from_row()"
     },
     {
       "label": "_row_to_frame_analysis()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L75",
+      "source_location": "L100",
       "id": "analyze_row_to_frame_analysis",
-      "community": 3,
+      "community": 1,
       "norm_label": "_row_to_frame_analysis()"
     },
     {
       "label": "_with_image_urls()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L87",
+      "source_location": "L112",
       "id": "analyze_with_image_urls",
-      "community": 1,
+      "community": 4,
       "norm_label": "_with_image_urls()"
     },
     {
       "label": "_load_cached_frames()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L97",
+      "source_location": "L122",
       "id": "analyze_load_cached_frames",
-      "community": 1,
+      "community": 4,
       "norm_label": "_load_cached_frames()"
     },
     {
       "label": "_persist_frames()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L111",
+      "source_location": "L136",
       "id": "analyze_persist_frames",
-      "community": 1,
+      "community": 4,
       "norm_label": "_persist_frames()"
+    },
+    {
+      "label": "_run_analysis_job()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L150",
+      "id": "analyze_run_analysis_job",
+      "community": 5,
+      "norm_label": "_run_analysis_job()"
     },
     {
       "label": "get_frame_image()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L126",
+      "source_location": "L194",
       "id": "analyze_get_frame_image",
-      "community": 1,
+      "community": 4,
       "norm_label": "get_frame_image()"
+    },
+    {
+      "label": "stream_analysis()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L205",
+      "id": "analyze_stream_analysis",
+      "community": 4,
+      "norm_label": "stream_analysis()"
     },
     {
       "label": "get_analysis()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L138",
+      "source_location": "L266",
       "id": "analyze_get_analysis",
-      "community": 1,
+      "community": 4,
       "norm_label": "get_analysis()"
     },
     {
       "label": "analyze()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L155",
+      "source_location": "L282",
       "id": "analyze_analyze",
-      "community": 1,
+      "community": 4,
       "norm_label": "analyze()"
-    },
-    {
-      "label": "Serve the extracted JPEG for a frame (1-based file names on disk).",
-      "file_type": "rationale",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L127",
-      "community": 3,
-      "norm_label": "serve the extracted jpeg for a frame (1-based file names on disk).",
-      "id": "analyze_rationale_127"
-    },
-    {
-      "label": "Return cached frame analyses for a previously analyzed video.",
-      "file_type": "rationale",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L139",
-      "community": 3,
-      "norm_label": "return cached frame analyses for a previously analyzed video.",
-      "id": "analyze_rationale_139"
-    },
-    {
-      "label": "Analyze an uploaded video frame-by-frame.      Returns cached results if the vid",
-      "file_type": "rationale",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L156",
-      "community": 3,
-      "norm_label": "analyze an uploaded video frame-by-frame.      returns cached results if the vid",
-      "id": "analyze_rationale_156"
     },
     {
       "label": "chat.py",
@@ -387,7 +396,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\chat.py",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_api_app_routers_chat_py",
-      "community": 1,
+      "community": 2,
       "norm_label": "chat.py"
     },
     {
@@ -396,7 +405,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\chat.py",
       "source_location": "L19",
       "id": "chat_load_session_history",
-      "community": 1,
+      "community": 2,
       "norm_label": "_load_session_history()"
     },
     {
@@ -405,7 +414,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\chat.py",
       "source_location": "L31",
       "id": "chat_create_session",
-      "community": 1,
+      "community": 2,
       "norm_label": "_create_session()"
     },
     {
@@ -414,7 +423,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\chat.py",
       "source_location": "L49",
       "id": "chat_persist_messages",
-      "community": 1,
+      "community": 2,
       "norm_label": "_persist_messages()"
     },
     {
@@ -423,7 +432,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\chat.py",
       "source_location": "L67",
       "id": "chat_build_context_messages",
-      "community": 1,
+      "community": 2,
       "norm_label": "_build_context_messages()"
     },
     {
@@ -432,7 +441,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\chat.py",
       "source_location": "L127",
       "id": "chat_chat",
-      "community": 1,
+      "community": 2,
       "norm_label": "chat()"
     },
     {
@@ -459,7 +468,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\report.py",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_api_app_routers_report_py",
-      "community": 2,
+      "community": 3,
       "norm_label": "report.py"
     },
     {
@@ -468,7 +477,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\report.py",
       "source_location": "L19",
       "id": "report_generate_report",
-      "community": 1,
+      "community": 3,
       "norm_label": "generate_report()"
     },
     {
@@ -477,7 +486,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\report.py",
       "source_location": "L88",
       "id": "report_get_report",
-      "community": 2,
+      "community": 3,
       "norm_label": "get_report()"
     },
     {
@@ -486,7 +495,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\report.py",
       "source_location": "L114",
       "id": "report_list_reports",
-      "community": 2,
+      "community": 3,
       "norm_label": "list_reports()"
     },
     {
@@ -494,7 +503,7 @@
       "file_type": "rationale",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\report.py",
       "source_location": "L20",
-      "community": 2,
+      "community": 3,
       "norm_label": "generate and persist a disaster assessment report from a video.      reuses ca",
       "id": "report_rationale_20"
     },
@@ -503,7 +512,7 @@
       "file_type": "rationale",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\report.py",
       "source_location": "L89",
-      "community": 2,
+      "community": 3,
       "norm_label": "fetch a previously generated report by its id.",
       "id": "report_rationale_89"
     },
@@ -512,7 +521,7 @@
       "file_type": "rationale",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\report.py",
       "source_location": "L115",
-      "community": 2,
+      "community": 3,
       "norm_label": "list all reports, optionally filtered by video_id.",
       "id": "report_rationale_115"
     },
@@ -576,7 +585,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\report.py",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_api_app_services_report_py",
-      "community": 15,
+      "community": 3,
       "norm_label": "report.py"
     },
     {
@@ -585,7 +594,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\report.py",
       "source_location": "L14",
       "id": "report_aggregate_severity",
-      "community": 15,
+      "community": 3,
       "norm_label": "aggregate_severity()"
     },
     {
@@ -594,7 +603,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\report.py",
       "source_location": "L21",
       "id": "report_summarize",
-      "community": 15,
+      "community": 3,
       "norm_label": "summarize()"
     },
     {
@@ -603,7 +612,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\report.py",
       "source_location": "L43",
       "id": "report_recommend",
-      "community": 15,
+      "community": 3,
       "norm_label": "_recommend()"
     },
     {
@@ -612,7 +621,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\storage.py",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_api_app_services_storage_py",
-      "community": 1,
+      "community": 2,
       "norm_label": "storage.py"
     },
     {
@@ -621,7 +630,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\storage.py",
       "source_location": "L10",
       "id": "storage_upload_to_bucket",
-      "community": 1,
+      "community": 2,
       "norm_label": "upload_to_bucket()"
     },
     {
@@ -630,7 +639,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\storage.py",
       "source_location": "L19",
       "id": "storage_download_to_temp",
-      "community": 1,
+      "community": 2,
       "norm_label": "download_to_temp()"
     },
     {
@@ -639,80 +648,21 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\storage.py",
       "source_location": "L34",
       "id": "storage_get_signed_url",
-      "community": 1,
+      "community": 2,
       "norm_label": "get_signed_url()"
     },
     {
-      "label": "video.py",
+      "label": "Video Service (extract_frames, probe)",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L1",
-      "id": "c_users_carlo_desktop_aegis_apps_api_app_services_video_py",
-      "community": 4,
-      "norm_label": "video.py"
-    },
-    {
-      "label": "_resolve_binary()",
-      "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L10",
-      "id": "video_resolve_binary",
-      "community": 4,
-      "norm_label": "_resolve_binary()"
-    },
-    {
-      "label": "_run_ffmpeg()",
-      "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L32",
-      "id": "video_run_ffmpeg",
-      "community": 4,
-      "norm_label": "_run_ffmpeg()"
-    },
-    {
-      "label": "_probe()",
-      "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L43",
-      "id": "video_probe",
-      "community": 4,
-      "norm_label": "_probe()"
-    },
-    {
-      "label": "extract_frames()",
-      "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L54",
-      "id": "video_extract_frames",
-      "community": 1,
-      "norm_label": "extract_frames()"
-    },
-    {
-      "label": "probe_duration_seconds()",
-      "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L78",
-      "id": "video_probe_duration_seconds",
-      "community": 4,
-      "norm_label": "probe_duration_seconds()"
-    },
-    {
-      "label": "Resolve an ffmpeg-family executable across local dev and container setups.",
-      "file_type": "rationale",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L11",
-      "community": 4,
-      "norm_label": "resolve an ffmpeg-family executable across local dev and container setups.",
-      "id": "video_rationale_11"
-    },
-    {
-      "label": "Extract one frame every `interval_seconds` from the video.      Returns the or",
-      "file_type": "rationale",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L59",
-      "community": 1,
-      "norm_label": "extract one frame every `interval_seconds` from the video.      returns the or",
-      "id": "video_rationale_59"
+      "source_file": "apps/api/app/services/video.py",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "service_video",
+      "community": 11,
+      "norm_label": "video service (extract_frames, probe)"
     },
     {
       "label": "vlm.py",
@@ -720,88 +670,88 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_api_app_services_vlm_py",
-      "community": 3,
+      "community": 1,
       "norm_label": "vlm.py"
     },
     {
       "label": "_get_client()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L64",
+      "source_location": "L79",
       "id": "vlm_get_client",
-      "community": 3,
+      "community": 1,
       "norm_label": "_get_client()"
     },
     {
       "label": "_get_zai_client()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L71",
+      "source_location": "L86",
       "id": "vlm_get_zai_client",
-      "community": 3,
+      "community": 1,
       "norm_label": "_get_zai_client()"
     },
     {
       "label": "_frame_data_url()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L83",
+      "source_location": "L98",
       "id": "vlm_frame_data_url",
-      "community": 3,
+      "community": 1,
       "norm_label": "_frame_data_url()"
     },
     {
       "label": "_clamp01()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L89",
+      "source_location": "L104",
       "id": "vlm_clamp01",
-      "community": 3,
+      "community": 1,
       "norm_label": "_clamp01()"
     },
     {
       "label": "_parse_detections()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L93",
+      "source_location": "L108",
       "id": "vlm_parse_detections",
-      "community": 3,
+      "community": 1,
       "norm_label": "_parse_detections()"
     },
     {
       "label": "_parse_frame_json()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L128",
+      "source_location": "L143",
       "id": "vlm_parse_frame_json",
-      "community": 3,
+      "community": 1,
       "norm_label": "_parse_frame_json()"
     },
     {
       "label": "_mock_frame_analysis()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L155",
+      "source_location": "L170",
       "id": "vlm_mock_frame_analysis",
-      "community": 3,
+      "community": 1,
       "norm_label": "_mock_frame_analysis()"
     },
     {
       "label": "analyze_frame()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L200",
+      "source_location": "L215",
       "id": "vlm_analyze_frame",
-      "community": 3,
+      "community": 1,
       "norm_label": "analyze_frame()"
     },
     {
       "label": "chat_completion()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L240",
+      "source_location": "L266",
       "id": "vlm_chat_completion",
-      "community": 3,
+      "community": 1,
       "norm_label": "chat_completion()"
     },
     {
@@ -900,25 +850,25 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\Chat.tsx",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_desktop_src_components_chat_tsx",
-      "community": 1,
+      "community": 2,
       "norm_label": "chat.tsx"
     },
     {
       "label": "buildFrameSystemMessage()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\Chat.tsx",
-      "source_location": "L12",
+      "source_location": "L13",
       "id": "chat_buildframesystemmessage",
-      "community": 1,
+      "community": 2,
       "norm_label": "buildframesystemmessage()"
     },
     {
       "label": "send()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\Chat.tsx",
-      "source_location": "L36",
+      "source_location": "L55",
       "id": "chat_send",
-      "community": 1,
+      "community": 2,
       "norm_label": "send()"
     },
     {
@@ -1305,7 +1255,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\workspace\\AlertToast.tsx",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_desktop_src_components_workspace_alerttoast_tsx",
-      "community": 16,
+      "community": 14,
       "norm_label": "alerttoast.tsx"
     },
     {
@@ -1314,7 +1264,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\workspace\\AlertToast.tsx",
       "source_location": "L41",
       "id": "alerttoast_usealert",
-      "community": 16,
+      "community": 14,
       "norm_label": "usealert()"
     },
     {
@@ -1323,7 +1273,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\workspace\\AlertToast.tsx",
       "source_location": "L49",
       "id": "alerttoast_severitymeta",
-      "community": 16,
+      "community": 14,
       "norm_label": "severitymeta()"
     },
     {
@@ -1332,7 +1282,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\workspace\\AlertToast.tsx",
       "source_location": "L65",
       "id": "alerttoast_toastrow",
-      "community": 16,
+      "community": 14,
       "norm_label": "toastrow()"
     },
     {
@@ -1383,17 +1333,17 @@
     {
       "label": "FrameImageModal.tsx",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
       "source_location": "L1",
-      "id": "c_users_carlo_desktop_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
+      "id": "c_users_frank_desktop_projects_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
       "community": 8,
       "norm_label": "frameimagemodal.tsx"
     },
     {
       "label": "cleanupVideo()",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
-      "source_location": "L62",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
+      "source_location": "L69",
       "id": "frameimagemodal_cleanupvideo",
       "community": 8,
       "norm_label": "cleanupvideo()"
@@ -1401,8 +1351,8 @@
     {
       "label": "onSeeked()",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
-      "source_location": "L68",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
+      "source_location": "L75",
       "id": "frameimagemodal_onseeked",
       "community": 8,
       "norm_label": "onseeked()"
@@ -1410,8 +1360,8 @@
     {
       "label": "onLoadedMeta()",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
-      "source_location": "L108",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
+      "source_location": "L115",
       "id": "frameimagemodal_onloadedmeta",
       "community": 8,
       "norm_label": "onloadedmeta()"
@@ -1419,8 +1369,8 @@
     {
       "label": "onKey()",
       "file_type": "code",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
-      "source_location": "L132",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
+      "source_location": "L139",
       "id": "frameimagemodal_onkey",
       "community": 8,
       "norm_label": "onkey()"
@@ -1548,7 +1498,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\api.ts",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_desktop_src_lib_api_ts",
-      "community": 17,
+      "community": 15,
       "norm_label": "api.ts"
     },
     {
@@ -1557,25 +1507,25 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\api.ts",
       "source_location": "L79",
       "id": "api_frameimageurl",
-      "community": 17,
+      "community": 15,
       "norm_label": "frameimageurl()"
     },
     {
       "label": "handle()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\api.ts",
-      "source_location": "L127",
+      "source_location": "L134",
       "id": "api_handle",
-      "community": 17,
+      "community": 15,
       "norm_label": "handle()"
     },
     {
       "label": "uploadWithProgress()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\api.ts",
-      "source_location": "L135",
+      "source_location": "L142",
       "id": "api_uploadwithprogress",
-      "community": 17,
+      "community": 15,
       "norm_label": "uploadwithprogress()"
     },
     {
@@ -1584,7 +1534,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\assessments.ts",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_desktop_src_lib_assessments_ts",
-      "community": 5,
+      "community": 6,
       "norm_label": "assessments.ts"
     },
     {
@@ -1593,7 +1543,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\assessments.ts",
       "source_location": "L9",
       "id": "assessments_severitytolevel",
-      "community": 5,
+      "community": 6,
       "norm_label": "severitytolevel()"
     },
     {
@@ -1602,7 +1552,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\assessments.ts",
       "source_location": "L24",
       "id": "assessments_shortid",
-      "community": 5,
+      "community": 6,
       "norm_label": "shortid()"
     },
     {
@@ -1611,7 +1561,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\assessments.ts",
       "source_location": "L28",
       "id": "assessments_formatdate",
-      "community": 5,
+      "community": 6,
       "norm_label": "formatdate()"
     },
     {
@@ -1620,7 +1570,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\assessments.ts",
       "source_location": "L34",
       "id": "assessments_formatsize",
-      "community": 5,
+      "community": 6,
       "norm_label": "formatsize()"
     },
     {
@@ -1629,7 +1579,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\assessments.ts",
       "source_location": "L41",
       "id": "assessments_locationlabel",
-      "community": 5,
+      "community": 6,
       "norm_label": "locationlabel()"
     },
     {
@@ -1638,7 +1588,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\assessments.ts",
       "source_location": "L47",
       "id": "assessments_deriveassessments",
-      "community": 5,
+      "community": 6,
       "norm_label": "deriveassessments()"
     },
     {
@@ -1647,7 +1597,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\assessments.ts",
       "source_location": "L75",
       "id": "assessments_reporttolistitem",
-      "community": 5,
+      "community": 6,
       "norm_label": "reporttolistitem()"
     },
     {
@@ -1719,7 +1669,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\geocode.ts",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_desktop_src_lib_geocode_ts",
-      "community": 0,
+      "community": 16,
       "norm_label": "geocode.ts"
     },
     {
@@ -1728,7 +1678,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\geocode.ts",
       "source_location": "L32",
       "id": "geocode_shortlabelfromitem",
-      "community": 0,
+      "community": 16,
       "norm_label": "shortlabelfromitem()"
     },
     {
@@ -1737,7 +1687,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\geocode.ts",
       "source_location": "L47",
       "id": "geocode_mapitem",
-      "community": 0,
+      "community": 16,
       "norm_label": "mapitem()"
     },
     {
@@ -1746,7 +1696,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\geocode.ts",
       "source_location": "L64",
       "id": "geocode_searchaddresses",
-      "community": 0,
+      "community": 16,
       "norm_label": "searchaddresses()"
     },
     {
@@ -1755,7 +1705,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\mockApi.ts",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_desktop_src_lib_mockapi_ts",
-      "community": 6,
+      "community": 5,
       "norm_label": "mockapi.ts"
     },
     {
@@ -1764,7 +1714,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\mockApi.ts",
       "source_location": "L16",
       "id": "mockapi_sleep",
-      "community": 6,
+      "community": 5,
       "norm_label": "sleep()"
     },
     {
@@ -1773,7 +1723,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\mockApi.ts",
       "source_location": "L20",
       "id": "mockapi_randomdelayms",
-      "community": 6,
+      "community": 5,
       "norm_label": "randomdelayms()"
     },
     {
@@ -1782,7 +1732,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\mockApi.ts",
       "source_location": "L24",
       "id": "mockapi_nowiso",
-      "community": 6,
+      "community": 5,
       "norm_label": "nowiso()"
     },
     {
@@ -1791,7 +1741,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\mockApi.ts",
       "source_location": "L28",
       "id": "mockapi_makevideoid",
-      "community": 6,
+      "community": 5,
       "norm_label": "makevideoid()"
     },
     {
@@ -1800,7 +1750,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\mockApi.ts",
       "source_location": "L35",
       "id": "mockapi_framelocation",
-      "community": 6,
+      "community": 5,
       "norm_label": "framelocation()"
     },
     {
@@ -1809,7 +1759,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\mockApi.ts",
       "source_location": "L43",
       "id": "mockapi_withmockvisuals",
-      "community": 6,
+      "community": 5,
       "norm_label": "withmockvisuals()"
     },
     {
@@ -1818,7 +1768,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\mockApi.ts",
       "source_location": "L166",
       "id": "mockapi_buildmockreport",
-      "community": 6,
+      "community": 5,
       "norm_label": "buildmockreport()"
     },
     {
@@ -2011,10 +1961,28 @@
       "norm_label": "fetchactivityfeed()"
     },
     {
+      "label": "fetchChatMessages()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\supabaseQueries.ts",
+      "source_location": "L364",
+      "id": "supabasequeries_fetchchatmessages",
+      "community": 0,
+      "norm_label": "fetchchatmessages()"
+    },
+    {
+      "label": "appendChatMessages()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\supabaseQueries.ts",
+      "source_location": "L376",
+      "id": "supabasequeries_appendchatmessages",
+      "community": 0,
+      "norm_label": "appendchatmessages()"
+    },
+    {
       "label": "subscribeToQueueUpdates()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\supabaseQueries.ts",
-      "source_location": "L361",
+      "source_location": "L392",
       "id": "supabasequeries_subscribetoqueueupdates",
       "community": 0,
       "norm_label": "subscribetoqueueupdates()"
@@ -2043,7 +2011,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\pages\\AssessmentsWorkspacePage.tsx",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_desktop_src_pages_assessmentsworkspacepage_tsx",
-      "community": 11,
+      "community": 3,
       "norm_label": "assessmentsworkspacepage.tsx"
     },
     {
@@ -2052,7 +2020,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\pages\\AssessmentsWorkspacePage.tsx",
       "source_location": "L15",
       "id": "assessmentsworkspacepage_formatfilesize",
-      "community": 11,
+      "community": 3,
       "norm_label": "formatfilesize()"
     },
     {
@@ -2061,7 +2029,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\pages\\AssessmentsWorkspacePage.tsx",
       "source_location": "L32",
       "id": "assessmentsworkspacepage_phaselabel",
-      "community": 11,
+      "community": 3,
       "norm_label": "phaselabel()"
     },
     {
@@ -2070,7 +2038,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\pages\\AssessmentsWorkspacePage.tsx",
       "source_location": "L49",
       "id": "assessmentsworkspacepage_phasepillclass",
-      "community": 11,
+      "community": 3,
       "norm_label": "phasepillclass()"
     },
     {
@@ -2079,7 +2047,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\pages\\AssessmentsWorkspacePage.tsx",
       "source_location": "L136",
       "id": "assessmentsworkspacepage_handlefile",
-      "community": 11,
+      "community": 3,
       "norm_label": "handlefile()"
     },
     {
@@ -2088,7 +2056,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\pages\\AssessmentsWorkspacePage.tsx",
       "source_location": "L171",
       "id": "assessmentsworkspacepage_runanalysis",
-      "community": 11,
+      "community": 3,
       "norm_label": "runanalysis()"
     },
     {
@@ -2097,34 +2065,34 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\pages\\AssessmentViewPage.tsx",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_desktop_src_pages_assessmentviewpage_tsx",
-      "community": 18,
+      "community": 17,
       "norm_label": "assessmentviewpage.tsx"
     },
     {
       "label": "countBySeverity()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\pages\\AssessmentViewPage.tsx",
-      "source_location": "L24",
+      "source_location": "L26",
       "id": "assessmentviewpage_countbyseverity",
-      "community": 18,
+      "community": 17,
       "norm_label": "countbyseverity()"
     },
     {
       "label": "filenameToTitle()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\pages\\AssessmentViewPage.tsx",
-      "source_location": "L32",
+      "source_location": "L34",
       "id": "assessmentviewpage_filenametotitle",
-      "community": 18,
+      "community": 17,
       "norm_label": "filenametotitle()"
     },
     {
       "label": "buildHeader()",
       "file_type": "code",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\pages\\AssessmentViewPage.tsx",
-      "source_location": "L47",
+      "source_location": "L49",
       "id": "assessmentviewpage_buildheader",
-      "community": 18,
+      "community": 17,
       "norm_label": "buildheader()"
     },
     {
@@ -2241,7 +2209,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src-tauri\\src\\lib.rs",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_desktop_src_tauri_src_lib_rs",
-      "community": 4,
+      "community": 18,
       "norm_label": "lib.rs"
     },
     {
@@ -2250,7 +2218,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src-tauri\\src\\lib.rs",
       "source_location": "L2",
       "id": "lib_run",
-      "community": 4,
+      "community": 18,
       "norm_label": "run()"
     },
     {
@@ -2259,7 +2227,7 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src-tauri\\src\\main.rs",
       "source_location": "L1",
       "id": "c_users_carlo_desktop_aegis_apps_desktop_src_tauri_src_main_rs",
-      "community": 4,
+      "community": 18,
       "norm_label": "main.rs"
     },
     {
@@ -2268,8 +2236,53 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src-tauri\\src\\main.rs",
       "source_location": "L4",
       "id": "main_main",
-      "community": 4,
+      "community": 18,
       "norm_label": "main()"
+    },
+    {
+      "label": "Serve the extracted JPEG for a frame (1-based file names on disk).",
+      "file_type": "rationale",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L127",
+      "community": 1,
+      "norm_label": "serve the extracted jpeg for a frame (1-based file names on disk).",
+      "id": "analyze_rationale_127"
+    },
+    {
+      "label": "Return cached frame analyses for a previously analyzed video.",
+      "file_type": "rationale",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L139",
+      "community": 1,
+      "norm_label": "return cached frame analyses for a previously analyzed video.",
+      "id": "analyze_rationale_139"
+    },
+    {
+      "label": "Analyze an uploaded video frame-by-frame.      Returns cached results if the vid",
+      "file_type": "rationale",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L156",
+      "community": 1,
+      "norm_label": "analyze an uploaded video frame-by-frame.      returns cached results if the vid",
+      "id": "analyze_rationale_156"
+    },
+    {
+      "label": "Resolve an ffmpeg-family executable across local dev and container setups.",
+      "file_type": "rationale",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
+      "source_location": "L11",
+      "community": 52,
+      "norm_label": "resolve an ffmpeg-family executable across local dev and container setups.",
+      "id": "video_rationale_11"
+    },
+    {
+      "label": "Extract one frame every `interval_seconds` from the video.      Returns the or",
+      "file_type": "rationale",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
+      "source_location": "L59",
+      "community": 53,
+      "norm_label": "extract one frame every `interval_seconds` from the video.      returns the or",
+      "id": "video_rationale_59"
     }
   ],
   "links": [
@@ -2288,19 +2301,19 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\config.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\config.py",
       "source_location": "L12",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_config_py",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_config_py",
       "_tgt": "config_settings",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_config_py",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_config_py",
       "target": "config_settings",
       "confidence_score": 1.0
     },
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\config.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\config.py",
       "source_location": "L12",
       "weight": 1.0,
       "_src": "config_settings",
@@ -2312,14 +2325,26 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\config.py",
-      "source_location": "L45",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\config.py",
+      "source_location": "L44",
       "weight": 1.0,
       "_src": "config_settings",
       "_tgt": "config_settings_ensure_dirs",
       "source": "config_settings",
       "target": "config_settings_ensure_dirs",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/api/app/services/video.py",
+      "source_location": "line 7",
+      "weight": 1.0,
+      "_src": "service_video",
+      "_tgt": "config_settings",
+      "source": "config_settings",
+      "target": "service_video"
     },
     {
       "relation": "contains",
@@ -2540,187 +2565,199 @@
     {
       "relation": "imports_from",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L2",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "_tgt": "enum",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "target": "enum",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L8",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "_tgt": "schemas_damageseverity",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "target": "schemas_damageseverity",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L16",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "_tgt": "schemas_geopoint",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "target": "schemas_geopoint",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L26",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "_tgt": "schemas_uploadresponse",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "target": "schemas_uploadresponse",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L42",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "_tgt": "schemas_videolistitem",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "target": "schemas_videolistitem",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L59",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "_tgt": "schemas_videolistresponse",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "target": "schemas_videolistresponse",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L64",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "_tgt": "schemas_detection",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "target": "schemas_detection",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L82",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L80",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "_tgt": "schemas_frameanalysis",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "target": "schemas_frameanalysis",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L109",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L107",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "_tgt": "schemas_analyzerequest",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "target": "schemas_analyzerequest",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L119",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L117",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "_tgt": "schemas_analyzeresponse",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "target": "schemas_analyzeresponse",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L125",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L123",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
+      "_tgt": "schemas_analyzejobresponse",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
+      "target": "schemas_analyzejobresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L130",
+      "weight": 1.0,
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "_tgt": "schemas_reportrequest",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "target": "schemas_reportrequest",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L136",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L141",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "_tgt": "schemas_report",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "target": "schemas_report",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L153",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L158",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "_tgt": "schemas_chatmessage",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "target": "schemas_chatmessage",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L160",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L165",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "_tgt": "schemas_chatrequest",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "target": "schemas_chatrequest",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L175",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L180",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "_tgt": "schemas_chatresponse",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_schemas_py",
+      "source": "c_users_frank_desktop_projects_aegis_apps_api_app_schemas_py",
       "target": "schemas_chatresponse",
       "confidence_score": 1.0
     },
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L8",
       "weight": 1.0,
       "_src": "schemas_damageseverity",
@@ -2732,7 +2769,7 @@
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L8",
       "weight": 1.0,
       "_src": "schemas_damageseverity",
@@ -2745,37 +2782,13 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L9",
+      "source_location": "L14",
       "weight": 0.8,
-      "_src": "schemas_damageseverity",
-      "_tgt": "analyze_rationale_127",
-      "confidence_score": 0.5,
+      "_src": "analyze_analysisjob",
+      "_tgt": "schemas_damageseverity",
       "source": "schemas_damageseverity",
-      "target": "analyze_rationale_127"
-    },
-    {
-      "relation": "uses",
-      "confidence": "INFERRED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L9",
-      "weight": 0.8,
-      "_src": "schemas_damageseverity",
-      "_tgt": "analyze_rationale_139",
-      "confidence_score": 0.5,
-      "source": "schemas_damageseverity",
-      "target": "analyze_rationale_139"
-    },
-    {
-      "relation": "uses",
-      "confidence": "INFERRED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L9",
-      "weight": 0.8,
-      "_src": "schemas_damageseverity",
-      "_tgt": "analyze_rationale_156",
-      "confidence_score": 0.5,
-      "source": "schemas_damageseverity",
-      "target": "analyze_rationale_156"
+      "target": "analyze_analysisjob",
+      "confidence_score": 0.5
     },
     {
       "relation": "calls",
@@ -2826,6 +2839,42 @@
       "target": "vlm_parse_frame_json"
     },
     {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L9",
+      "weight": 0.8,
+      "_src": "schemas_damageseverity",
+      "_tgt": "analyze_rationale_127",
+      "confidence_score": 0.5,
+      "source": "schemas_damageseverity",
+      "target": "analyze_rationale_127"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L9",
+      "weight": 0.8,
+      "_src": "schemas_damageseverity",
+      "_tgt": "analyze_rationale_139",
+      "confidence_score": 0.5,
+      "source": "schemas_damageseverity",
+      "target": "analyze_rationale_139"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L9",
+      "weight": 0.8,
+      "_src": "schemas_damageseverity",
+      "_tgt": "analyze_rationale_156",
+      "confidence_score": 0.5,
+      "source": "schemas_damageseverity",
+      "target": "analyze_rationale_156"
+    },
+    {
       "relation": "calls",
       "confidence": "INFERRED",
       "confidence_score": 0.8,
@@ -2865,37 +2914,13 @@
       "relation": "calls",
       "confidence": "INFERRED",
       "confidence_score": 0.8,
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L27",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L183",
       "weight": 1.0,
-      "_src": "str",
-      "_tgt": "video_resolve_binary",
+      "_src": "analyze_run_analysis_job",
+      "_tgt": "str",
       "source": "str",
-      "target": "video_resolve_binary"
-    },
-    {
-      "relation": "calls",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L46",
-      "weight": 1.0,
-      "_src": "str",
-      "_tgt": "video_probe",
-      "source": "str",
-      "target": "video_probe"
-    },
-    {
-      "relation": "calls",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L67",
-      "weight": 1.0,
-      "_src": "str",
-      "_tgt": "video_extract_frames",
-      "source": "str",
-      "target": "video_extract_frames"
+      "target": "analyze_run_analysis_job"
     },
     {
       "relation": "calls",
@@ -2936,7 +2961,7 @@
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L16",
       "weight": 1.0,
       "_src": "schemas_geopoint",
@@ -3008,7 +3033,7 @@
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L26",
       "weight": 1.0,
       "_src": "schemas_uploadresponse",
@@ -3020,7 +3045,7 @@
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L42",
       "weight": 1.0,
       "_src": "schemas_videolistitem",
@@ -3032,7 +3057,7 @@
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L59",
       "weight": 1.0,
       "_src": "schemas_videolistresponse",
@@ -3044,7 +3069,7 @@
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L64",
       "weight": 1.0,
       "_src": "schemas_detection",
@@ -3056,8 +3081,8 @@
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L82",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L80",
       "weight": 1.0,
       "_src": "schemas_frameanalysis",
       "_tgt": "basemodel",
@@ -3068,8 +3093,8 @@
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L109",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L107",
       "weight": 1.0,
       "_src": "schemas_analyzerequest",
       "_tgt": "basemodel",
@@ -3080,8 +3105,8 @@
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L119",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L117",
       "weight": 1.0,
       "_src": "schemas_analyzeresponse",
       "_tgt": "basemodel",
@@ -3092,8 +3117,20 @@
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L125",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L123",
+      "weight": 1.0,
+      "_src": "schemas_analyzejobresponse",
+      "_tgt": "basemodel",
+      "source": "basemodel",
+      "target": "schemas_analyzejobresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L130",
       "weight": 1.0,
       "_src": "schemas_reportrequest",
       "_tgt": "basemodel",
@@ -3104,8 +3141,8 @@
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L136",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L141",
       "weight": 1.0,
       "_src": "schemas_report",
       "_tgt": "basemodel",
@@ -3116,8 +3153,8 @@
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L153",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L158",
       "weight": 1.0,
       "_src": "schemas_chatmessage",
       "_tgt": "basemodel",
@@ -3128,8 +3165,8 @@
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L160",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L165",
       "weight": 1.0,
       "_src": "schemas_chatrequest",
       "_tgt": "basemodel",
@@ -3140,8 +3177,8 @@
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
-      "source_location": "L175",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
+      "source_location": "L180",
       "weight": 1.0,
       "_src": "schemas_chatresponse",
       "_tgt": "basemodel",
@@ -3260,7 +3297,7 @@
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\schemas.py",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\api\\app\\schemas.py",
       "source_location": "L65",
       "weight": 1.0,
       "_src": "schemas_rationale_65",
@@ -3273,37 +3310,13 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L9",
+      "source_location": "L14",
       "weight": 0.8,
-      "_src": "schemas_detection",
-      "_tgt": "analyze_rationale_127",
-      "confidence_score": 0.5,
+      "_src": "analyze_analysisjob",
+      "_tgt": "schemas_detection",
       "source": "schemas_detection",
-      "target": "analyze_rationale_127"
-    },
-    {
-      "relation": "uses",
-      "confidence": "INFERRED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L9",
-      "weight": 0.8,
-      "_src": "schemas_detection",
-      "_tgt": "analyze_rationale_139",
-      "confidence_score": 0.5,
-      "source": "schemas_detection",
-      "target": "analyze_rationale_139"
-    },
-    {
-      "relation": "uses",
-      "confidence": "INFERRED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L9",
-      "weight": 0.8,
-      "_src": "schemas_detection",
-      "_tgt": "analyze_rationale_156",
-      "confidence_score": 0.5,
-      "source": "schemas_detection",
-      "target": "analyze_rationale_156"
+      "target": "analyze_analysisjob",
+      "confidence_score": 0.5
     },
     {
       "relation": "calls",
@@ -3347,10 +3360,10 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
       "source_location": "L9",
       "weight": 0.8,
-      "_src": "schemas_frameanalysis",
+      "_src": "schemas_detection",
       "_tgt": "analyze_rationale_127",
       "confidence_score": 0.5,
-      "source": "schemas_frameanalysis",
+      "source": "schemas_detection",
       "target": "analyze_rationale_127"
     },
     {
@@ -3359,10 +3372,10 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
       "source_location": "L9",
       "weight": 0.8,
-      "_src": "schemas_frameanalysis",
+      "_src": "schemas_detection",
       "_tgt": "analyze_rationale_139",
       "confidence_score": 0.5,
-      "source": "schemas_frameanalysis",
+      "source": "schemas_detection",
       "target": "analyze_rationale_139"
     },
     {
@@ -3371,11 +3384,23 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
       "source_location": "L9",
       "weight": 0.8,
-      "_src": "schemas_frameanalysis",
+      "_src": "schemas_detection",
       "_tgt": "analyze_rationale_156",
       "confidence_score": 0.5,
-      "source": "schemas_frameanalysis",
+      "source": "schemas_detection",
       "target": "analyze_rationale_156"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L14",
+      "weight": 0.8,
+      "_src": "analyze_analysisjob",
+      "_tgt": "schemas_frameanalysis",
+      "source": "schemas_frameanalysis",
+      "target": "analyze_analysisjob",
+      "confidence_score": 0.5
     },
     {
       "relation": "calls",
@@ -3419,10 +3444,10 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
       "source_location": "L9",
       "weight": 0.8,
-      "_src": "schemas_analyzerequest",
+      "_src": "schemas_frameanalysis",
       "_tgt": "analyze_rationale_127",
       "confidence_score": 0.5,
-      "source": "schemas_analyzerequest",
+      "source": "schemas_frameanalysis",
       "target": "analyze_rationale_127"
     },
     {
@@ -3431,10 +3456,10 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
       "source_location": "L9",
       "weight": 0.8,
-      "_src": "schemas_analyzerequest",
+      "_src": "schemas_frameanalysis",
       "_tgt": "analyze_rationale_139",
       "confidence_score": 0.5,
-      "source": "schemas_analyzerequest",
+      "source": "schemas_frameanalysis",
       "target": "analyze_rationale_139"
     },
     {
@@ -3443,11 +3468,23 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
       "source_location": "L9",
       "weight": 0.8,
-      "_src": "schemas_analyzerequest",
+      "_src": "schemas_frameanalysis",
       "_tgt": "analyze_rationale_156",
       "confidence_score": 0.5,
-      "source": "schemas_analyzerequest",
+      "source": "schemas_frameanalysis",
       "target": "analyze_rationale_156"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L14",
+      "weight": 0.8,
+      "_src": "analyze_analysisjob",
+      "_tgt": "schemas_analyzerequest",
+      "source": "schemas_analyzerequest",
+      "target": "analyze_analysisjob",
+      "confidence_score": 0.5
     },
     {
       "relation": "uses",
@@ -3491,6 +3528,66 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
       "source_location": "L9",
       "weight": 0.8,
+      "_src": "schemas_analyzerequest",
+      "_tgt": "analyze_rationale_127",
+      "confidence_score": 0.5,
+      "source": "schemas_analyzerequest",
+      "target": "analyze_rationale_127"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L9",
+      "weight": 0.8,
+      "_src": "schemas_analyzerequest",
+      "_tgt": "analyze_rationale_139",
+      "confidence_score": 0.5,
+      "source": "schemas_analyzerequest",
+      "target": "analyze_rationale_139"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L9",
+      "weight": 0.8,
+      "_src": "schemas_analyzerequest",
+      "_tgt": "analyze_rationale_156",
+      "confidence_score": 0.5,
+      "source": "schemas_analyzerequest",
+      "target": "analyze_rationale_156"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L14",
+      "weight": 0.8,
+      "_src": "analyze_analysisjob",
+      "_tgt": "schemas_analyzeresponse",
+      "source": "schemas_analyzeresponse",
+      "target": "analyze_analysisjob",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L151",
+      "weight": 1.0,
+      "_src": "schemas_analyzeresponse",
+      "_tgt": "analyze_get_analysis",
+      "source": "schemas_analyzeresponse",
+      "target": "analyze_get_analysis"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L9",
+      "weight": 0.8,
       "_src": "schemas_analyzeresponse",
       "_tgt": "analyze_rationale_127",
       "confidence_score": 0.5,
@@ -3526,23 +3623,35 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L151",
+      "source_location": "L183",
       "weight": 1.0,
       "_src": "schemas_analyzeresponse",
-      "_tgt": "analyze_get_analysis",
+      "_tgt": "analyze_analyze",
       "source": "schemas_analyzeresponse",
-      "target": "analyze_get_analysis"
+      "target": "analyze_analyze"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L14",
+      "weight": 0.8,
+      "_src": "analyze_analysisjob",
+      "_tgt": "schemas_analyzejobresponse",
+      "source": "schemas_analyzejobresponse",
+      "target": "analyze_analysisjob",
+      "confidence_score": 0.5
     },
     {
       "relation": "calls",
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L183",
+      "source_location": "L302",
       "weight": 1.0,
-      "_src": "schemas_analyzeresponse",
-      "_tgt": "analyze_analyze",
-      "source": "schemas_analyzeresponse",
+      "_src": "analyze_analyze",
+      "_tgt": "schemas_analyzejobresponse",
+      "source": "schemas_analyzejobresponse",
       "target": "analyze_analyze"
     },
     {
@@ -3765,7 +3874,19 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L17",
+      "source_location": "L32",
+      "weight": 1.0,
+      "_src": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
+      "_tgt": "analyze_analysisjob",
+      "source": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
+      "target": "analyze_analysisjob",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L42",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
       "_tgt": "analyze_is_missing_column_error",
@@ -3777,7 +3898,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L26",
+      "source_location": "L51",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
       "_tgt": "analyze_serialize_frame_analyses",
@@ -3789,7 +3910,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L50",
+      "source_location": "L75",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
       "_tgt": "analyze_detections_from_row",
@@ -3801,7 +3922,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L75",
+      "source_location": "L100",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
       "_tgt": "analyze_row_to_frame_analysis",
@@ -3813,7 +3934,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L87",
+      "source_location": "L112",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
       "_tgt": "analyze_with_image_urls",
@@ -3825,7 +3946,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L97",
+      "source_location": "L122",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
       "_tgt": "analyze_load_cached_frames",
@@ -3837,7 +3958,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L111",
+      "source_location": "L136",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
       "_tgt": "analyze_persist_frames",
@@ -3849,7 +3970,19 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L126",
+      "source_location": "L150",
+      "weight": 1.0,
+      "_src": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
+      "_tgt": "analyze_run_analysis_job",
+      "source": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
+      "target": "analyze_run_analysis_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L194",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
       "_tgt": "analyze_get_frame_image",
@@ -3861,7 +3994,19 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L138",
+      "source_location": "L205",
+      "weight": 1.0,
+      "_src": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
+      "_tgt": "analyze_stream_analysis",
+      "source": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
+      "target": "analyze_stream_analysis",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L266",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
       "_tgt": "analyze_get_analysis",
@@ -3873,7 +4018,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L155",
+      "source_location": "L282",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_routers_analyze_py",
       "_tgt": "analyze_analyze",
@@ -3885,7 +4030,19 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L119",
+      "source_location": "L325",
+      "weight": 1.0,
+      "_src": "analyze_analyze",
+      "_tgt": "analyze_analysisjob",
+      "source": "analyze_analysisjob",
+      "target": "analyze_analyze",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L144",
       "weight": 1.0,
       "_src": "analyze_persist_frames",
       "_tgt": "analyze_is_missing_column_error",
@@ -3897,7 +4054,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L115",
+      "source_location": "L140",
       "weight": 1.0,
       "_src": "analyze_persist_frames",
       "_tgt": "analyze_serialize_frame_analyses",
@@ -3909,7 +4066,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L83",
+      "source_location": "L108",
       "weight": 1.0,
       "_src": "analyze_row_to_frame_analysis",
       "_tgt": "analyze_detections_from_row",
@@ -3921,7 +4078,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L108",
+      "source_location": "L133",
       "weight": 1.0,
       "_src": "analyze_load_cached_frames",
       "_tgt": "analyze_row_to_frame_analysis",
@@ -3933,7 +4090,19 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L150",
+      "source_location": "L214",
+      "weight": 1.0,
+      "_src": "analyze_stream_analysis",
+      "_tgt": "analyze_with_image_urls",
+      "source": "analyze_with_image_urls",
+      "target": "analyze_stream_analysis",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L277",
       "weight": 1.0,
       "_src": "analyze_get_analysis",
       "_tgt": "analyze_with_image_urls",
@@ -3945,7 +4114,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L182",
+      "source_location": "L301",
       "weight": 1.0,
       "_src": "analyze_analyze",
       "_tgt": "analyze_with_image_urls",
@@ -3957,7 +4126,19 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L149",
+      "source_location": "L208",
+      "weight": 1.0,
+      "_src": "analyze_stream_analysis",
+      "_tgt": "analyze_load_cached_frames",
+      "source": "analyze_load_cached_frames",
+      "target": "analyze_stream_analysis",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
+      "source_location": "L276",
       "weight": 1.0,
       "_src": "analyze_get_analysis",
       "_tgt": "analyze_load_cached_frames",
@@ -3969,7 +4150,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L180",
+      "source_location": "L299",
       "weight": 1.0,
       "_src": "analyze_analyze",
       "_tgt": "analyze_load_cached_frames",
@@ -3991,18 +4172,6 @@
     },
     {
       "relation": "calls",
-      "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L207",
-      "weight": 1.0,
-      "_src": "analyze_analyze",
-      "_tgt": "analyze_persist_frames",
-      "source": "analyze_persist_frames",
-      "target": "analyze_analyze",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\report.py",
@@ -4014,40 +4183,16 @@
       "target": "report_generate_report"
     },
     {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L127",
+      "source_location": "L179",
       "weight": 1.0,
-      "_src": "analyze_rationale_127",
-      "_tgt": "analyze_get_frame_image",
-      "source": "analyze_get_frame_image",
-      "target": "analyze_rationale_127",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L139",
-      "weight": 1.0,
-      "_src": "analyze_rationale_139",
-      "_tgt": "analyze_get_analysis",
-      "source": "analyze_get_analysis",
-      "target": "analyze_rationale_139",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L156",
-      "weight": 1.0,
-      "_src": "analyze_rationale_156",
-      "_tgt": "analyze_analyze",
-      "source": "analyze_analyze",
-      "target": "analyze_rationale_156",
-      "confidence_score": 1.0
+      "_src": "analyze_run_analysis_job",
+      "_tgt": "mockapi_sleep",
+      "source": "analyze_run_analysis_job",
+      "target": "mockapi_sleep"
     },
     {
       "relation": "calls",
@@ -4060,18 +4205,6 @@
       "_tgt": "storage_download_to_temp",
       "source": "analyze_analyze",
       "target": "storage_download_to_temp"
-    },
-    {
-      "relation": "calls",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\analyze.py",
-      "source_location": "L195",
-      "weight": 1.0,
-      "_src": "analyze_analyze",
-      "_tgt": "video_extract_frames",
-      "source": "analyze_analyze",
-      "target": "video_extract_frames"
     },
     {
       "relation": "calls",
@@ -4306,18 +4439,6 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\report.py",
-      "source_location": "L49",
-      "weight": 1.0,
-      "_src": "report_generate_report",
-      "_tgt": "video_extract_frames",
-      "source": "report_generate_report",
-      "target": "video_extract_frames"
-    },
-    {
-      "relation": "calls",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\routers\\report.py",
       "source_location": "L50",
       "weight": 1.0,
       "_src": "report_generate_report",
@@ -4544,152 +4665,8 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L10",
-      "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_services_video_py",
-      "_tgt": "video_resolve_binary",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_services_video_py",
-      "target": "video_resolve_binary",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L32",
-      "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_services_video_py",
-      "_tgt": "video_run_ffmpeg",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_services_video_py",
-      "target": "video_run_ffmpeg",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L43",
-      "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_services_video_py",
-      "_tgt": "video_probe",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_services_video_py",
-      "target": "video_probe",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L54",
-      "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_services_video_py",
-      "_tgt": "video_extract_frames",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_services_video_py",
-      "target": "video_extract_frames",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L78",
-      "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_api_app_services_video_py",
-      "_tgt": "video_probe_duration_seconds",
-      "source": "c_users_carlo_desktop_aegis_apps_api_app_services_video_py",
-      "target": "video_probe_duration_seconds",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L33",
-      "weight": 1.0,
-      "_src": "video_run_ffmpeg",
-      "_tgt": "video_resolve_binary",
-      "source": "video_resolve_binary",
-      "target": "video_run_ffmpeg",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L44",
-      "weight": 1.0,
-      "_src": "video_probe",
-      "_tgt": "video_resolve_binary",
-      "source": "video_resolve_binary",
-      "target": "video_probe",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L11",
-      "weight": 1.0,
-      "_src": "video_rationale_11",
-      "_tgt": "video_resolve_binary",
-      "source": "video_resolve_binary",
-      "target": "video_rationale_11",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L70",
-      "weight": 1.0,
-      "_src": "video_extract_frames",
-      "_tgt": "video_run_ffmpeg",
-      "source": "video_run_ffmpeg",
-      "target": "video_extract_frames",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L35",
-      "weight": 1.0,
-      "_src": "video_run_ffmpeg",
-      "_tgt": "lib_run",
-      "source": "video_run_ffmpeg",
-      "target": "lib_run"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L79",
-      "weight": 1.0,
-      "_src": "video_probe_duration_seconds",
-      "_tgt": "video_probe",
-      "source": "video_probe",
-      "target": "video_probe_duration_seconds",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\video.py",
-      "source_location": "L59",
-      "weight": 1.0,
-      "_src": "video_rationale_59",
-      "_tgt": "video_extract_frames",
-      "source": "video_extract_frames",
-      "target": "video_rationale_59",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L64",
+      "source_location": "L79",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_services_vlm_py",
       "_tgt": "vlm_get_client",
@@ -4701,7 +4678,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L71",
+      "source_location": "L86",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_services_vlm_py",
       "_tgt": "vlm_get_zai_client",
@@ -4713,7 +4690,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L83",
+      "source_location": "L98",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_services_vlm_py",
       "_tgt": "vlm_frame_data_url",
@@ -4725,7 +4702,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L89",
+      "source_location": "L104",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_services_vlm_py",
       "_tgt": "vlm_clamp01",
@@ -4737,7 +4714,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L93",
+      "source_location": "L108",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_services_vlm_py",
       "_tgt": "vlm_parse_detections",
@@ -4749,7 +4726,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L128",
+      "source_location": "L143",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_services_vlm_py",
       "_tgt": "vlm_parse_frame_json",
@@ -4761,7 +4738,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L155",
+      "source_location": "L170",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_services_vlm_py",
       "_tgt": "vlm_mock_frame_analysis",
@@ -4773,7 +4750,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L200",
+      "source_location": "L215",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_services_vlm_py",
       "_tgt": "vlm_analyze_frame",
@@ -4785,7 +4762,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L240",
+      "source_location": "L266",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_api_app_services_vlm_py",
       "_tgt": "vlm_chat_completion",
@@ -4797,7 +4774,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L228",
+      "source_location": "L254",
       "weight": 1.0,
       "_src": "vlm_analyze_frame",
       "_tgt": "vlm_get_client",
@@ -4809,7 +4786,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L259",
+      "source_location": "L292",
       "weight": 1.0,
       "_src": "vlm_chat_completion",
       "_tgt": "vlm_get_client",
@@ -4821,7 +4798,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L209",
+      "source_location": "L229",
       "weight": 1.0,
       "_src": "vlm_analyze_frame",
       "_tgt": "vlm_get_zai_client",
@@ -4833,7 +4810,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L253",
+      "source_location": "L286",
       "weight": 1.0,
       "_src": "vlm_chat_completion",
       "_tgt": "vlm_get_zai_client",
@@ -4845,7 +4822,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L218",
+      "source_location": "L238",
       "weight": 1.0,
       "_src": "vlm_analyze_frame",
       "_tgt": "vlm_frame_data_url",
@@ -4857,7 +4834,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L104",
+      "source_location": "L119",
       "weight": 1.0,
       "_src": "vlm_parse_detections",
       "_tgt": "vlm_clamp01",
@@ -4869,7 +4846,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L170",
+      "source_location": "L185",
       "weight": 1.0,
       "_src": "vlm_mock_frame_analysis",
       "_tgt": "vlm_clamp01",
@@ -4881,7 +4858,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L143",
+      "source_location": "L158",
       "weight": 1.0,
       "_src": "vlm_parse_frame_json",
       "_tgt": "vlm_parse_detections",
@@ -4893,7 +4870,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L226",
+      "source_location": "L246",
       "weight": 1.0,
       "_src": "vlm_analyze_frame",
       "_tgt": "vlm_parse_frame_json",
@@ -4905,13 +4882,25 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
-      "source_location": "L206",
+      "source_location": "L221",
       "weight": 1.0,
       "_src": "vlm_analyze_frame",
       "_tgt": "vlm_mock_frame_analysis",
       "source": "vlm_mock_frame_analysis",
       "target": "vlm_analyze_frame",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\api\\app\\services\\vlm.py",
+      "source_location": "L227",
+      "weight": 1.0,
+      "_src": "vlm_analyze_frame",
+      "_tgt": "mockapi_sleep",
+      "source": "vlm_analyze_frame",
+      "target": "mockapi_sleep"
     },
     {
       "relation": "contains",
@@ -4929,7 +4918,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\Chat.tsx",
-      "source_location": "L12",
+      "source_location": "L13",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_desktop_src_components_chat_tsx",
       "_tgt": "chat_buildframesystemmessage",
@@ -4941,7 +4930,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\Chat.tsx",
-      "source_location": "L36",
+      "source_location": "L55",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_desktop_src_components_chat_tsx",
       "_tgt": "chat_send",
@@ -4953,13 +4942,25 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\Chat.tsx",
-      "source_location": "L46",
+      "source_location": "L66",
       "weight": 1.0,
       "_src": "chat_send",
       "_tgt": "chat_buildframesystemmessage",
       "source": "chat_buildframesystemmessage",
       "target": "chat_send",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\Chat.tsx",
+      "source_location": "L77",
+      "weight": 1.0,
+      "_src": "chat_send",
+      "_tgt": "supabasequeries_appendchatmessages",
+      "source": "chat_send",
+      "target": "supabasequeries_appendchatmessages"
     },
     {
       "relation": "contains",
@@ -5388,8 +5389,8 @@
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\geocode.ts",
       "source_location": "L43",
       "weight": 1.0,
-      "_src": "geocode_shortlabelfromitem",
-      "_tgt": "map_map",
+      "_src": "map_map",
+      "_tgt": "geocode_shortlabelfromitem",
       "source": "map_map",
       "target": "geocode_shortlabelfromitem"
     },
@@ -5488,6 +5489,18 @@
       "_tgt": "supabasequeries_fetchactivityfeed",
       "source": "map_map",
       "target": "supabasequeries_fetchactivityfeed"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\supabaseQueries.ts",
+      "source_location": "L382",
+      "weight": 1.0,
+      "_src": "supabasequeries_appendchatmessages",
+      "_tgt": "map_map",
+      "source": "map_map",
+      "target": "supabasequeries_appendchatmessages"
     },
     {
       "relation": "calls",
@@ -5600,56 +5613,56 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
-      "source_location": "L62",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
+      "source_location": "L69",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
       "_tgt": "frameimagemodal_cleanupvideo",
-      "source": "c_users_carlo_desktop_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
+      "source": "c_users_frank_desktop_projects_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
       "target": "frameimagemodal_cleanupvideo",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
-      "source_location": "L68",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
+      "source_location": "L75",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
       "_tgt": "frameimagemodal_onseeked",
-      "source": "c_users_carlo_desktop_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
+      "source": "c_users_frank_desktop_projects_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
       "target": "frameimagemodal_onseeked",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
-      "source_location": "L108",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
+      "source_location": "L115",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
       "_tgt": "frameimagemodal_onloadedmeta",
-      "source": "c_users_carlo_desktop_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
+      "source": "c_users_frank_desktop_projects_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
       "target": "frameimagemodal_onloadedmeta",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
-      "source_location": "L132",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
+      "source_location": "L139",
       "weight": 1.0,
-      "_src": "c_users_carlo_desktop_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
+      "_src": "c_users_frank_desktop_projects_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
       "_tgt": "frameimagemodal_onkey",
-      "source": "c_users_carlo_desktop_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
+      "source": "c_users_frank_desktop_projects_aegis_apps_desktop_src_components_workspace_frameimagemodal_tsx",
       "target": "frameimagemodal_onkey",
       "confidence_score": 1.0
     },
     {
       "relation": "calls",
       "confidence": "EXTRACTED",
-      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
-      "source_location": "L74",
+      "source_file": "C:\\Users\\Frank\\Desktop\\PROJECTS\\aegis\\apps\\desktop\\src\\components\\workspace\\FrameImageModal.tsx",
+      "source_location": "L81",
       "weight": 1.0,
       "_src": "frameimagemodal_onseeked",
       "_tgt": "frameimagemodal_cleanupvideo",
@@ -5781,7 +5794,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\api.ts",
-      "source_location": "L127",
+      "source_location": "L134",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_desktop_src_lib_api_ts",
       "_tgt": "api_handle",
@@ -5793,7 +5806,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\api.ts",
-      "source_location": "L135",
+      "source_location": "L142",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_desktop_src_lib_api_ts",
       "_tgt": "api_uploadwithprogress",
@@ -6405,7 +6418,31 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\supabaseQueries.ts",
-      "source_location": "L361",
+      "source_location": "L364",
+      "weight": 1.0,
+      "_src": "c_users_carlo_desktop_aegis_apps_desktop_src_lib_supabasequeries_ts",
+      "_tgt": "supabasequeries_fetchchatmessages",
+      "source": "c_users_carlo_desktop_aegis_apps_desktop_src_lib_supabasequeries_ts",
+      "target": "supabasequeries_fetchchatmessages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\supabaseQueries.ts",
+      "source_location": "L376",
+      "weight": 1.0,
+      "_src": "c_users_carlo_desktop_aegis_apps_desktop_src_lib_supabasequeries_ts",
+      "_tgt": "supabasequeries_appendchatmessages",
+      "source": "c_users_carlo_desktop_aegis_apps_desktop_src_lib_supabasequeries_ts",
+      "target": "supabasequeries_appendchatmessages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\lib\\supabaseQueries.ts",
+      "source_location": "L392",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_desktop_src_lib_supabasequeries_ts",
       "_tgt": "supabasequeries_subscribetoqueueupdates",
@@ -6705,7 +6742,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\pages\\AssessmentViewPage.tsx",
-      "source_location": "L24",
+      "source_location": "L26",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_desktop_src_pages_assessmentviewpage_tsx",
       "_tgt": "assessmentviewpage_countbyseverity",
@@ -6717,7 +6754,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\pages\\AssessmentViewPage.tsx",
-      "source_location": "L32",
+      "source_location": "L34",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_desktop_src_pages_assessmentviewpage_tsx",
       "_tgt": "assessmentviewpage_filenametotitle",
@@ -6729,7 +6766,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\pages\\AssessmentViewPage.tsx",
-      "source_location": "L47",
+      "source_location": "L49",
       "weight": 1.0,
       "_src": "c_users_carlo_desktop_aegis_apps_desktop_src_pages_assessmentviewpage_tsx",
       "_tgt": "assessmentviewpage_buildheader",
@@ -6741,7 +6778,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\carlo\\Desktop\\aegis\\apps\\desktop\\src\\pages\\AssessmentViewPage.tsx",
-      "source_location": "L53",
+      "source_location": "L55",
       "weight": 1.0,
       "_src": "assessmentviewpage_buildheader",
       "_tgt": "assessmentviewpage_filenametotitle",
