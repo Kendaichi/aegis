@@ -3,6 +3,7 @@
  * Built on maplibre-gl — no Leaflet.
  */
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
@@ -107,30 +108,46 @@ interface MarkerProps {
 
 export function Marker({ lngLat, children, popupHtml }: MarkerProps) {
   const map = useMap();
-  const elRef = useRef<HTMLDivElement>(null);
+  const [container] = useState(() => {
+    const div = document.createElement("div");
+    div.className = "flex items-center justify-center";
+    return div;
+  });
   const markerRef = useRef<maplibregl.Marker | null>(null);
+  const popupRef = useRef<maplibregl.Popup | null>(null);
 
   useEffect(() => {
-    if (!elRef.current) return;
-
-    const marker = new maplibregl.Marker({ element: elRef.current }).setLngLat(lngLat).addTo(map);
-
-    if (popupHtml) {
-      marker.setPopup(new maplibregl.Popup({ offset: 25 }).setHTML(popupHtml));
-    }
-
+    const marker = new maplibregl.Marker({ element: container }).setLngLat(lngLat).addTo(map);
     markerRef.current = marker;
     return () => {
       marker.remove();
       markerRef.current = null;
+      popupRef.current = null;
     };
-  }, [map, lngLat[0], lngLat[1], popupHtml]);
+  }, [map, container]);
 
-  return (
-    <div ref={elRef} className="flex items-center justify-center">
-      {children}
-    </div>
-  );
+  useEffect(() => {
+    markerRef.current?.setLngLat(lngLat);
+  }, [lngLat[0], lngLat[1]]);
+
+  useEffect(() => {
+    const marker = markerRef.current;
+    if (!marker) return;
+    if (!popupHtml) {
+      popupRef.current?.remove();
+      popupRef.current = null;
+      return;
+    }
+    if (popupRef.current) {
+      popupRef.current.setHTML(popupHtml);
+      return;
+    }
+    const popup = new maplibregl.Popup({ offset: 25 }).setHTML(popupHtml);
+    marker.setPopup(popup);
+    popupRef.current = popup;
+  }, [popupHtml]);
+
+  return createPortal(children, container);
 }
 
 /** Dot marker for severity overlays */
