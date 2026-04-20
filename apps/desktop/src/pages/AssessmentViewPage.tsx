@@ -3,11 +3,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import MapView from "../components/Map";
 import Chat from "../components/Chat";
 import { SeverityBadge, StatusBadge } from "../components/ui/Badges";
-import DetailedInsights from "../components/workspace/DetailedInsights";
-import FrameAnalysisFeed from "../components/workspace/FrameAnalysisFeed";
 import FrameImageModal from "../components/workspace/FrameImageModal";
 import VideoPlayer from "../components/workspace/VideoPlayer";
+import FrameAnalysisCards from "../components/reports/FrameAnalysisCards";
 import KeyFindingsFrameCards from "../components/reports/KeyFindingsFrameCards";
+import { BrandedLoader } from "../components/ui/BrandedLoader";
 import { severityToLevel } from "../lib/assessments";
 import { api, type FrameAnalysis, type Report, type VideoListItem } from "../lib/api";
 import { useCachedQuery } from "../lib/apiCache";
@@ -153,8 +153,8 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
 
   if (loading) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-4">
-        <p className="text-slate-400">Loading assessment...</p>
+      <div className="flex h-full flex-col items-center justify-center gap-4 bg-aegis-bg/30">
+        <BrandedLoader message="Loading assessment…" />
       </div>
     );
   }
@@ -233,6 +233,18 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
                 <p className="mt-4 text-[14px] leading-7 text-slate-100">{report.summary}</p>
               </section>
 
+              {/* Frame Analysis — image left, description right */}
+              {frames.length > 0 && (
+                <section className="rounded-card border border-aegis-border bg-aegis-surface2/70 p-4">
+                  <FrameAnalysisCards
+                    frames={frames}
+                    selectedFrameIndex={selectedFrameIndex}
+                    onSelectFrame={inspectFrame}
+                    className="max-h-[min(28rem,50vh)]"
+                  />
+                </section>
+              )}
+
               {/* Severity Distribution */}
               <section className="rounded-card border border-aegis-border bg-aegis-surface2/70 p-4">
                 <h3 className="section-title">Severity Distribution</h3>
@@ -296,18 +308,6 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
                   ))}
                 </ul>
               </section>
-
-              {/* Frame Analysis Table */}
-              {frames.length > 0 && (
-                <section>
-                  <h3 className="section-title mb-3">Frame Analysis</h3>
-                  <DetailedInsights
-                    frames={frames}
-                    onSelectRow={inspectFrame}
-                    className="max-h-80"
-                  />
-                </section>
-              )}
             </div>
           ) : (
             <div className="flex flex-1 flex-col items-center justify-center gap-3 text-slate-500">
@@ -330,28 +330,15 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
           />
         </div>
 
-        {/* Right: Frame Feed + Chat */}
-        <div className="flex min-h-0 flex-col overflow-hidden p-4">
-          <FrameAnalysisFeed
-            frames={frames}
-            selectedFrameIndex={selectedFrameIndex}
-            onSelectFrame={inspectFrame}
-            className="max-h-72 overflow-auto"
+        {/* Right: Analyst Chat (full height) */}
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden p-4">
+          <Chat
+            key={assessmentId}
+            reportId={report?.report_id}
+            videoId={assessmentId}
+            frameContext={frameForChat}
+            onClearFrameContext={onClearFrameContext}
           />
-          {frames.length === 0 && (
-            <p className="mt-4 text-[12px] leading-6 text-slate-500">
-              No frames available for this assessment.
-            </p>
-          )}
-          <div className="mt-4 flex min-h-0 flex-1 flex-col border-t border-aegis-border pt-4">
-            <Chat
-              key={assessmentId}
-              reportId={report?.report_id}
-              videoId={assessmentId}
-              frameContext={frameForChat}
-              onClearFrameContext={onClearFrameContext}
-            />
-          </div>
         </div>
       </div>
 

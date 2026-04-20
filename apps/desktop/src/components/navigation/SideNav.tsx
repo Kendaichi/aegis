@@ -21,6 +21,8 @@ import {
   subscribeToQueueUpdates,
 } from "../../lib/supabaseQueries";
 import type { NavView } from "../layout/AppShell";
+import AegisLogo from "../ui/AegisLogo";
+import { BrandedLoaderInline } from "../ui/BrandedLoader";
 import { SeverityBadge } from "../ui/Badges";
 
 interface Props {
@@ -175,11 +177,11 @@ export default function SideNav({
         <button
           type="button"
           onClick={() => onNavigate("dashboard")}
-          className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-aegis-border bg-aegis-surface2 text-sm font-semibold tracking-[0.3em] text-white shadow-card transition hover:bg-white/5"
+          className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-aegis-border bg-aegis-surface2 p-1.5 shadow-card transition hover:bg-white/5"
           title="AEGIS Dashboard"
           aria-label="Go to dashboard"
         >
-          AG
+          <AegisLogo className="h-9 w-9 object-contain" alt="" />
         </button>
 
         <nav className="flex w-full flex-1 flex-col items-center gap-2">
@@ -272,9 +274,9 @@ export default function SideNav({
             </div>
             <div className="flex flex-col gap-3">
               {loading && incidents.length === 0 && (
-                <p className="rounded-card border border-dashed border-aegis-border bg-aegis-surface2/60 p-3 text-[12px] text-slate-500">
-                  Loading live queue...
-                </p>
+                <div className="rounded-card border border-dashed border-aegis-border bg-aegis-surface2/60 p-3">
+                  <BrandedLoaderInline message="Loading live queue…" />
+                </div>
               )}
               {!loading && incidents.length === 0 && (
                 <p className="rounded-card border border-dashed border-aegis-border bg-aegis-surface2/60 p-3 text-[12px] text-slate-500">
@@ -293,9 +295,9 @@ export default function SideNav({
               <h2 className="section-title">Bookmarked Areas</h2>
             </div>
             {bookmarksLoading && bookmarkedAreas.length === 0 && (
-              <p className="rounded-2xl border border-dashed border-aegis-border bg-aegis-surface2/60 px-3 py-2 text-[12px] text-slate-500">
-                Loading areas...
-              </p>
+              <div className="rounded-2xl border border-dashed border-aegis-border bg-aegis-surface2/60 px-3 py-2">
+                <BrandedLoaderInline message="Loading areas…" className="justify-start text-left" />
+              </div>
             )}
             {!bookmarksLoading && bookmarkedAreas.length === 0 && (
               <p className="rounded-2xl border border-dashed border-aegis-border bg-aegis-surface2/60 px-3 py-2 text-[12px] text-slate-500">

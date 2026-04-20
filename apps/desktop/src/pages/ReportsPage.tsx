@@ -1,6 +1,7 @@
 import { Download, Loader2, Search, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import ReportPreviewCard from "../components/reports/ReportPreviewCard";
+import { BrandedLoaderInline } from "../components/ui/BrandedLoader";
 import ReportsList from "../components/reports/ReportsList";
 import { api, type Report } from "../lib/api";
 import { reportToListItem } from "../lib/assessments";
@@ -153,9 +154,8 @@ export default function ReportsPage() {
           style={{ flex: isOpen ? "0 0 25%" : "1 1 100%" }}
         >
           {loading ? (
-            <div className="card flex h-full items-center justify-center gap-2 p-10 text-sm text-slate-500">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Syncing reports...
+            <div className="card flex h-full items-center justify-center p-10">
+              <BrandedLoaderInline message="Syncing reports…" />
             </div>
           ) : (
             <ReportsList

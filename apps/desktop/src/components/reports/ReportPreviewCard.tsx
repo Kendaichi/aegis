@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { api, type FrameAnalysis, type Report } from "../../lib/api";
 import { buildReportExportPayload, downloadReportJson, downloadReportPdf } from "../../lib/exportReport";
 import ReportView from "../Report";
+import AegisLogo from "../ui/AegisLogo";
 
 type ViewMode = "report" | "json";
 
@@ -95,7 +96,8 @@ export default function ReportPreviewCard({ report, assessmentId }: Props) {
           </button>
         </div>
         {framesLoading && (
-          <span className="flex items-center gap-1 text-[11px] text-slate-500">
+          <span className="flex items-center gap-1.5 text-[11px] text-slate-500">
+            <AegisLogo className="h-4 w-4 object-contain opacity-90" alt="" />
             <Loader2 className="h-3 w-3 animate-spin" />
             Loading frame data…
           </span>

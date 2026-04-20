@@ -1,5 +1,6 @@
 import { Pause, Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { BrandedLoaderInline } from "../ui/BrandedLoader";
 
 interface Props {
   /** Local file from upload / workspace (takes precedence over `src`). */
@@ -97,9 +98,9 @@ export default function VideoPlayer({
   if (file && !blobUrl) {
     return (
       <div
-        className={`flex aspect-video w-full items-center justify-center rounded-card border border-dashed border-aegis-border bg-aegis-surface2/60 text-[13px] text-slate-500 ${className}`}
+        className={`flex aspect-video w-full items-center justify-center rounded-card border border-dashed border-aegis-border bg-aegis-surface2/60 ${className}`}
       >
-        Loading video…
+        <BrandedLoaderInline message="Loading video…" />
       </div>
     );
   }

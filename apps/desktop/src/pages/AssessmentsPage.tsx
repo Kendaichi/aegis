@@ -1,8 +1,9 @@
-import { ChevronRight, Loader2, Plus, Search } from "lucide-react";
+import { ChevronRight, Plus, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { SeverityBadge, StatusBadge } from "../components/ui/Badges";
 import { api } from "../lib/api";
 import { useCachedQuery } from "../lib/apiCache";
+import { BrandedLoaderInline } from "../components/ui/BrandedLoader";
 import { deriveAssessments } from "../lib/assessments";
 import type { AssessmentStatus } from "../lib/mockData";
 
@@ -154,10 +155,7 @@ export default function AssessmentsPage({ onNewAssessment, onViewAssessment }: P
         </div>
 
         {loading && (
-          <div className="flex items-center justify-center gap-2 p-10 text-sm text-slate-500">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            Syncing assessments...
-          </div>
+          <BrandedLoaderInline message="Syncing assessments…" className="p-10" />
         )}
 
         {!loading && filtered.length === 0 && (

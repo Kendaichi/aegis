@@ -2,6 +2,7 @@ import { Layers, Maximize2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import MapView, { type MapFocusPoint } from "../components/Map";
 import MapContextPanel from "../components/map/MapContextPanel";
+import { BrandedLoader } from "../components/ui/BrandedLoader";
 import type {
   AssessmentStatus,
   MapSeverityFilter,
@@ -174,7 +175,7 @@ export default function MapViewPage() {
             </div>
           </div>
           <div className="min-h-0 flex-1 p-3">
-            <div className="h-full overflow-hidden rounded-[1.25rem] border border-aegis-border bg-aegis-surface2">
+            <div className="relative h-full overflow-hidden rounded-[1.25rem] border border-aegis-border bg-aegis-surface2">
               <MapView
                 markers={filteredMarkers}
                 selectedMarkerId={selectedMarkerId}
@@ -182,6 +183,11 @@ export default function MapViewPage() {
                 fitBoundsRevision={fitBoundsNonce}
                 showProvinces={showProvinces}
               />
+              {loading && (
+                <div className="absolute inset-0 z-10 flex items-center justify-center bg-aegis-bg/75 backdrop-blur-[2px]">
+                  <BrandedLoader message="Loading incidents…" logoClassName="h-16 w-16 object-contain opacity-95 animate-pulse" />
+                </div>
+              )}
             </div>
           </div>
           <div className="flex flex-wrap gap-3 border-t border-aegis-border px-4 py-3 text-[11px] text-slate-400">

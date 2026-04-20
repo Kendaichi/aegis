@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import type { AppView } from "../layout/AppShell";
 import { MOCK_NOTIFICATIONS } from "../../lib/mockData";
+import AegisLogo from "../ui/AegisLogo";
 
 interface Props {
   title: string;
@@ -54,8 +55,9 @@ export default function TopNav({ title, subtitle, activeView, onNavigate }: Prop
     <header className="relative z-20 flex h-12 shrink-0 items-center justify-between border-b border-aegis-border bg-aegis-surface/70 px-5 backdrop-blur-xl">
       <div className="min-w-0">
         <div className="flex items-center gap-3">
-          <span className="rounded-full border border-aegis-border bg-aegis-surface2 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.3em] text-aegis-muted">
-            AEGIS
+          <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-aegis-border bg-aegis-surface2 p-1">
+            <span className="sr-only">AEGIS</span>
+            <AegisLogo className="h-7 w-7 object-contain" alt="" />
           </span>
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold text-white">{title}</p>
