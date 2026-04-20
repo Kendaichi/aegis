@@ -2,7 +2,10 @@ import { Pause, Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 interface Props {
-  file: File | null;
+  /** Local file from upload / workspace (takes precedence over `src`). */
+  file?: File | null;
+  /** Remote URL (e.g. signed storage URL from `VideoListItem.url`). */
+  src?: string | null;
   liveMode?: boolean;
   /** When true, starts muted playback after metadata loads (browser autoplay policies). */
   autoPlay?: boolean;
@@ -18,27 +21,29 @@ function formatTime(seconds: number): string {
 }
 
 export default function VideoPlayer({
-  file,
+  file = null,
+  src = null,
   liveMode = false,
   autoPlay = false,
   onTimeUpdate,
   className = "",
 }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [url, setUrl] = useState<string | null>(null);
+  const [blobUrl, setBlobUrl] = useState<string | null>(null);
   const [playing, setPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [current, setCurrent] = useState(0);
 
+  const remoteUrl = src?.trim() || null;
+  const url = file ? blobUrl : remoteUrl;
+
   useEffect(() => {
     if (!file) {
-      setUrl(null);
+      setBlobUrl(null);
       return;
     }
-
     const objectUrl = URL.createObjectURL(file);
-    setUrl(objectUrl);
-
+    setBlobUrl(objectUrl);
     return () => {
       URL.revokeObjectURL(objectUrl);
     };
@@ -78,7 +83,28 @@ export default function VideoPlayer({
     };
   }, [autoPlay, onTimeUpdate, url]);
 
-  if (!file || !url) {
+  const hasSource = Boolean(file || remoteUrl);
+  if (!hasSource) {
+    return (
+      <div
+        className={`flex aspect-video w-full items-center justify-center rounded-card border border-dashed border-aegis-border bg-aegis-surface2/60 text-[13px] text-slate-500 ${className}`}
+      >
+        No video loaded
+      </div>
+    );
+  }
+
+  if (file && !blobUrl) {
+    return (
+      <div
+        className={`flex aspect-video w-full items-center justify-center rounded-card border border-dashed border-aegis-border bg-aegis-surface2/60 text-[13px] text-slate-500 ${className}`}
+      >
+        Loading video…
+      </div>
+    );
+  }
+
+  if (!url) {
     return (
       <div
         className={`flex aspect-video w-full items-center justify-center rounded-card border border-dashed border-aegis-border bg-aegis-surface2/60 text-[13px] text-slate-500 ${className}`}

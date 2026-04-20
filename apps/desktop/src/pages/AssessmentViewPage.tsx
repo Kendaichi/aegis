@@ -6,6 +6,8 @@ import { SeverityBadge, StatusBadge } from "../components/ui/Badges";
 import DetailedInsights from "../components/workspace/DetailedInsights";
 import FrameAnalysisFeed from "../components/workspace/FrameAnalysisFeed";
 import FrameImageModal from "../components/workspace/FrameImageModal";
+import VideoPlayer from "../components/workspace/VideoPlayer";
+import KeyFindingsFrameCards from "../components/reports/KeyFindingsFrameCards";
 import { severityToLevel } from "../lib/assessments";
 import { api, type FrameAnalysis, type Report, type VideoListItem } from "../lib/api";
 import { useCachedQuery } from "../lib/apiCache";
@@ -207,7 +209,15 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
       {/* Body */}
       <div className="grid min-h-0 flex-1 grid-cols-[1fr_1fr_320px] gap-0 overflow-hidden">
         {/* Left: Report + Insights */}
-        <div className="flex min-h-0 flex-col overflow-y-auto border-r border-aegis-border p-5">
+        <div className="flex min-h-0 flex-col space-y-4 overflow-y-auto border-r border-aegis-border p-5">
+          {video && video.url ? (
+            <section
+              key={assessmentId}
+              className="rounded-card border border-aegis-border bg-aegis-surface2/70 p-3"
+            >
+              <VideoPlayer src={video.url} autoPlay />
+            </section>
+          ) : null}
           {report ? (
             <div className="space-y-4">
               {/* Summary */}
@@ -256,16 +266,20 @@ export default function AssessmentViewPage({ assessmentId, onBack }: Props) {
               {/* Key Findings */}
               <section className="rounded-card border border-aegis-border bg-aegis-surface2/70 p-4">
                 <h3 className="section-title">Key Findings</h3>
-                <ul className="mt-3 space-y-2 text-[13px] leading-6 text-slate-300">
-                  {report.key_findings.map((finding, i) => (
-                    <li
-                      key={i}
-                      className="rounded-2xl border border-aegis-border bg-aegis-surface px-3 py-3"
-                    >
-                      {finding}
-                    </li>
-                  ))}
-                </ul>
+                {frames.length > 0 ? (
+                  <KeyFindingsFrameCards findings={report.key_findings} frames={frames} />
+                ) : (
+                  <ul className="mt-3 space-y-2 text-[13px] leading-6 text-slate-300">
+                    {report.key_findings.map((finding, i) => (
+                      <li
+                        key={i}
+                        className="rounded-2xl border border-aegis-border bg-aegis-surface px-3 py-3"
+                      >
+                        {finding}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </section>
 
               {/* Recommendations */}

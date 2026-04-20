@@ -1,7 +1,10 @@
-import { Report } from "../lib/api";
+import type { FrameAnalysis, Report } from "../lib/api";
+import KeyFindingsFrameCards from "./reports/KeyFindingsFrameCards";
 
 interface Props {
   report: Report | null;
+  /** When set, Key Findings render with frame thumbnails (same order as backend top-by-severity). */
+  frames?: FrameAnalysis[] | null;
 }
 
 const severityColor: Record<string, string> = {
@@ -12,7 +15,7 @@ const severityColor: Record<string, string> = {
   destroyed: "border border-red-700/30 bg-red-700/20 text-red-100",
 };
 
-export default function ReportView({ report }: Props) {
+export default function ReportView({ report, frames = null }: Props) {
   if (!report) {
     return (
       <div className="text-[13px] text-aegis-muted">
@@ -20,6 +23,9 @@ export default function ReportView({ report }: Props) {
       </div>
     );
   }
+
+  const frameList = frames ?? [];
+  const showFrameCards = frameList.length > 0;
 
   return (
     <div className="space-y-5">
@@ -38,16 +44,20 @@ export default function ReportView({ report }: Props) {
 
       <section>
         <h3 className="section-title">Key Findings</h3>
-        <ul className="mt-3 space-y-2 text-[13px] leading-6 text-slate-300">
-          {report.key_findings.map((finding, index) => (
-            <li
-              key={index}
-              className="rounded-2xl border border-aegis-border bg-aegis-surface2/70 px-4 py-3"
-            >
-              {finding}
-            </li>
-          ))}
-        </ul>
+        {showFrameCards ? (
+          <KeyFindingsFrameCards findings={report.key_findings} frames={frameList} />
+        ) : (
+          <ul className="mt-3 space-y-2 text-[13px] leading-6 text-slate-300">
+            {report.key_findings.map((finding, index) => (
+              <li
+                key={index}
+                className="rounded-2xl border border-aegis-border bg-aegis-surface2/70 px-4 py-3"
+              >
+                {finding}
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       <section>

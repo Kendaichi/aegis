@@ -1,4 +1,26 @@
-import type { DamageSeverity, Report, VideoListItem } from "./api";
+import type { DamageSeverity, FrameAnalysis, Report, VideoListItem } from "./api";
+
+/** Matches backend `app/services/report.py` `_SEVERITY_ORDER` for key_findings frame ordering. */
+export const SEVERITY_ORDER: readonly DamageSeverity[] = [
+  "none",
+  "minor",
+  "moderate",
+  "severe",
+  "destroyed",
+] as const;
+
+function severityRank(severity: DamageSeverity): number {
+  const i = SEVERITY_ORDER.indexOf(severity);
+  return i === -1 ? 0 : i;
+}
+
+/** Top frames by severity (highest first), same rule as persisted `report.key_findings`. */
+export function topKeyFrames(frames: FrameAnalysis[], limit = 5): FrameAnalysis[] {
+  if (!frames.length) return [];
+  return [...frames]
+    .sort((a, b) => severityRank(b.severity) - severityRank(a.severity))
+    .slice(0, limit);
+}
 import type {
   AssessmentRow,
   AssessmentStatus,

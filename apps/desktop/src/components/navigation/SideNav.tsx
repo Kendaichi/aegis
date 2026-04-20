@@ -134,7 +134,7 @@ function useBookmarkedAreas(enabled: boolean): {
 
     async function load() {
       try {
-        const next = await fetchBookmarkedAreas(5);
+        const next = await fetchBookmarkedAreas();
         if (!cancelled) setAreas(next);
       } catch {
         if (!cancelled) setAreas([]);

@@ -1,16 +1,9 @@
 import { X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import { frameImageUrl, type DamageSeverity, type FrameAnalysis } from "../../lib/api";
+import { frameImageUrl, type FrameAnalysis } from "../../lib/api";
 import { severityToLevel } from "../../lib/assessments";
 import { SeverityBadge } from "../ui/Badges";
-
-const borderBySeverity: Record<DamageSeverity, string> = {
-  none: "border-emerald-400 shadow-emerald-500/20",
-  minor: "border-amber-400 shadow-amber-500/20",
-  moderate: "border-orange-400 shadow-orange-500/20",
-  severe: "border-red-400 shadow-red-500/30",
-  destroyed: "border-red-600 shadow-red-600/40",
-};
+import { frameBorderBySeverity } from "./FrameAnalysisImage";
 
 interface Props {
   frame: FrameAnalysis | null;
@@ -205,7 +198,7 @@ export default function FrameImageModal({ frame, videoFile, onClose }: Props) {
                   return (
                     <div
                       key={`${d.label}-${i}`}
-                      className={`absolute border-2 shadow-lg ${borderBySeverity[d.severity]}`}
+                      className={`absolute border-2 shadow-lg ${frameBorderBySeverity[d.severity]}`}
                       style={{
                         left: `${left}%`,
                         top: `${top}%`,

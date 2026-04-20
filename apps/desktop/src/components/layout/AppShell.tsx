@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import SideNav from "../navigation/SideNav";
 import TopNav from "../navigation/TopNav";
 
@@ -18,7 +18,6 @@ interface AppShellRenderProps {
   openAssessmentView: (id: string) => void;
   closeAssessmentView: () => void;
   dashboardMapFocus: DashboardMapFocus;
-  clearDashboardMapFocus: () => void;
 }
 
 interface Props {
@@ -42,8 +41,6 @@ export default function AppShell({ children }: Props) {
     setWorkspaceOpen(false);
     setViewingAssessmentId(id);
   }
-
-  const clearDashboardMapFocus = useCallback(() => setDashboardMapFocus(null), []);
 
   const topNavMeta = useMemo(() => {
     if (workspaceOpen) {
@@ -139,7 +136,6 @@ export default function AppShell({ children }: Props) {
               openAssessmentView,
               closeAssessmentView: () => setViewingAssessmentId(null),
               dashboardMapFocus,
-              clearDashboardMapFocus,
             })}
           </main>
         </div>

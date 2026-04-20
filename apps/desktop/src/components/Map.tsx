@@ -112,8 +112,8 @@ export default function MapView({
 
   /** Pan/zoom to bookmark or form focus even when cluster markers are shown. */
   const focusActive = Boolean(focusPoint && !report?.location);
-  /** Only draw the extra pin when it would not duplicate multi/frame/report markers. */
-  const showFocusPin = focusActive && !showMulti && !showFrames;
+  /** Selection/bookmark pin: show with multi-markers (dashboard bookmarks, map list focus). Omit when frame pins own the map. */
+  const showFocusPin = focusActive && !showFrames;
 
   const center: [number, number] = report?.location
     ? [report.location.lng, report.location.lat]

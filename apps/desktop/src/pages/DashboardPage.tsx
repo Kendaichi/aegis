@@ -10,18 +10,12 @@ import { DASHBOARD_MAP_MARKERS } from "../lib/mockData";
 
 interface Props {
   mapFocus?: DashboardMapFocus;
-  onMapFocusConsumed?: () => void;
   onViewAssessment?: (videoId: string) => void;
 }
 
-export default function DashboardPage({
-  mapFocus = null,
-  onMapFocusConsumed,
-  onViewAssessment,
-}: Props) {
+export default function DashboardPage({ mapFocus = null, onViewAssessment }: Props) {
   const mapSectionRef = useRef<HTMLElement>(null);
   const [mapFocused, setMapFocused] = useState(false);
-  const [fitBoundsNonce, setFitBoundsNonce] = useState(0);
 
   useEffect(() => {
     if (!mapFocused) return;
@@ -31,14 +25,9 @@ export default function DashboardPage({
 
   useEffect(() => {
     if (!mapFocus) return;
-    mapSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    // Bookmark fly-to is handled inside Map only; avoid scrollIntoView here so the dashboard layout doesn't jump.
     setMapFocused(true);
-    const timeoutId = window.setTimeout(() => {
-      onMapFocusConsumed?.();
-      setFitBoundsNonce((n) => n + 1);
-    }, 1800);
-    return () => window.clearTimeout(timeoutId);
-  }, [mapFocus, onMapFocusConsumed]);
+  }, [mapFocus]);
 
   function handleFocusMap() {
     mapSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -103,11 +92,7 @@ export default function DashboardPage({
             </div>
             <div className="min-h-0 flex-1 p-3">
               <div className="h-full overflow-hidden rounded-[1.25rem] border border-aegis-border bg-aegis-surface2">
-                <MapView
-                  markers={DASHBOARD_MAP_MARKERS}
-                  focusPoint={mapFocus}
-                  fitBoundsRevision={fitBoundsNonce}
-                />
+                <MapView markers={DASHBOARD_MAP_MARKERS} focusPoint={mapFocus} />
               </div>
             </div>
             <div className="flex flex-wrap gap-3 border-t border-aegis-border px-4 py-3 text-[11px] text-slate-400">
