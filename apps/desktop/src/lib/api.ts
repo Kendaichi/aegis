@@ -80,6 +80,10 @@ export interface FrameAnalysis {
   image_url?: string | null;
   /** AI-localized regions (bounding boxes) for this frame. */
   detections?: Detection[];
+  /** Passability of visible roads/bridges: clear | blocked | unknown */
+  access_route_status?: string;
+  /** Resources needed based on observed damage e.g. rescue boats, medical team */
+  resource_recommendations?: string[];
 }
 
 /** Resolve a frame image URL for <img src={...}> (prepends API base when path is relative). */

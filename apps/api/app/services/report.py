@@ -26,9 +26,21 @@ def summarize(frames: list[FrameAnalysis]) -> tuple[str, list[str], list[str]]:
     hazard_counts = Counter(h for f in frames for h in f.detected_hazards)
     top_hazards = [h for h, _ in hazard_counts.most_common(5)]
 
+    blocked_count = sum(
+        1 for f in frames if getattr(f, "access_route_status", "unknown") == "blocked"
+    )
+    clear_count = sum(1 for f in frames if getattr(f, "access_route_status", "unknown") == "clear")
+
+    route_summary = ""
+    if blocked_count or clear_count:
+        route_summary = (
+            f" {blocked_count} frame(s) show blocked routes; {clear_count} show clear routes."
+        )
+
     summary = (
         f"Analyzed {len(frames)} frames. Overall damage level: {severity.value}. "
         f"Most frequent hazards: {', '.join(top_hazards) if top_hazards else 'none detected'}."
+        f"{route_summary}"
     )
 
     key_findings = [
@@ -36,7 +48,24 @@ def summarize(frames: list[FrameAnalysis]) -> tuple[str, list[str], list[str]]:
         for f in sorted(frames, key=lambda x: _SEVERITY_ORDER.index(x.severity), reverse=True)[:5]
     ]
 
+    if blocked_count:
+        key_findings.append(
+            f"{blocked_count} frame(s) recorded impassable roads or bridges — ground access may be restricted."
+        )
+
     recommendations = _recommend(severity, top_hazards)
+
+    vlm_resources: list[str] = []
+    seen: set[str] = set()
+    for f in frames:
+        for r in getattr(f, "resource_recommendations", []) or []:
+            key = r.lower().strip()
+            if key and key not in seen:
+                seen.add(key)
+                vlm_resources.append(r)
+    if vlm_resources:
+        recommendations = list(dict.fromkeys(recommendations + vlm_resources))
+
     return summary, key_findings, recommendations
 
 

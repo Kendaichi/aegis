@@ -98,6 +98,14 @@ class FrameAnalysis(BaseModel):
         None,
         description="URL path to the extracted JPEG for this frame (set by the API when serving)",
     )
+    access_route_status: str = Field(
+        default="unknown",
+        description="Passability of visible roads/bridges: clear | blocked | unknown",
+    )
+    resource_recommendations: list[str] = Field(
+        default_factory=list,
+        description="Resources needed based on observed damage e.g. rescue boats, medical team",
+    )
     detections: list[Detection] = Field(
         default_factory=list,
         description="Localized damage regions with normalized bounding boxes",
