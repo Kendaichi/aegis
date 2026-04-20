@@ -16,10 +16,16 @@ export default function KeyFindingsFrameCards({ findings, frames }: Props) {
       {top.map((frame, i) => (
         <li
           key={`${frame.frame_index}-${i}`}
-          className="overflow-hidden rounded-2xl border border-aegis-border bg-aegis-surface px-3 py-3"
+          className="flex gap-3 overflow-hidden rounded-2xl border border-aegis-border bg-aegis-surface px-3 py-3"
         >
-          <FrameAnalysisImage frame={frame} className="mb-3" maxHeightClass="max-h-56" />
-          <p className="text-[13px] leading-6 text-slate-300">
+          <div className="w-[55%] shrink-0 self-start [&_.mx-auto]:mx-0">
+            <FrameAnalysisImage
+              frame={frame}
+              className="!space-y-0"
+              maxHeightClass="max-h-40"
+            />
+          </div>
+          <p className="min-w-0 flex-1 self-center text-[13px] leading-6 text-slate-300">
             {findings[i] ??
               `Frame @ ${frame.timestamp_seconds.toFixed(1)}s — ${frame.severity}: ${frame.description}`}
           </p>

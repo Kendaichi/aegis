@@ -2,6 +2,7 @@ import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { AssessmentRow } from "../../lib/mockData";
 import { fetchRecentAssessments, subscribeToQueueUpdates } from "../../lib/supabaseQueries";
+import { BrandedLoaderInline } from "../ui/BrandedLoader";
 import { SeverityBadge, StatusBadge } from "../ui/Badges";
 
 interface Props {
@@ -94,7 +95,7 @@ export default function RecentAssessments({ className = "", onViewAssessment }: 
           </tbody>
         </table>
         {loading && rows.length === 0 && (
-          <p className="p-6 text-center text-[12px] text-slate-500">Loading assessments...</p>
+          <BrandedLoaderInline message="Loading assessments…" className="p-6" />
         )}
         {!loading && rows.length === 0 && !error && (
           <p className="p-6 text-center text-[12px] text-slate-500">

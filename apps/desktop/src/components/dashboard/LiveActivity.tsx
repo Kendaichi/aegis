@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { ActivityItem } from "../../lib/mockData";
 import { fetchActivityFeed, subscribeToQueueUpdates } from "../../lib/supabaseQueries";
+import { BrandedLoaderInline } from "../ui/BrandedLoader";
 
 const kindDot: Record<ActivityItem["kind"], string> = {
   extract: "bg-aegis-accent",
@@ -68,8 +69,8 @@ export default function LiveActivity() {
           </li>
         ))}
         {loading && items.length === 0 && (
-          <li className="rounded-2xl border border-dashed border-aegis-border bg-aegis-surface2/40 p-4 text-center text-[12px] text-slate-500">
-            Loading activity...
+          <li className="rounded-2xl border border-dashed border-aegis-border bg-aegis-surface2/40 p-4">
+            <BrandedLoaderInline message="Loading activity…" />
           </li>
         )}
         {!loading && items.length === 0 && (
