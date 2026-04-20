@@ -40,6 +40,7 @@ class Settings(BaseSettings):
         "http://localhost:1420",
         "http://localhost:5173",
         "tauri://localhost",
+        "https://tauri.localhost",
     ]
 
     def ensure_dirs(self) -> None:
