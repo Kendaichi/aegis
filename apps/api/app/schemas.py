@@ -1,0 +1,182 @@
+from datetime import datetime
+from enum import Enum
+from typing import Literal
+
+from pydantic import BaseModel, Field
+
+
+class DamageSeverity(str, Enum):
+    none = "none"
+    minor = "minor"
+    moderate = "moderate"
+    severe = "severe"
+    destroyed = "destroyed"
+
+
+class GeoPoint(BaseModel):
+    lat: float = Field(..., ge=-90, le=90, description="Latitude in decimal degrees (-90 to 90)")
+    lng: float = Field(
+        ..., ge=-180, le=180, description="Longitude in decimal degrees (-180 to 180)"
+    )
+
+
+AssessmentStatus = Literal["pending", "analyzing", "complete"]
+
+
+class UploadResponse(BaseModel):
+    video_id: str = Field(..., description="Unique identifier for the uploaded video")
+    filename: str = Field(..., description="Original filename of the uploaded video")
+    size_bytes: int = Field(..., description="File size in bytes")
+    content_type: str | None = Field(None, description="MIME type of the uploaded file")
+    title: str | None = Field(None, description="Human-readable assessment title")
+    location_name: str | None = Field(None, description="Human-readable location label")
+    incident_type: str | None = Field(
+        None, description="Incident classification (e.g. 'Flooding', 'Landslide')"
+    )
+    lat: float | None = Field(None, ge=-90, le=90, description="Incident latitude")
+    lng: float | None = Field(None, ge=-180, le=180, description="Incident longitude")
+    status: AssessmentStatus = Field("pending", description="Assessment pipeline status")
+    created_at: datetime = Field(..., description="UTC timestamp of when the file was uploaded")
+
+
+class VideoListItem(BaseModel):
+    video_id: str = Field(..., description="Unique identifier for the uploaded video")
+    filename: str = Field(..., description="Original filename of the uploaded video")
+    size_bytes: int = Field(..., description="File size in bytes")
+    content_type: str | None = Field(None, description="MIME type of the uploaded file")
+    title: str | None = Field(None, description="Human-readable assessment title")
+    location_name: str | None = Field(None, description="Human-readable location label")
+    incident_type: str | None = Field(
+        None, description="Incident classification (e.g. 'Flooding', 'Landslide')"
+    )
+    lat: float | None = Field(None, ge=-90, le=90, description="Incident latitude")
+    lng: float | None = Field(None, ge=-180, le=180, description="Incident longitude")
+    status: AssessmentStatus = Field("pending", description="Assessment pipeline status")
+    created_at: datetime = Field(..., description="UTC timestamp of when the file was uploaded")
+    url: str | None = Field(None, description="Signed URL for temporary playback access")
+
+
+class VideoListResponse(BaseModel):
+    videos: list[VideoListItem] = Field(..., description="List of uploaded videos")
+    total: int = Field(..., description="Total number of uploaded videos")
+
+
+class Detection(BaseModel):
+    """Localized damage region on the frame (object-detection style). Coordinates are normalized."""
+
+    label: str = Field(
+        ...,
+        max_length=240,
+        description="Short label for the region (e.g. 'collapsed roof', 'flood water')",
+    )
+    severity: DamageSeverity = Field(..., description="Severity attributed to this region")
+    bbox: tuple[float, float, float, float] = Field(
+        ...,
+        description="Bounding box as normalized x1, y1, x2, y2 in [0, 1] (origin top-left)",
+    )
+    confidence: float = Field(..., ge=0.0, le=1.0, description="Confidence for this box (0.0–1.0)")
+
+
+class FrameAnalysis(BaseModel):
+    frame_index: int = Field(..., description="Zero-based index of the frame within the video")
+    timestamp_seconds: float = Field(
+        ..., description="Time offset of the frame from the start of the video"
+    )
+    severity: DamageSeverity = Field(
+        ..., description="Assessed damage severity level for this frame"
+    )
+    description: str = Field(
+        ..., description="Natural language description of observed damage or conditions"
+    )
+    detected_hazards: list[str] = Field(
+        default_factory=list, description="List of specific hazards detected in the frame"
+    )
+    confidence: float = Field(
+        ..., ge=0.0, le=1.0, description="Model confidence score for this assessment (0.0–1.0)"
+    )
+    image_url: str | None = Field(
+        None,
+        description="URL path to the extracted JPEG for this frame (set by the API when serving)",
+    )
+    detections: list[Detection] = Field(
+        default_factory=list,
+        description="Localized damage regions with normalized bounding boxes",
+    )
+
+
+class AnalyzeRequest(BaseModel):
+    video_id: str = Field(..., description="ID of a previously uploaded video (from /upload)")
+    frame_interval_seconds: float | None = Field(
+        None, description="Seconds between sampled frames; uses server default if omitted"
+    )
+    location: GeoPoint | None = Field(
+        None, description="Optional GPS coordinates of the incident site"
+    )
+
+
+class AnalyzeResponse(BaseModel):
+    video_id: str = Field(..., description="ID of the analyzed video")
+    frame_count: int = Field(..., description="Number of frames that were analyzed")
+    frames: list[FrameAnalysis] = Field(..., description="Per-frame analysis results")
+
+
+class AnalyzeJobResponse(BaseModel):
+    video_id: str = Field(..., description="ID of the video being analyzed")
+    status: Literal["processing", "complete"] = Field(..., description="Job status")
+    frame_count: int = Field(0, description="Number of frames analyzed so far")
+    frames: list[FrameAnalysis] = Field(default_factory=list, description="Frames analyzed so far")
+
+
+class ReportRequest(BaseModel):
+    video_id: str = Field(..., description="ID of a previously uploaded video (from /upload)")
+    location: GeoPoint | None = Field(
+        None, description="Optional GPS coordinates of the incident site"
+    )
+    incident_type: str | None = Field(
+        None,
+        description="Optional classification of the incident (e.g. 'flood', 'fire', 'earthquake')",
+    )
+
+
+class Report(BaseModel):
+    report_id: str = Field(..., description="Unique identifier for this generated report")
+    video_id: str = Field(..., description="ID of the source video")
+    summary: str = Field(..., description="High-level narrative summary of the assessment")
+    overall_severity: DamageSeverity = Field(
+        ..., description="Worst-case severity level across all analyzed frames"
+    )
+    key_findings: list[str] = Field(
+        ..., description="Bullet-point list of the most critical observations"
+    )
+    recommendations: list[str] = Field(..., description="Actionable recommendations for responders")
+    location: GeoPoint | None = Field(
+        None, description="GPS coordinates of the incident site, if provided"
+    )
+    created_at: datetime = Field(..., description="UTC timestamp of when the report was generated")
+
+
+class ChatMessage(BaseModel):
+    role: Literal["user", "assistant", "system"] = Field(
+        ..., description="Speaker role for this message"
+    )
+    content: str = Field(..., description="Text content of the message")
+
+
+class ChatRequest(BaseModel):
+    session_id: str | None = Field(
+        None, description="Existing chat session ID to continue a conversation"
+    )
+    report_id: str | None = Field(
+        None, description="Optional report ID to give the assistant context about a specific report"
+    )
+    video_id: str | None = Field(
+        None, description="Optional video ID to give the assistant context about a specific video"
+    )
+    messages: list[ChatMessage] = Field(
+        ..., description="New messages to send; prior history is loaded from the session"
+    )
+
+
+class ChatResponse(BaseModel):
+    session_id: str = Field(..., description="Session ID to pass in follow-up requests")
+    message: ChatMessage = Field(..., description="The assistant's reply")

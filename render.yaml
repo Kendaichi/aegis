@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: aegis-api
+    runtime: docker
+    dockerContext: ./apps/api
+    envVars:
+      - key: VLM_MODE
+        value: zai
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: ZAI_API_KEY
+        sync: false
+      - key: ZAI_BASE_URL
+        value: https://api.z.ai/api/paas/v4
+      - key: FRAME_INTERVAL_SECONDS
+        value: "2"
