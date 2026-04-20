@@ -291,7 +291,8 @@ export interface BookmarkedArea {
   lng: number;
 }
 
-export async function fetchBookmarkedAreas(limit = 5): Promise<BookmarkedArea[]> {
+/** Unique `location_name` values from videos, newest activity first. Pass `limit` to cap the list. */
+export async function fetchBookmarkedAreas(limit?: number): Promise<BookmarkedArea[]> {
   const { data, error } = await supabase
     .from("videos")
     .select("location_name, lat, lng, created_at")
@@ -327,11 +328,12 @@ export async function fetchBookmarkedAreas(limit = 5): Promise<BookmarkedArea[]>
     }
   }
 
-  return [...byName.entries()]
-    .map(([name, v]) => ({ name, lat: v.lat, lng: v.lng, count: v.count }))
-    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
-    .slice(0, limit)
-    .map(({ name, lat, lng }) => ({ name, lat, lng }));
+  const rows = [...byName.entries()]
+    .map(([name, v]) => ({ name, lat: v.lat, lng: v.lng, latestTs: v.latestTs }))
+    .sort((a, b) => b.latestTs - a.latestTs || a.name.localeCompare(b.name));
+
+  const capped = limit != null ? rows.slice(0, limit) : rows;
+  return capped.map(({ name, lat, lng }) => ({ name, lat, lng }));
 }
 
 export async function fetchActivityFeed(limit = 8): Promise<ActivityItem[]> {

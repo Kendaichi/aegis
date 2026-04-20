@@ -1,5 +1,16 @@
 import jsPDF from "jspdf";
-import type { Report } from "./api";
+import { frameImageUrl, type FrameAnalysis, type Report } from "./api";
+import { topKeyFrames } from "./assessments";
+
+/** Merged object for JSON preview/download (matches Reports UI). */
+export type ReportExportPayload = Report & { frame_analyses: FrameAnalysis[] };
+
+export function buildReportExportPayload(
+  report: Report,
+  frames: FrameAnalysis[] | null | undefined
+): ReportExportPayload {
+  return { ...report, frame_analyses: frames ?? [] };
+}
 
 /** Trigger a browser file download from a Blob. */
 function triggerDownload(blob: Blob, filename: string): void {
@@ -28,7 +39,65 @@ const SEVERITY_COLORS: Record<string, [number, number, number]> = {
   destroyed: [185, 28, 28],
 };
 
-export function downloadReportPdf(report: Report, assessmentId?: string): void {
+/**
+ * Decode the fetched image and re-encode as baseline JPEG for jsPDF.
+ * Passing arbitrary data URLs / wrong format strings into addImage() often yields corrupted
+ * (striped) output; canvas + toDataURL('image/jpeg') produces bytes jsPDF decodes reliably.
+ * Blob URLs are same-origin, so this works even when the original URL is cross-origin.
+ */
+async function fetchImageAsJpegForPdf(url: string): Promise<{ dataUrl: string; aspect: number } | null> {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const blob = await res.blob();
+    const objectUrl = URL.createObjectURL(blob);
+    try {
+      const { dataUrl, w, h } = await new Promise<{ dataUrl: string; w: number; h: number }>(
+        (resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            const w = img.naturalWidth;
+            const h = img.naturalHeight;
+            if (!w || !h) {
+              reject(new Error("zero size"));
+              return;
+            }
+            const canvas = document.createElement("canvas");
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) {
+              reject(new Error("no canvas context"));
+              return;
+            }
+            ctx.drawImage(img, 0, 0);
+            let jpegDataUrl: string;
+            try {
+              jpegDataUrl = canvas.toDataURL("image/jpeg", 0.92);
+            } catch {
+              reject(new Error("canvas export blocked"));
+              return;
+            }
+            resolve({ dataUrl: jpegDataUrl, w, h });
+          };
+          img.onerror = () => reject(new Error("image decode failed"));
+          img.src = objectUrl;
+        }
+      );
+      return { dataUrl, aspect: w / h };
+    } finally {
+      URL.revokeObjectURL(objectUrl);
+    }
+  } catch {
+    return null;
+  }
+}
+
+export async function downloadReportPdf(
+  report: Report,
+  assessmentId?: string,
+  frames?: FrameAnalysis[] | null
+): Promise<void> {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
@@ -92,7 +161,6 @@ export function downloadReportPdf(report: Report, assessmentId?: string): void {
   doc.text(summaryLines, margin, y);
   y += summaryLines.length * 5 + 8;
 
-  // ── Numbered section helper ──
   const addSection = (title: string, items: string[]) => {
     checkPage(20);
     doc.setFontSize(13);
@@ -110,8 +178,62 @@ export function downloadReportPdf(report: Report, assessmentId?: string): void {
     y += 4;
   };
 
-  // ── Key Findings ──
-  addSection("Key Findings", report.key_findings);
+  // ── Key Findings (with optional frame images) ──
+  const topFrames = frames?.length ? topKeyFrames(frames, 5) : [];
+  if (topFrames.length > 0) {
+    checkPage(25);
+    doc.setFontSize(13);
+    doc.setFont("helvetica", "bold");
+    doc.text("Key Findings", margin, y);
+    y += 7;
+
+    for (let i = 0; i < topFrames.length; i++) {
+      const frame = topFrames[i];
+      const findingText =
+        report.key_findings[i] ??
+        `Frame @ ${frame.timestamp_seconds.toFixed(1)}s — ${frame.severity}: ${frame.description}`;
+
+      if (frame.image_url) {
+        const url = frameImageUrl(frame.image_url);
+        const loaded = await fetchImageAsJpegForPdf(url);
+        if (loaded) {
+          const imgW = contentW;
+          const imgH = imgW / loaded.aspect;
+          checkPage(imgH + 40);
+          try {
+            doc.addImage(loaded.dataUrl, "JPEG", margin, y, imgW, imgH);
+
+            for (const d of frame.detections ?? []) {
+              const rgb = SEVERITY_COLORS[d.severity] ?? [239, 68, 68];
+              doc.setDrawColor(rgb[0], rgb[1], rgb[2]);
+              doc.setLineWidth(0.35);
+              const [x1, y1, x2, y2] = d.bbox;
+              const rx = margin + x1 * imgW;
+              const ry = y + y1 * imgH;
+              const rw = (x2 - x1) * imgW;
+              const rh = (y2 - y1) * imgH;
+              doc.rect(rx, ry, rw, rh, "S");
+            }
+
+            y += imgH + 5;
+          } catch {
+            /* unsupported image format for jsPDF — fall through to text only */
+          }
+        }
+      }
+
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(0);
+      const lines = doc.splitTextToSize(`${i + 1}. ${findingText}`, contentW);
+      checkPage(lines.length * 5 + 4);
+      doc.text(lines, margin, y);
+      y += lines.length * 5 + 6;
+    }
+    y += 4;
+  } else {
+    addSection("Key Findings", report.key_findings);
+  }
 
   // ── Recommendations ──
   addSection("Recommendations", report.recommendations);
@@ -139,12 +261,16 @@ export function downloadReportPdf(report: Report, assessmentId?: string): void {
   doc.text(`Video ID: ${report.video_id}`, margin, pageH - 10);
   doc.text("Generated by AEGIS", pageW - margin, pageH - 10, { align: "right" });
 
-  // ── Save / download ──
   doc.save(buildFileStem(report, assessmentId) + ".pdf");
 }
 
-export function downloadReportJson(report: Report, assessmentId?: string): void {
-  const json = JSON.stringify(report, null, 2);
+export function downloadReportJson(
+  report: Report,
+  assessmentId?: string,
+  frames?: FrameAnalysis[] | null
+): void {
+  const payload = buildReportExportPayload(report, frames);
+  const json = JSON.stringify(payload, null, 2);
   const blob = new Blob([json], { type: "application/json" });
   triggerDownload(blob, buildFileStem(report, assessmentId) + ".json");
 }

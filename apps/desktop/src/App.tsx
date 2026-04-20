@@ -45,7 +45,6 @@ export default function App() {
           openAssessmentView,
           closeAssessmentView,
           dashboardMapFocus,
-          clearDashboardMapFocus,
         }) => {
           if (workspaceOpen) {
             return <AssessmentsWorkspacePage onBack={closeWorkspace} />;
@@ -65,7 +64,6 @@ export default function App() {
               return (
                 <DashboardPage
                   mapFocus={dashboardMapFocus}
-                  onMapFocusConsumed={clearDashboardMapFocus}
                   onViewAssessment={openAssessmentView}
                 />
               );
