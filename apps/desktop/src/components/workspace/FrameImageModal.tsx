@@ -289,6 +289,34 @@ export default function FrameImageModal({ frame, videoFile, onClose }: Props) {
               </ul>
             </div>
           )}
+          {frame.access_route_status && frame.access_route_status !== "unknown" && (
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                Access Route
+              </p>
+              <div className="mt-2 flex items-center gap-2">
+                <span className={`h-2 w-2 rounded-full ${frame.access_route_status === "blocked" ? "bg-red-500" : "bg-green-500"}`} />
+                <span className="text-[13px] capitalize text-slate-300">{frame.access_route_status}</span>
+              </div>
+            </div>
+          )}
+          {(frame.resource_recommendations?.length ?? 0) > 0 && (
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                Resources Needed
+              </p>
+              <ul className="mt-2 flex flex-wrap gap-2">
+                {frame.resource_recommendations!.map((r) => (
+                  <li
+                    key={r}
+                    className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-[11px] text-amber-300"
+                  >
+                    {r}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </div>

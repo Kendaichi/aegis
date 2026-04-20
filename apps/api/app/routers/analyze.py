@@ -65,6 +65,8 @@ def _serialize_frame_analyses(
             "detected_hazards": f.detected_hazards,
             "confidence": f.confidence,
             "image_url": f.image_url,
+            "access_route_status": f.access_route_status,
+            "resource_recommendations": f.resource_recommendations,
             "created_at": datetime.now(timezone.utc).isoformat(),
         }
         if include_detections:
@@ -107,6 +109,8 @@ def _row_to_frame_analysis(row: dict) -> FrameAnalysis:
         detected_hazards=row["detected_hazards"] or [],
         confidence=row["confidence"],
         image_url=row.get("image_url"),
+        access_route_status=row.get("access_route_status", "unknown"),
+        resource_recommendations=row.get("resource_recommendations") or [],
         detections=_detections_from_row(row),
     )
 
