@@ -16,17 +16,19 @@ _client: Client | None = None
 _zai_client_instance: OpenAI | None = None
 
 CHAT_SYSTEM_PROMPT = (
-    "You are AEGIS, an AI analyst for Disaster Risk Reduction and Management (DRRM). "
-    "You assist emergency responders, analysts, and coordinators by interpreting aerial footage, "
-    "damage reports, and frame analysis data. "
+    "You are AEGIS, an AI analyst for Disaster Risk Reduction and Management (DRRM) in Caraga, Philippines. "
+    "You assist emergency responders, barangay captains, analysts, and coordinators by interpreting aerial footage, "
+    "damage reports, frame analysis data, resource recommendations, and access route status. "
     "You ONLY answer questions related to DRRM topics such as: disaster damage assessment, "
-    "hazard identification, evacuation planning, rescue prioritization, infrastructure impact, "
+    "hazard identification, evacuation planning, rescue prioritization, road passability, "
+    "resource deployment (rescue boats, medical teams, heavy equipment), infrastructure impact, "
     "flood/landslide/typhoon/earthquake/fire analysis, and emergency response recommendations. "
+    "Respond in the same language the user writes in — Filipino (Tagalog/Bisaya) or English are both fully supported. "
     "If a question is not related to DRRM or disaster response, politely decline and remind the "
     "user that you are scoped to disaster risk reduction and management queries only."
 )
 
-FRAME_PROMPT = """You are a disaster-response analyst reviewing a single frame of site footage.
+FRAME_PROMPT = """You are a disaster-response analyst reviewing a single frame of aerial site footage for DRRM teams in Caraga, Philippines.
 
 PRIORITY — PEOPLE IN DANGER: First, scan for any visible person or human figure. If a person appears to be in a hazardous situation (surrounded by flood water, debris, fire, collapsed structure, etc.), draw a bounding box around them and assign severity "severe" to reflect the life-threatening nature of their situation. Label such detections as "Person in danger".
 
@@ -38,6 +40,8 @@ Respond with STRICT JSON matching this schema:
   "description": "one to two sentence description of visible damage and any people in danger",
   "detected_hazards": ["list", "of", "hazards"],
   "confidence": 0.85,
+  "access_route_status": "clear|blocked|unknown",
+  "resource_recommendations": ["rescue boats|medical team|heavy equipment|search and rescue|evacuation support — include only what the visible damage warrants"],
   "detections": [
     {
       "label": "short region label e.g. collapsed roof OR Person in danger",
@@ -49,6 +53,8 @@ Respond with STRICT JSON matching this schema:
 }
 Rules:
 - If any person is in danger, the top-level severity must be at least "severe".
+- access_route_status: "blocked" if any road or bridge in the frame appears impassable; "clear" if routes look passable; "unknown" if no route is visible.
+- resource_recommendations: base these strictly on observed damage — e.g. flooded roads → "rescue boats", collapsed structures with trapped persons → "search and rescue" + "medical team", heavy debris → "heavy equipment". Use an empty array if severity is "none".
 - confidence fields: your actual certainty estimate as a float from 0.0 (uncertain) to 1.0 (certain). Do NOT copy the example values — replace them with your real estimate.
 - bbox: x1 < x2, y1 < y2, all values in [0, 1]. Use 1–6 boxes when damage or people in danger are visible; use an empty array if none.
 Only output the JSON object. No prose, no markdown fences."""
@@ -187,6 +193,10 @@ def _parse_frame_json(
             "detections": [],
         }
     detections = _parse_detections(data.get("detections", []))
+    valid_route_statuses = {"clear", "blocked", "unknown"}
+    raw_route = str(data.get("access_route_status", "unknown")).lower()
+    route_status = raw_route if raw_route in valid_route_statuses else "unknown"
+    resource_recs = [str(r) for r in data.get("resource_recommendations", []) or [] if r]
     return FrameAnalysis(
         frame_index=frame_index,
         timestamp_seconds=timestamp_seconds,
@@ -194,6 +204,8 @@ def _parse_frame_json(
         description=str(data.get("description", "")),
         detected_hazards=list(data.get("detected_hazards", []) or []),
         confidence=float(data.get("confidence", 0.0)),
+        access_route_status=route_status,
+        resource_recommendations=resource_recs,
         detections=detections,
     )
 

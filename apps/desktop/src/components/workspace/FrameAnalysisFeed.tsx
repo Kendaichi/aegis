@@ -85,6 +85,26 @@ export default function FrameAnalysisFeed({
                   ))}
                 </div>
               )}
+              {(frame.access_route_status && frame.access_route_status !== "unknown") && (
+                <div className="mt-2 flex items-center gap-1.5">
+                  <span className={`h-2 w-2 rounded-full ${frame.access_route_status === "blocked" ? "bg-red-500" : "bg-green-500"}`} />
+                  <span className="text-[11px] text-slate-400">
+                    Route {frame.access_route_status}
+                  </span>
+                </div>
+              )}
+              {(frame.resource_recommendations?.length ?? 0) > 0 && (
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {frame.resource_recommendations!.map((r) => (
+                    <span
+                      key={r}
+                      className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-[11px] text-amber-300"
+                    >
+                      {r}
+                    </span>
+                  ))}
+                </div>
+              )}
             </button>
           );
         })}
